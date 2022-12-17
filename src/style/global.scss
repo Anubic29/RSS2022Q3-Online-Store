@@ -1,0 +1,37 @@
+@import './vars';
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  color: black;
+  list-style: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1810px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  height: 90px;
+  background-color: black;
+  color: white;
+}
+
+.header-inner {
+  display: flex;
+  margin: auto;
+  justify-content: flex-start;
+  flex-basis: 1600px;
+  align-items: center;
+}
+
+.header-inner * {
+  color: white;
+}
+
