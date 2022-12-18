@@ -43,26 +43,6 @@ const baseConfig = {
             template: './index.html',
             chunks: ['main'],
         }),
-        new HtmlWebpackPlugin({
-            filename: '404.html',
-            template: './404/index.html',
-            chunks: [],
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'cart.html',
-            template: './cart/index.html',
-            chunks: [],
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'catalog.html',
-            template: './catalog/index.html',
-            chunks: [],
-        }),
-        new HtmlWebpackPlugin({
-            filename: 'details.html',
-            template: './details/index.html',
-            chunks: [],
-        }),
         new CleanWebpackPlugin(),
         new NetlifyPlugin({
             redirects: [
