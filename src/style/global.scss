@@ -12,6 +12,11 @@
   box-sizing: border-box;
 }
 
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 .container {
   max-width: 1810px;
 }
@@ -58,6 +63,11 @@
   background-color: $blueAccentColor;
   border: none;
   border-radius: 0 5px 5px 0;
+  transition: all 200ms ease-in-out;
+}
+
+.search-btn:hover {
+  background-color: #0aeeff;
 }
 
 .search-input {
@@ -65,13 +75,13 @@
   width: 100%;
   border: none;
   border-radius: 5px 0 0 5px;
-}
-
-.search-input::placeholder {
+  color: $darkGreyText;
   padding-left: 90px;
 }
 
-
+.search-input:focus-visible {
+  outline: none;
+}
 .cart-block {
   margin-left: auto;
   display: flex;
@@ -106,4 +116,43 @@
 .total-numbers {
   margin-left: 9px;
   font-size: 24px;
+}
+
+.main {
+  flex: 1;
+}
+
+.footer {
+  background-color: black;
+  margin-top: auto;
+  flex-shrink: 0;
+  color: white;
+}
+
+.footer-inner {
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  margin-right: 30px;
+  margin-left: 30px;
+}
+
+.developers {
+  padding-bottom: 50px;
+  
+}
+
+.dev {
+  display: flex;
+  align-items: center;
+}
+.dev-name {
+  color: white;
+  padding-left: 10px;
+}
+
+.git-logo-img {
+  position: relative;
+  top: 10px;
 }
