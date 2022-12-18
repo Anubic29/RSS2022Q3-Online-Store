@@ -7,7 +7,7 @@ const { NetlifyPlugin } = require('netlify-webpack-plugin');
 const baseConfig = {
     context: path.resolve(__dirname, 'src'),
     entry: {
-        main: './router/router',
+        main: './index',
     },
     mode: 'development',
     module: {
