@@ -98,6 +98,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
     filename: 'index.[contenthash].js',
-    assetModuleFilename: 'assets/[name][ext]',
+    assetModuleFilename: '[path][name][ext]',
   },
 };
