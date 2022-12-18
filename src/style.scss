@@ -32,18 +32,7 @@ body {
     margin: 0.5rem 0;
 }
 
-.page-404 {
-    color: blue;
-}
-
-.page-catalog {
-    color: green;
-}
-
-.page-cart {
-    color: yellow;
-}
-
-.page-details {
-    color: aqua;
-}
+@import './pages/404/style';
+@import './pages/cart/style';
+@import './pages/catalog/style';
+@import './pages/details/style';

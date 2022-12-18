@@ -1,11 +1,21 @@
 import { route } from '../../router/router';
 
 function generateContent404() {
+    const mainBlock = document.createElement('div');
+    mainBlock.className = 'page-404';
+
+    const title = document.createElement('h1');
+    title.textContent = '404';
+
     const link = document.createElement('a');
-    link.text = '404 to cart';
+    link.text = 'Cart';
     link.href = '/cart';
     link.addEventListener('click', route);
-    return link;
+
+    mainBlock.append(title);
+    mainBlock.append(link);
+
+    return mainBlock;
 }
 
 export default generateContent404;
