@@ -17,6 +17,10 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+img {
+  user-select: none;
+}
 .container {
   max-width: 1810px;
 }
@@ -32,7 +36,7 @@ body {
   display: flex;
   margin: auto;
   justify-content: flex-start;
-  flex-basis: 1600px;
+  flex-basis: 1810px;
   align-items: center;
   margin-right: 30px;
   margin-left: 30px;
@@ -64,10 +68,11 @@ body {
   border: none;
   border-radius: 0 5px 5px 0;
   transition: all 200ms ease-in-out;
+  cursor: pointer;
 }
 
 .search-btn:hover {
-  background-color: #0aeeff;
+  background-color: $lightBlueOnHover;
 }
 
 .search-input {
@@ -134,24 +139,31 @@ body {
   display: flex;
   justify-content: space-between;
   color: white;
+  margin-top: 30px;
   margin-right: 30px;
   margin-left: 30px;
 }
 
 .developers {
   padding-bottom: 50px;
-  
 }
 
 .dev {
   display: flex;
   align-items: center;
 }
+
+.dev-title {
+  color: $blueAccentColor;
+}
 .dev-name {
   color: white;
   padding-left: 10px;
 }
 
+.dev-year {
+  color: white;
+}
 .git-logo-img {
   position: relative;
   top: 10px;
