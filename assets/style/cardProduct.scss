@@ -44,6 +44,7 @@
   margin-left: 40%;
   margin-top: 35%;
   position: absolute;
+  filter: invert(96%) sepia(100%) saturate(2%) hue-rotate(302deg) brightness(103%) contrast(101%);
 }
 .prod-img-wrap:hover .prod-img,
 .prod-img-wrap:focus .prod-img {
