@@ -1,11 +1,9 @@
+import './index.html';
 import './style.scss';
+import { route, handleLocation } from './router/router';
+import {} from './types/index';
 
-const text = 'Hello World!';
+window.onpopstate = handleLocation;
+window.route = route;
 
-const title = document.querySelector('.title');
-
-if (title instanceof Element) {
-  title.textContent = text;
-}
-
-console.log(text);
+handleLocation();

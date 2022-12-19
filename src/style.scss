@@ -3,3 +3,36 @@ $body-color: red;
 body {
   color: $body-color;
 }
+
+html,
+body {
+    font-family: sans-serif;
+    margin: 0;
+    height: 100%;
+}
+
+#root {
+    display: flex;
+    height: 100%;
+}
+
+#main-page {
+    flex-grow: 1;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    border-right: 1px solid lightgray;
+}
+
+.sidebar > a {
+    margin: 0.5rem 0;
+}
+
+@import './pages/404/style';
+@import './pages/cart/style';
+@import './pages/catalog/style';
+@import './pages/details/style';
