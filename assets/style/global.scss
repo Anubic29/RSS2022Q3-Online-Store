@@ -46,6 +46,12 @@ img {
   color: white;
 }
 
+.shop-logo {
+  display: inline-block;
+  width: 140px;
+  height: 55px;
+}
+
 .search-bar {
   margin-left: 160px;
   background-color: white;
@@ -58,6 +64,9 @@ img {
 
 .search-icon {
   position: absolute;
+  display: inline-block;
+  width: 30px;
+  height: 30px;
   top: 9px;
   left: 30px;
 }
@@ -90,6 +99,12 @@ img {
 .cart-block {
   margin-left: auto;
   display: flex;
+}
+
+.cart-icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
 }
 
 .cart {
@@ -144,6 +159,11 @@ img {
   margin-left: 30px;
 }
 
+.rs-logo-img {
+  display: inline-block;
+  width: 100px;
+  height: 37px;
+}
 .developers {
   padding-bottom: 50px;
 }
@@ -167,4 +187,7 @@ img {
 .git-logo-img {
   position: relative;
   top: 10px;
+  display: inline-block;
+  width: 30px;
+  height: 30px
 }
