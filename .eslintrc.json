@@ -1,27 +1,28 @@
 {
-    "plugins": ["prettier", "import", "@typescript-eslint"],
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
     "extends": [
         "plugin:prettier/recommended",
         "prettier",
-        "plugin:@typescript-eslint/recommended",
-        "eslint:recommended"
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "overrides": [
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": 2020,
+        "ecmaVersion": "latest",
         "sourceType": "module"
     },
-    "env": {
-        "es6": true,
-        "browser": true,
-        "node": true
-    },
+    "plugins": [ "prettier", "import", "@typescript-eslint" ],
     "rules": {
-        "no-unused-vars": "off",
-        "no-debugger": "off",
-        "no-console": 0,
-        "class-methods-use-this": "off",
-        "@typescript-eslint/no-explicit-any": "error",
-        "prettier/prettier": ["error", { "endOfLine": "auto" }]  
+      "no-unused-vars": "off",
+      "no-debugger": "off",
+      "no-console": 0,
+      "class-methods-use-this": "off",
+      "@typescript-eslint/no-explicit-any": "error",
+      "prettier/prettier": ["error", { "endOfLine": "auto" }]
     }
 }

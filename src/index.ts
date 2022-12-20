@@ -1,5 +1,5 @@
 import './index.html';
-import './style.scss';
+import './index.scss';
 import { route, handleLocation } from './router/router';
 import {} from './types/index';
 

@@ -4,17 +4,94 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet">
   <title>Online-store</title>
 </head>
 <body>
-    <div id="root">
-        <nav id="main-nav" class="sidebar">
-            <a href="/" onclick="route()">Home</a>
-            <a href="/cart" onclick="route()">Cart</a>
-            <a href="/details" onclick="route()">Details</a>
-            <a href="/error" onclick="route()">404</a>
-        </nav>
-        <div id="main-page"></div>
+  <header class="header">
+    <div class="header-inner container">
+      <a href="./index.html"><img src="../assets/img/logo.png" alt="logo" class="shop-logo"></a>
+      <div class="search-bar">
+        <img src="../assets/icons/search.svg" alt="" width="30" height="30" class="search-icon">
+        <input class="search-input" type="text" id="product-search" placeholder="I am searching for..." title="Type in product name">
+        <button class="search-btn" type="submit" value="Find!">Find!</button>
+      </div>
+      <div class="cart-block">
+        <p class="total-sum">
+          total: <span class="total-numbers">0 ₴</span>
+        </p>
+        <div class="cart">
+          <img src="../assets/icons/cart.svg" alt="cart-icon" class="cart-icon">
+          <div class="cart-prod-count">3</div>
+        </div>
+      </div>
     </div>
+  </header>
+  <main class="main">
+    <article class="prod-card">
+      <div class="v prod-card-inner">
+        <div class="discount">-15%</div>
+        <div class="stock">144 in stock</div>
+        <div class="prod-img-wrap">
+          <div class="prod-img"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-zoom-in img-more-info-icon" viewBox="0 0 16 16"> <path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zM13 6.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/> <path d="M10.344 11.742c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1 6.538 6.538 0 0 1-1.398 1.4z"/> <path fill-rule="evenodd" d="M6.5 3a.5.5 0 0 1 .5.5V6h2.5a.5.5 0 0 1 0 1H7v2.5a.5.5 0 0 1-1 0V7H3.5a.5.5 0 0 1 0-1H6V3.5a.5.5 0 0 1 .5-.5z"/> </svg></div>
+        </div>
+        <div class="rating-line">
+          <div class="rating-stars">
+            <div class="stars-wrap">
+              <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r1">
+              <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r2">
+              <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r3">
+              <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r4">
+              <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r5">
+            </div>
+            <p class="rating-nums">4.21</p>
+          </div>
+          <p class="category">fragrances</p>
+          <p class="title">Non-alcoholic Concentrated Parfume</p>
+          <p class="brand">Al Munakh</p>
+          <div class="price-wrap">
+            <p class="price">899 ₴</p>
+            <p class="reduced-price">764 ₴</p>
+          </div>
+          <di class="card-buttons-wrap">
+            <button class="btn card-btn card-btn-info">
+              More info
+            </button>
+            <button class="btn card-btn card-btn-cart">
+              <img src="../assets/icons/cart.svg" alt="cart button icon" class="cart-icon">
+            </button>
+          </di>
+        </div>
+      </div>
+    </article>
+    <div id="main-page"></div>
+  </main>
+  <footer class="footer">
+    <div class="footer-inner container">
+      <div class="rs-logo-wrap">
+        <a href="https://rs.school/js/">
+          <img src="../assets/icons/rs-logo.svg" alt="rs school logo" class="rs-logo-img">
+        </a>
+      </div>
+      <p class="dev-year">2022</p>
+      <div class="developers">
+        <p class="dev-title">Developers:</p>
+        <p class="dev">
+          <a href="https://github.com/Anubic29">
+            <img src="../assets/icons/icons8-github.svg" class="git-logo-img" alt="git logo">
+            <span class="dev-name">Alexander Sitailo</span>
+          </a>
+        </p>
+        <p class="dev">
+          <a href="https://github.com/ElenaDatso">
+            <img src="../assets/icons/icons8-github.svg" class="git-logo-img" alt="git logo">
+            <span class="dev-name">Olena Datso</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
