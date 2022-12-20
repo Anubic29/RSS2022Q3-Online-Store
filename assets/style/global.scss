@@ -20,6 +20,12 @@ body {
 
 img {
   user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 .container {
   max-width: 1810px;
@@ -140,8 +146,8 @@ img {
 
 .main {
   flex: 1;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(6, 300px [col-start]);
 }
 
 .footer {
