@@ -1,0 +1,134 @@
+.left-dots-bg,
+.right-dots-bg {
+  width: 27px;
+  height: 27px;
+  margin-left: 7px;
+}
+
+.switch-layout {
+  grid-column: 6;
+  margin-left: auto;
+  position: relative;
+  display: inline-block;
+  width: 80px;
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch-layout input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.layout-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 10px;
+  border: 2px $veryLightGreyElements solid;
+}
+
+.layout-slider:before {
+  position: absolute;
+  content: "";
+  height: 40px;
+  width: 40px;
+  left: -1px;
+  bottom: -2px;
+  background-color: $blueAccentColor;
+  background-image: url(../assets/icons/5-dots.svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  border-radius: 10px 0 0 10px;
+  transition: 0.4s;
+  background-position: center;
+  background-size: 27px;
+  background-repeat: no-repeat;
+}
+
+ .layout-slider:hover:before {
+  background-color: $lightBlueOnHover;
+}
+
+input:checked + .layout-slider:before {
+  border-radius: 0 10px 10px 0;
+  background-image: url(../assets/icons/4-dots-w.svg);
+}
+
+input:checked + .layout-slider:before {
+  -webkit-transform: translateX(40px);
+  -ms-transform: translateX(40px);
+  transform: translateX(40px);
+}
+
+.prods-per-page {
+  grid-column: 4;
+  padding-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.prods-count {
+  padding-left: 10px;
+}
+
+.sort-by-select {
+  grid-column: 5;
+  appearance: none;
+  border-radius: 5px;
+  border: $veryLightGreyElements 1px solid;
+  padding-left: 10px;
+  width: 100%;
+  height: 100%;
+  color: $darkGreyText;
+  cursor: pointer;
+}
+
+.sort-by-wrap {
+  position: relative;
+  margin-left: auto;
+  width: 210px;
+  height: 40px;
+}
+
+
+.sort-by-wrap::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  top: 40%;
+  width: 0.8em;
+  height: 0.5em;
+  color: #578f93;
+  background-color: $blueAccentColor;
+  clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+  cursor: pointer;
+  pointer-events:none;
+}
+
+.sort-by-select:focus-visible {
+  outline: none;
+}
+
+.sort-by-select[data-open] {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 0;
+}
+.sort-by-select .sort-option:hover {
+  background-color: $blueAccentColor;
+}
+.sort-option {
+  color: $darkGreyText;
+}
+
+
+

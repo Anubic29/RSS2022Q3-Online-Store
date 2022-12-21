@@ -2,7 +2,7 @@
 
 .prod-card {
   border: 1px solid $veryLightGreyElements;
-  width: 300px;
+  width: 250px;
   height: auto;
   margin: auto;
 }
@@ -13,7 +13,7 @@
   align-items: center;
   width: 90%;
   margin: auto;
-  margin-top: 26px;
+  margin-top: 15px;
   position: relative;
 }
 .prod-img-wrap {
@@ -42,7 +42,7 @@
   z-index: 2;
   display: none;
   margin-left: 40%;
-  margin-top: 35%;
+  margin-top: 45%;
   position: absolute;
   filter: invert(96%) sepia(100%) saturate(2%) hue-rotate(302deg) brightness(103%) contrast(101%);
 }
@@ -99,7 +99,7 @@
 }
 
 .prod-card-big {
-  width: 375px;
+  width: 300px;
 }
 
 .prod-card-big .prod-img-wrap {
