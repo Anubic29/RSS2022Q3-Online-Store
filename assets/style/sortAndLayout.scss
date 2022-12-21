@@ -98,8 +98,9 @@ input:checked + .layout-slider:before {
   margin-left: auto;
   width: 210px;
   height: 40px;
+  background-color: $blueAccentColor;
+  border-radius: 10px;
 }
-
 
 .sort-by-wrap::after {
   content: "";
@@ -108,24 +109,20 @@ input:checked + .layout-slider:before {
   top: 40%;
   width: 0.8em;
   height: 0.5em;
-  color: #578f93;
-  background-color: $blueAccentColor;
+  background-color: inherit;
   clip-path: polygon(100% 0%, 0 0%, 50% 100%);
   cursor: pointer;
   pointer-events:none;
 }
 
-.sort-by-select:focus-visible {
+.sort-by-select:focus {
   outline: none;
 }
 
-.sort-by-select[data-open] {
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 0;
+.sort-by-wrap:hover {
+  background-color: $lightBlueOnHover;
 }
-.sort-by-select .sort-option:hover {
-  background-color: $blueAccentColor;
-}
+
 .sort-option {
   color: $darkGreyText;
 }
