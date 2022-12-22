@@ -1,4 +1,5 @@
 import { route } from '../../router/router';
+import dataProducts from '../../../assets/libs/data';
 
 function generateContentCatalog() {
     const mainBlock = document.createElement('div');
@@ -14,6 +15,8 @@ function generateContentCatalog() {
 
     mainBlock.append(title);
     mainBlock.append(link);
+
+    console.log(dataProducts);
 
     return mainBlock;
 }
