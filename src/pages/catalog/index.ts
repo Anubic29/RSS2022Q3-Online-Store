@@ -1,6 +1,7 @@
 import { route } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard } from '../../types/types';
+import '../../../assets/icons/search-plus.svg';
 
 function generateContentCatalog() {
     const mainBlock = document.createElement('div');
@@ -35,7 +36,7 @@ function generateProductCard(data: ProductCard) {
         <div class="stock">${data.stock} in stock</div>
         <div class="prod-img-wrap">
         <div class="prod-img" style="background-image: url(${data.thumbnail})">
-            <img src="../assets/icons/search-plus.svg" alt="more info icon" class="img-more-info-icon">
+            <img src="/assets/icons/search-plus.svg" alt="more info icon" class="img-more-info-icon">
         </div>
         </div>
         <div class="rating-line">
