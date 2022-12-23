@@ -1,27 +1,66 @@
 import { route } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard } from '../../types/types';
+
+import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
+import '../../../assets/icons/4-dots.svg';
+import '../../../assets/icons/5-dots-g.svg';
 
 function generateContentCatalog() {
+    console.log(route);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';
 
-    const title = document.createElement('h1');
-    title.textContent = 'Catalog';
+    mainBlock.innerHTML = `
+    <div class="main-inner">
+        <div class="head-line">
+        <div class="reset-copy-wrap">
+            <div class="reset-filter">
+            <div class="reset-checkbox filter-checkbox">
+                <span class="cross-line"></span>
+                <span class="cross-line"></span>
+            </div>
+            <span class="reset-span">reset</span>
+            </div>
+            <div class="copy-link">
+            <div class="copy-icon"></div>
+            <span class="copy-span">copy link</span>
+            </div>
+        </div>
+        <p class="prods-per-page">Products on the page:
+            <span class="prods-count">${dataProducts.length}</span>
+        </p>
+        <div class="sort-by-wrap">
+            <select name="sort-variant" class="sort-by-select">
+                <option value="" disabled selected hidden>Sort by:</option>
+                <option class="sort-option" value="by-price">increasing price</option>
+                <option class="sort-option" value="by-rating">increasing rating</option>
+            </select>
+        </div>
 
-    const link = document.createElement('a');
-    link.text = 'Details';
-    link.href = '/details';
-    link.addEventListener('click', route);
+        <label class="switch-layout">
+            <img class="left-dots-bg" src="../assets/icons/5-dots-g.svg" alt="">
+            <img src="../assets/icons/4-dots.svg" alt="" class="right-dots-bg">
+            <input type="checkbox">
+            <span class="layout-slider"></span>
+        </label>
+        </div>
+        <div class="under-head-line">
+        <div class="filters">
+            Filters
+        </div>
+        <div class="cards-area"></div>
+        </div>
+    </div>
+    `;
 
-    mainBlock.append(title);
-    mainBlock.append(link);
-
-    console.log();
-    dataProducts.forEach((elem) => {
-        mainBlock.append(generateProductCard(elem));
-    });
+    const cardsArea = mainBlock.querySelector('.cards-area');
+    if (cardsArea instanceof Element) {
+        dataProducts.forEach((elem) => {
+            cardsArea.append(generateProductCard(elem));
+        });
+    }
 
     return mainBlock;
 }
