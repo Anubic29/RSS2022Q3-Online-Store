@@ -6,7 +6,11 @@ import generateContentDetails from '../pages/details';
 const route = (event: Event) => {
     event = event || window.event;
     event.preventDefault();
-    window.history.pushState({}, '', (event.target as HTMLLinkElement).href);
+    let target = event.target as HTMLElement;
+    while (target.tagName !== 'A') {
+        target = target.parentNode as HTMLElement;
+    }
+    window.history.pushState({}, '', (target as HTMLLinkElement).href);
     handleLocation();
 };
 
