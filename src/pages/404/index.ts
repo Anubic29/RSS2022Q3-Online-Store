@@ -1,4 +1,5 @@
 import { route } from '../../router/router';
+import './_style.scss';
 
 function generateContent404() {
     const mainBlock = document.createElement('div');
@@ -6,14 +7,25 @@ function generateContent404() {
 
     const title = document.createElement('h1');
     title.textContent = '404';
+    title.className = 'h1';
+
+    const text = document.createElement('p');
+    text.textContent = 'page not found';
+    text.className = 'text';
+
+    const moon = document.createElement('div');
+    moon.className = 'moon';
 
     const link = document.createElement('a');
-    link.text = 'Cart';
+    link.text = 'Go to cart';
     link.href = '/cart';
+    link.className = 'link';
     link.addEventListener('click', route);
 
     mainBlock.append(title);
+    mainBlock.append(text);
     mainBlock.append(link);
+    mainBlock.append(moon);
 
     return mainBlock;
 }
