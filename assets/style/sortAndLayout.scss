@@ -126,3 +126,139 @@ input:checked + .layout-slider:before {
 .sort-option {
   color: $darkGreyText;
 }
+
+.filter-panel {
+  width: 250px;
+}
+
+.filter-inner {
+  display: flex;
+  flex-direction: column;
+  & > * + * {
+    margin-top: 70px;
+  }
+  .filter-title {
+    margin-bottom: 25px;
+  }
+  .filter-value-list {
+    display: flex;
+    flex-direction: column;
+    height: calc(28px * 6 + 15px * 5);
+    overflow-y: scroll;
+    overflow-x: hidden;
+    & > * + * {
+      margin-top: 15px;
+    }
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: $lightGreyElements;
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      width: 10px;
+      height: 45px;
+      background-color: $blueAccentColor;
+      border-radius: 5px;
+    }
+  }
+  .filter-category-list {
+    & > * {
+      text-transform: capitalize;
+    }
+  }
+
+  .checkbox-container {
+    width: 100%;
+    color: $darkGreyText;
+    font-weight: 400;
+    position: relative;
+    padding-left: 45px;
+    padding-right: 5px;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    span {
+      color: $darkGreyText;
+    }
+    &:hover {
+      input ~ .checkmark::after {
+        background-color: $lightGreyText;
+      }
+    }
+    input {
+      position: absolute;
+      opacity: 0;
+      height: 0;
+      width: 0;
+      &:checked ~ .checkmark::after {
+        background-color: $blueAccentColor;
+      }
+    }
+    .checkmark {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translate(0, -50%);
+      height: 20px;
+      width: 20px;
+      background-color: transparent;
+      border: 1px solid $darkGreyText;
+      border-radius: 5px;
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 16px;
+        width: 16px;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  .dual-slider-container {
+    display: flex;
+    flex-direction: column;
+    .values-container {
+      padding: 0 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .sliders-control {
+      position: relative;
+      height: 20px;
+      margin: 15px 20px 0;
+      input[type="range"] {
+        appearance: none;
+        height: 2px;
+        width: 100%;
+        top: 10px;
+        position: absolute;
+        background-color: #C6C6C6;
+        pointer-events: none;
+        &::-webkit-slider-thumb {
+          appearance: none;
+          pointer-events: all;
+          width: 20px;
+          height: 20px;
+          background-color: $blueAccentColor;
+          position: relative;
+          z-index: 2;
+          border-radius: 50%;
+          box-shadow: 0 0 0 1px #C6C6C6;
+          cursor: pointer;
+          &:hover {
+            box-shadow: inset 0 0 3px $darkGreyText, 0 0 9px $darkGreyText;
+          }
+          &:active {
+            box-shadow: inset 0 0 3px $blueAccentColor, 0 0 9px $blueAccentColor;
+          }
+        }
+      }
+    }
+  }
+}

@@ -47,9 +47,7 @@ function generateContentCatalog() {
         </label>
         </div>
         <div class="under-head-line">
-        <div class="filters">
-            Filters
-        </div>
+        <div class="filter-panel"></div>
         <div class="cards-area"></div>
         </div>
     </div>
@@ -60,6 +58,11 @@ function generateContentCatalog() {
         dataProducts.forEach((elem) => {
             cardsArea.append(generateProductCard(elem));
         });
+    }
+
+    const filters = mainBlock.querySelector('.filter-panel');
+    if (filters instanceof Element) {
+        filters.append(generateFilterPanel());
     }
 
     return mainBlock;
@@ -109,6 +112,99 @@ function generateProductCard(data: ProductCard) {
     `;
 
     return card;
+}
+
+function generateFilterPanel() {
+    const categoryValues = [...new Set(dataProducts.map((obj) => obj.category))];
+    const brandValues = [...new Set(dataProducts.map((obj) => obj.brand))];
+
+    const filter = document.createElement('div');
+    filter.className = 'filter-inner';
+
+    filter.innerHTML = `
+        <div class="filter-category filter-feature-list">
+            <h2 class="filter-title">Category<h2>
+            <div class="filter-category-list filter-value-list"></div>
+        </div>
+        <div class="filter-brand filter-feature-list">
+            <h2 class="filter-title">Brand<h2>
+            <div class="filter-brand-list filter-value-list"></div>
+        </div>
+        <div class="filter-price filter-feature-2-range">
+            <h2 class="filter-title">Price<h2>
+            <div class="dual-slider-container">
+                <div class="values-container">
+                    <p class="value-1">10</p>
+                    <p>-</p>
+                    <p class="value-2">80</p>
+                </div>
+                <div class="sliders-control">
+                    <input type="range" value="20" min="0" max="100">
+                    <input type="range" value="80" min="0" max="100">
+                </div>
+            </div>
+        </div>
+        <div class="filter-stock filter-feature-2-range">
+            <h2 class="filter-title">Stock<h2>
+            <div class="dual-slider-container">
+                <div class="values-container">
+                    <p class="value-1">10</p>
+                    <p>-</p>
+                    <p class="value-2">80</p>
+                </div>
+                <div class="sliders-control">
+                    <input type="range" value="20" min="0" max="100">
+                    <input type="range" value="80" min="0" max="100">
+                </div>
+            </div>
+        </div>
+    `;
+
+    const filterCategoryList = filter.querySelector('.filter-category-list');
+    if (filterCategoryList instanceof Element) {
+        categoryValues.forEach((value) => {
+            filterCategoryList.append(
+                createCheckbox(value, 'category', dataProducts.filter((obj) => obj.category === value).length)
+            );
+        });
+    }
+
+    const filterBrandList = filter.querySelector('.filter-brand-list');
+    if (filterBrandList instanceof Element) {
+        brandValues.forEach((value) => {
+            filterBrandList.append(
+                createCheckbox(value, 'brand', dataProducts.filter((obj) => obj.brand === value).length)
+            );
+        });
+    }
+
+    return filter;
+}
+
+function createCheckbox(value: string, type: string, amount: number) {
+    const label = document.createElement('label');
+    label.className = 'checkbox-container';
+
+    const spanText = document.createElement('span');
+    spanText.textContent = value;
+    label.append(spanText);
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.value = value;
+    input.name = `filter-${type}`;
+    label.append(input);
+
+    const span = document.createElement('span');
+    span.className = 'checkmark';
+    label.append(span);
+
+    const spanAmount = document.createElement('span');
+    spanAmount.className = 'amount';
+    spanAmount.textContent = `(${amount})`;
+    label.append(spanAmount);
+
+    return label;
 }
 
 export default generateContentCatalog;
