@@ -65,7 +65,10 @@ function generateContentDetails() {
     </div>
     `;
 
-    const imagesList = mainBlock.querySelector('.images-list');
+    const imageBlock = mainBlock.querySelector('.image-block') as Element;
+
+    const mainImage = mainBlock.querySelector('.main-image') as HTMLImageElement;
+    const imagesList = imageBlock.querySelector('.images-list');
     if (imagesList instanceof Element) {
         currentProduct.images.forEach((image) => {
             const li = document.createElement('li');
@@ -73,6 +76,9 @@ function generateContentDetails() {
             const img = document.createElement('img');
             img.src = image;
             img.alt = '';
+            img.addEventListener('mouseover', () => {
+                mainImage.src = image;
+            });
             li.append(img);
 
             imagesList.append(li);
