@@ -2,3 +2,10 @@
 @import "../assets/style/global.scss";
 
 @import "./pages/catalog/style";
+@import "./pages/details/style";
+
+#main-page {
+  margin: auto;
+  width: 100%;
+  max-width: 1500px;
+}
