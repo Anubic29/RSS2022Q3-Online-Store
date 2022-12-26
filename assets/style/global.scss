@@ -1,5 +1,4 @@
 @import './vars.scss';
-@import './sortAndLayout.scss';
 
 *,
 *::after,
@@ -284,8 +283,4 @@ img {
   height: 16px;
   background-image: url(../assets/icons/link.svg);
   background-size: cover;
-}
-
-.filters {
-  width: 250px;
 }
