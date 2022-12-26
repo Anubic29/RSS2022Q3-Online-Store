@@ -1,6 +1,8 @@
 import { route } from '../../router/router';
+import type { ParamsObjGenerate } from '../../types/types';
 
-function generateContentCart() {
+function generateContentCart(params?: ParamsObjGenerate) {
+    console.log(params);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-cart';
 
