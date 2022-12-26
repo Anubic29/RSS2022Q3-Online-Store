@@ -90,6 +90,7 @@ function generateContentDetails() {
 
     return mainBlock;
 }
+console.log(JSON.parse(localStorage.getItem('cartList') as string));
 
 function generateBtnsBlock() {
     const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
@@ -104,7 +105,13 @@ function generateBtnsBlock() {
     btnAddRem.addEventListener('click', () => {
         const idProdCart = cartList.findIndex((product) => product.id === currentProduct.id);
         if (idProdCart === -1) {
-            cartList.push({ id: currentProduct.id, count: 1 });
+            cartList.push({
+                id: currentProduct.id,
+                count: 1,
+                finalPrice: Math.round(
+                    currentProduct.price - (currentProduct.discountPercentage / 100) * currentProduct.price
+                ),
+            });
             btnAddRem.textContent = 'Remove from cart';
         } else {
             cartList.splice(idProdCart, 1);
@@ -118,7 +125,13 @@ function generateBtnsBlock() {
     btnBuyNow.textContent = 'Buy now';
     btnBuyNow.addEventListener('click', () => {
         if (cartList.findIndex((product) => product.id === currentProduct.id) === -1) {
-            cartList.push({ id: currentProduct.id, count: 1 });
+            cartList.push({
+                id: currentProduct.id,
+                count: 1,
+                finalPrice: Math.round(
+                    currentProduct.price - (currentProduct.discountPercentage / 100) * currentProduct.price
+                ),
+            });
             localStorage.setItem('cartList', JSON.stringify(cartList));
         }
         window.history.pushState({}, '', '/cart');
