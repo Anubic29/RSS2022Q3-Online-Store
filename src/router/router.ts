@@ -19,6 +19,7 @@ const routes: { [index: string]: () => HTMLElement } = {
     '/': generateContentCatalog,
     '/cart': generateContentCart,
     '/details': generateContentDetails,
+    '/index.html': generateContentCatalog,
 };
 
 const handleLocation = async () => {
