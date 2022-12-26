@@ -112,7 +112,7 @@ module.exports = {
         clean: true,
         filename: 'index.[contenthash].js',
         assetModuleFilename: '[path][name][ext]',
-        publicPath: '/',
+        publicPath: '', // /
     },
     devServer: {
         historyApiFallback: {
