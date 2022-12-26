@@ -1,6 +1,6 @@
-import { route } from '../../router/router';
+import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { ProductCard } from '../../types/types';
+import type { ProductCard, CartProduct } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
 
 const currentProduct: ProductCard = dataProducts[0];
@@ -13,7 +13,9 @@ function generateContentDetails() {
     mainBlock.innerHTML = `
     <div class="main-inner">
       <ul class="path">
-        <li class="path-step path-step-store">Store</li>
+        <li class="path-step path-step-store">
+            <a href="/" onclick="route()">Store</a>
+        </li>
         <li class="path-step path-step-category">${currentProduct.category}</li>
         <li class="path-step path-step-brand">${currentProduct.brand}</li>
         <li class="path-step path-step-product">${currentProduct.title}</li>
@@ -49,10 +51,6 @@ function generateContentDetails() {
               <h2 class="cost">$${Math.round(
                   currentProduct.price - (currentProduct.discountPercentage / 100) * currentProduct.price
               )}</h2>
-              <div class="btns-block">
-                <button class="btn">Add to cart</button>
-                <button class="btn">Buy now</button>
-              </div>
             </div>
             <div class="description-block">
               <h2 class="info-title">Description:</h2>
@@ -85,7 +83,51 @@ function generateContentDetails() {
         });
     }
 
+    const priceBlock = mainBlock.querySelector('.price-block');
+    if (priceBlock instanceof Element) {
+        priceBlock.append(generateBtnsBlock());
+    }
+
     return mainBlock;
+}
+
+function generateBtnsBlock() {
+    const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
+
+    const btnsBlock = document.createElement('div');
+    btnsBlock.className = 'btns-block';
+
+    const btnAddRem = document.createElement('button');
+    btnAddRem.className = 'btn';
+    btnAddRem.textContent =
+        cartList.findIndex((product) => product.id === currentProduct.id) === -1 ? 'Add to cart' : 'Remove from cart';
+    btnAddRem.addEventListener('click', () => {
+        const idProdCart = cartList.findIndex((product) => product.id === currentProduct.id);
+        if (idProdCart === -1) {
+            cartList.push({ id: currentProduct.id, count: 1 });
+            btnAddRem.textContent = 'Remove from cart';
+        } else {
+            cartList.splice(idProdCart, 1);
+            btnAddRem.textContent = 'Add to cart';
+        }
+        localStorage.setItem('cartList', JSON.stringify(cartList));
+    });
+
+    const btnBuyNow = document.createElement('button');
+    btnBuyNow.className = 'btn';
+    btnBuyNow.textContent = 'Buy now';
+    btnBuyNow.addEventListener('click', () => {
+        if (cartList.findIndex((product) => product.id === currentProduct.id) === -1) {
+            cartList.push({ id: currentProduct.id, count: 1 });
+            localStorage.setItem('cartList', JSON.stringify(cartList));
+        }
+        window.history.pushState({}, '', '/cart');
+        handleLocation();
+    });
+
+    btnsBlock.append(btnAddRem);
+    btnsBlock.append(btnBuyNow);
+    return btnsBlock;
 }
 
 export default generateContentDetails;

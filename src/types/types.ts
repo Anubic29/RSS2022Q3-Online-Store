@@ -12,4 +12,9 @@ type ProductCard = {
     images: string[];
 };
 
-export type { ProductCard };
+type CartProduct = {
+    id: number;
+    count: number;
+};
+
+export type { ProductCard, CartProduct };
