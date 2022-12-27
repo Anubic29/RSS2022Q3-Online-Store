@@ -30,6 +30,9 @@
   background-size: cover;
   background-position: center;
   transition: all 200ms ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
 }
 .img-more-info-icon {
   // display: none;
