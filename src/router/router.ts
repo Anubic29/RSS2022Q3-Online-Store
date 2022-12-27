@@ -23,6 +23,8 @@ const routes: { [index: string]: (params?: ParamsObjGenerate) => HTMLElement } =
 };
 
 const handleLocation = async () => {
+    window.scroll({ top: 0 });
+
     const path = window.location.pathname;
     const route = routes[path] || routes['404'];
     const mainPage = document.getElementById('main-page');
