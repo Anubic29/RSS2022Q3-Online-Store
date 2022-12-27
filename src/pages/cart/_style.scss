@@ -70,10 +70,6 @@
     cursor: pointer;
   }
 
-  .cart-body-wrap {
-    // display: flex;
-  }
-
   .one-item-block {
     display: grid;
     grid-template-columns: 4fr 1fr 1fr;
@@ -119,7 +115,6 @@
 
   .prod-img {
     width: 250px;
-    height: 250px;
   }
 
   .text-block {
@@ -161,13 +156,20 @@
     text-align: center;
     margin-left: 10px;
     margin-right: 10px;
-    cursor: default;
   }
 
   .prod-count-control {
     display: flex;
     align-items: baseline;
     margin-right: 60px;
+    position: relative;
+  }
+
+  .stock {
+    top: 50px;
+    left: 0;
+    text-align: center;
+    cursor: default;
   }
 
   .prod-count {
@@ -307,5 +309,9 @@
     background-color: $lightBlueOnHover;
     border: $lightBlueOnHover 1px solid;
     color: white;
+  }
+
+  .empty-cart-div {
+    text-align: center;
   }
 }

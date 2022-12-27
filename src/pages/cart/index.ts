@@ -1,6 +1,32 @@
-import { route } from '../../router/router';
+// import { route } from '../../router/router';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
+import dataProducts from '../../../assets/libs/data';
+import { CartProduct, ProductCard } from '../../types/types';
+import '../../../assets/icons/empty-cart.svg';
+
+const cartCountHead = document.getElementById('cart-prod-count') as HTMLElement;
+const totalCountHead = document.getElementById('total-numbers') as HTMLElement;
+const productsArray = () => JSON.parse(localStorage.getItem('cartList') as string) ?? [];
+const totalSum = () => productsArray().reduce((acc: number, cur: CartProduct) => acc + cur.finalPrice, 0);
+const productsInCart = (prodAr: CartProduct[]): Array<ProductCard> => {
+    const idArray = prodAr.map((obj) => obj.id);
+    return dataProducts.filter((el) => {
+        if (idArray.includes(el.id)) {
+            return el;
+        }
+    });
+};
+
+refreshCartHead();
+
+export function refreshCartHead(): void {
+    const products = productsArray();
+    const counter = products.length;
+    productsInCart(products);
+    cartCountHead.innerText = counter;
+    totalCountHead.innerText = `${totalSum()} ₴`;
+}
 
 function generateContentCart() {
     const mainBlock = document.createElement('div');
@@ -9,7 +35,7 @@ function generateContentCart() {
         <div class="main-inner card-page">
       <nav class="cart-nav-line">
         <div class="header-h2-wrap">
-          <h2 class="cart-header">Кошик</h2>
+          <h2 class="cart-header">Cart</h2>
           <img src="../assets/icons/cart.svg" alt="cart-icon" class="cart-header-icon">
         </div>
         <div class="items-count counter">
@@ -39,57 +65,7 @@ function generateContentCart() {
       </nav>
       <div class="cart-body">
         <div class="cart-body-wrap">
-          <div class="all-items-holder">
-            <div class="one-item-block">
-              <div class="item-card">
-                <div class="v prod-card-inner">
-                  <div class="image-block">
-                    <div class="discount">-15%</div>
-                    <div class="prod-img-wrap">
-                      <div class="prod-img" style="background-image: url(thumbnail)">
-                        <img src="/assets/icons/search-plus.svg" alt="more info icon" class="img-more-info-icon">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="text-block">
-                  <p class="category">category</p>
-                  <p class="title">title</p>
-                  <p class="brand">brand</p>
-                    <div class="rating-line">
-                      <div class="rating-stars">
-                        <div class="stars-wrap">
-                          <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r1">
-                          <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r2">
-                          <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r3">
-                          <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r4">
-                          <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r5">
-                        </div>
-                        <p class="rating-nums">4.5</p>
-                      </div>
-                      </div>
-                      <p class="desctiption">Amet culpa reprehenderit et erehenderit et excepteur. Laborum voluptate eu incididunt laboris qui irure est velit et adipisicing officia cillum duis. Non proident sint occaecat culpa. Labore aute voluptate id ullamco. Magna et reprehenderit aute anim ipsum proident esse irure cupidatat velit nulla Lorem aliquip.</p>
-                  </div>
-                </div>
-                <hr>
-              </div>
-              <div class="item-count">
-                <div class="prod-count-control">
-                  <div class="prod-count">—</div>
-                  <div class="prod-count-number">0</div>
-                  <div class="prod-count">+</div>
-                </div>
-                <div class="stock">152 in stock</div>
-              </div>
-              <div class="item-sum-col">
-                <div class="price-wrap">
-                  <p class="price">price ₴</p>
-                  <p class="reduced-price">1250 ₴</p>
-                  </div>
-                  <div class="continue-btn">
-                    <a href="/" class="continue-btn-text">Continue shopping</a>
-                  </div>
-              </div>
-            </div>
+          <div id="items-holder" class="all-items-holder">
           </div>
           <div class="coupon-block">
             <div></div>
@@ -102,24 +78,89 @@ function generateContentCart() {
           </div>
           <section class="summary-block">
             <h2 class="summary-title">Summary</h2>
-            <p class="total-prod-count">Products count:<span class="total-span total-count-num">1</span></p>
-            <p class="total-prod-sum">Total:<span class="total-span total-sum-num">15000 ₴</span></p>
+            <p class="total-prod-count">Products count:<span class="total-span total-count-num">${
+                productsArray().length
+            }</span></p>
+            <p class="total-prod-sum">Total:<span class="total-span total-sum-num">${totalSum()} ₴</span></p>
             <button class="cart-order-btn">Place order</button>
           </section>
         </div>
       </div>
     </div>
     `;
-
-    const title = document.createElement('h1');
-    title.textContent = 'Cart';
-
-    const link = document.createElement('a');
-    link.text = 'Catalog';
-    link.href = '/';
-    link.addEventListener('click', route);
+    const cartBody = mainBlock.querySelector('.all-items-holder');
+    if (cartBody instanceof Element) {
+        const products = productsInCart(productsArray());
+        if (products.length > 0) {
+            products.map((obj: ProductCard) => cartBody.append(itemsGenerator(obj)));
+        }
+        if (products.length === 0) {
+            const emptyCartDiv = document.createElement('div') as HTMLDivElement;
+            emptyCartDiv.className = 'empty-cart-div';
+            const emptyCartImg = document.createElement('img') as HTMLImageElement;
+            emptyCartImg.setAttribute('src', '../../../assets/icons/empty-cart.svg');
+            emptyCartDiv.append(emptyCartImg);
+            cartBody.append(emptyCartDiv);
+        }
+    }
 
     return mainBlock;
 }
+
+const itemsGenerator = (obj: ProductCard) => {
+    const item = document.createElement('div') as HTMLElement;
+    item.className = 'one-item-block';
+    item.innerHTML = `
+            <div class="item-card">
+              <div class="prod-card-inner">
+                <div class="image-block">
+                  <div class="discount">${obj.discountPercentage} %</div>
+                  <div class="prod-img-wrap">
+                    <div class="prod-img" style="background-image: url(${obj.thumbnail})">
+                      <img src="/assets/icons/search-plus.svg" alt="more info icon" class="img-more-info-icon">
+                    </div>
+                  </div>
+                </div>
+                <div class="text-block">
+                <p class="category">${obj.category}</p>
+                <p class="title">${obj.title}</p>
+                <p class="brand">${obj.brand}</p>
+                  <div class="rating-line">
+                    <div class="rating-stars">
+                      <div class="stars-wrap">
+                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r1">
+                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r2">
+                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r3">
+                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r4">
+                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r5">
+                      </div>
+                      <p class="rating-nums">${obj.rating}</p>
+                    </div>
+                    </div>
+                    <p class="desctiption">${obj.description}</p>
+                </div>
+              </div>
+              <hr>
+            </div>
+            <div class="item-count">
+              <div class="prod-count-control">
+                <div class="prod-count">—</div>
+                <div class="prod-count-number">0</div>
+                <div class="prod-count">+</div>
+                <div class="stock">${obj.stock} in stock</div>
+              </div>
+            </div>
+            <div class="item-sum-col">
+              <div class="price-wrap">
+                <p class="price">${obj.price} ₴</p>
+                <p class="reduced-price">${Math.round(obj.price - (obj.discountPercentage / 100) * obj.price)} ₴</p>
+                </div>
+                <div class="continue-btn">
+                  <a href="/" class="continue-btn-text">Continue shopping</a>
+                </div>
+            </div>
+            `;
+    return item;
+};
 
 export default generateContentCart;

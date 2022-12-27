@@ -2,6 +2,7 @@ import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, CartProduct } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
+import { refreshCartHead } from '../cart/index';
 
 const currentProduct: ProductCard = dataProducts[0];
 
@@ -118,6 +119,7 @@ function generateBtnsBlock() {
             btnAddRem.textContent = 'Add to cart';
         }
         localStorage.setItem('cartList', JSON.stringify(cartList));
+        refreshCartHead();
     });
 
     const btnBuyNow = document.createElement('button');
@@ -134,6 +136,7 @@ function generateBtnsBlock() {
             });
             localStorage.setItem('cartList', JSON.stringify(cartList));
         }
+        refreshCartHead();
         window.history.pushState({}, '', '/cart');
         handleLocation();
     });
