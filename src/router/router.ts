@@ -18,13 +18,16 @@ const routes: { [index: string]: () => HTMLElement } = {
     '404': generateContent404,
     '/': generateContentCatalog,
     '/cart': generateContentCart,
-    '/details': generateContentDetails,
+    '/details/': generateContentDetails,
 };
 
 const handleLocation = async () => {
     const path = window.location.pathname;
     console.log(window.location.search.substring(1));
-    const route = routes[path] || routes['404'];
+    let route = routes[path] || routes['404'];
+    if (path.match(/^\/details\//) && path.indexOf('/', 1) === path.lastIndexOf('/')) {
+        route = routes['/details/'];
+    }
     const mainPage = document.getElementById('main-page');
     if (mainPage instanceof Element) {
         mainPage.innerHTML = '';

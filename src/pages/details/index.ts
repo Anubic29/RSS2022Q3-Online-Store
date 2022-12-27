@@ -3,95 +3,105 @@ import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, CartProduct } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
 
-const currentProduct: ProductCard = dataProducts[0];
-
 function generateContentDetails() {
     console.log(route);
+    const path = window.location.pathname;
+    const idProd = path.substring(path.lastIndexOf('/') + 1);
+    const currentProduct: ProductCard | undefined = dataProducts.find((prodCard) => prodCard.id === +idProd);
+
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-details';
 
-    mainBlock.innerHTML = `
-    <div class="main-inner">
-      <ul class="path">
-        <li class="path-step path-step-store">
-            <a href="/" onclick="route()">Store</a>
-        </li>
-        <li class="path-step path-step-category">${currentProduct.category}</li>
-        <li class="path-step path-step-brand">${currentProduct.brand}</li>
-        <li class="path-step path-step-product">${currentProduct.title}</li>
-      </ul>
-      <div class="details-block">
-        <div class="title-block">
-          <h2 class="title">${currentProduct.title}</h2>
-          <div class="rating-block">
-            <div class="rating-stars">
-              <img src="../assets/icons/rate-star.svg" alt="">
-              <img src="../assets/icons/rate-star.svg" alt="">
-              <img src="../assets/icons/rate-star.svg" alt="">
-              <img src="../assets/icons/rate-star.svg" alt="">
-              <img src="../assets/icons/rate-star.svg" alt="">
+    if (currentProduct !== undefined) {
+        mainBlock.innerHTML = `
+        <div class="main-inner">
+        <ul class="path">
+            <li class="path-step path-step-store">
+                <a href="/" onclick="route()">Store</a>
+            </li>
+            <li class="path-step path-step-category">${currentProduct.category}</li>
+            <li class="path-step path-step-brand">${currentProduct.brand}</li>
+            <li class="path-step path-step-product">${currentProduct.title}</li>
+        </ul>
+        <div class="details-block">
+            <div class="title-block">
+            <h2 class="title">${currentProduct.title}</h2>
+            <div class="rating-block">
+                <div class="rating-stars">
+                <img src="../assets/icons/rate-star.svg" alt="">
+                <img src="../assets/icons/rate-star.svg" alt="">
+                <img src="../assets/icons/rate-star.svg" alt="">
+                <img src="../assets/icons/rate-star.svg" alt="">
+                <img src="../assets/icons/rate-star.svg" alt="">
+                </div>
+                <p class="rating">Rating: ${currentProduct.rating}</p>
             </div>
-            <p class="rating">Rating: ${currentProduct.rating}</p>
-          </div>
+            </div>
+            <div class="product-content-block">
+            <div class="image-block">
+                <img class="main-image" src="${currentProduct.images[0]}" alt=""></img>
+                <ul class="images-list"></ul>
+            </div>
+            <div class="info-block">
+                <ul class="info-list">
+                <li>Category: <span>${currentProduct.category}</span></li>
+                <li>Brand: <span>${currentProduct.brand}</span></li>
+                <li>Discount Percentage: <span>${currentProduct.discountPercentage}</span></li>
+                <li>Stock: <span>${currentProduct.stock}</span></li>
+                </ul>
+                <div class="price-block">
+                <h2 class="price">$${currentProduct.price}</h2>
+                <h2 class="cost">$${Math.round(
+                    currentProduct.price - (currentProduct.discountPercentage / 100) * currentProduct.price
+                )}</h2>
+                </div>
+                <div class="description-block">
+                <h2 class="info-title">Description:</h2>
+                <hr>
+                <p class="description">${currentProduct.description}</p>
+                </div>
+            </div>
+            </div>
         </div>
-        <div class="product-content-block">
-          <div class="image-block">
-            <img class="main-image" src="${currentProduct.images[0]}" alt=""></img>
-            <ul class="images-list"></ul>
-          </div>
-          <div class="info-block">
-            <ul class="info-list">
-              <li>Category: <span>${currentProduct.category}</span></li>
-              <li>Brand: <span>${currentProduct.brand}</span></li>
-              <li>Discount Percentage: <span>${currentProduct.discountPercentage}</span></li>
-              <li>Stock: <span>${currentProduct.stock}</span></li>
-            </ul>
-            <div class="price-block">
-              <h2 class="price">$${currentProduct.price}</h2>
-              <h2 class="cost">$${Math.round(
-                  currentProduct.price - (currentProduct.discountPercentage / 100) * currentProduct.price
-              )}</h2>
-            </div>
-            <div class="description-block">
-              <h2 class="info-title">Description:</h2>
-              <hr>
-              <p class="description">${currentProduct.description}</p>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-    `;
+        `;
 
-    const imageBlock = mainBlock.querySelector('.image-block') as Element;
+        const imageBlock = mainBlock.querySelector('.image-block') as Element;
 
-    const mainImage = mainBlock.querySelector('.main-image') as HTMLImageElement;
-    const imagesList = imageBlock.querySelector('.images-list');
-    if (imagesList instanceof Element) {
-        currentProduct.images.forEach((image) => {
-            const li = document.createElement('li');
+        const mainImage = mainBlock.querySelector('.main-image') as HTMLImageElement;
+        const imagesList = imageBlock.querySelector('.images-list');
+        if (imagesList instanceof Element) {
+            currentProduct.images.forEach((image) => {
+                const li = document.createElement('li');
 
-            const img = document.createElement('img');
-            img.src = image;
-            img.alt = '';
-            img.addEventListener('mouseover', () => {
-                mainImage.src = image;
+                const img = document.createElement('img');
+                img.src = image;
+                img.alt = '';
+                img.addEventListener('mouseover', () => {
+                    mainImage.src = image;
+                });
+                li.append(img);
+
+                imagesList.append(li);
             });
-            li.append(img);
+        }
 
-            imagesList.append(li);
-        });
-    }
-
-    const priceBlock = mainBlock.querySelector('.price-block');
-    if (priceBlock instanceof Element) {
-        priceBlock.append(generateBtnsBlock());
+        const priceBlock = mainBlock.querySelector('.price-block');
+        if (priceBlock instanceof Element) {
+            priceBlock.append(generateBtnsBlock(currentProduct));
+        }
+    } else {
+        mainBlock.innerHTML = `
+        <div class="main-inner">
+            <h1 class="not-found">Product number ${idProd} is not found</h1>
+        </div>
+        `;
     }
 
     return mainBlock;
 }
 
-function generateBtnsBlock() {
+function generateBtnsBlock(currentProduct: ProductCard) {
     const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
 
     const btnsBlock = document.createElement('div');

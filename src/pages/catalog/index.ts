@@ -114,7 +114,7 @@ function generateProductCard(data: ProductCard) {
     const prodImg = card.querySelector('.prod-img');
     if (prodImg instanceof Element) {
         prodImg.addEventListener('click', () => {
-            window.history.pushState({}, '', '/details');
+            window.history.pushState({}, '', `/details/${data.id}`);
             handleLocation();
         });
     }
@@ -122,7 +122,7 @@ function generateProductCard(data: ProductCard) {
     const btnMoreInfo = card.querySelector('.card-btn-info');
     if (btnMoreInfo instanceof Element) {
         btnMoreInfo.addEventListener('click', () => {
-            window.history.pushState({}, '', '/details');
+            window.history.pushState({}, '', `/details/${data.id}`);
             handleLocation();
         });
     }
