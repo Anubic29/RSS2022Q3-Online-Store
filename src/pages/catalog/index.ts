@@ -7,6 +7,8 @@ import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/4-dots.svg';
 import '../../../assets/icons/5-dots-g.svg';
 
+let mainBlockG: HTMLDivElement;
+
 function generateContentCatalog() {
     console.log(route);
     const mainBlock = document.createElement('div');
@@ -53,12 +55,9 @@ function generateContentCatalog() {
     </div>
     `;
 
-    const cardsArea = mainBlock.querySelector('.cards-area');
-    if (cardsArea instanceof Element) {
-        dataProducts.forEach((elem) => {
-            cardsArea.append(generateProductCard(elem));
-        });
-    }
+    mainBlockG = mainBlock;
+
+    fillProductList(dataProducts);
 
     const filters = mainBlock.querySelector('.filter-panel');
     if (filters instanceof Element) {
@@ -66,6 +65,16 @@ function generateContentCatalog() {
     }
 
     return mainBlock;
+}
+
+function fillProductList(products: ProductCard[]) {
+    const cardsArea = mainBlockG.querySelector('.cards-area');
+    if (cardsArea instanceof Element) {
+        cardsArea.innerHTML = '';
+        products.forEach((product) => {
+            cardsArea.append(generateProductCard(product));
+        });
+    }
 }
 
 function generateProductCard(data: ProductCard) {
