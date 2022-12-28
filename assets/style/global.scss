@@ -159,21 +159,6 @@ img {
   flex-direction: column;
 }
 
-.head-line {
-  display: grid;
-  grid-template-columns: repeat(6, 250px);
-}
-
-.under-head-line {
-  margin-top: 20px;
-  margin-bottom: 60px;
-  display: flex;
-}
-.cards-area {
-  display: grid;
-  grid-template-columns: repeat(5, 250px);
-}
-
 .footer {
   background-color: black;
   display: flex;
