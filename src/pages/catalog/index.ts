@@ -8,6 +8,8 @@ import '../../../assets/icons/4-dots.svg';
 import '../../../assets/icons/5-dots-g.svg';
 
 let mainBlockG: HTMLDivElement;
+const parameters: { [key: string]: string[] } = {};
+const orderParams: string[] = [];
 
 function generateContentCatalog() {
     console.log(route);
@@ -202,6 +204,10 @@ function createCheckbox(value: string, type: string, amount: number) {
     input.type = 'checkbox';
     input.value = value;
     input.name = `filter-${type}`;
+    input.addEventListener('change', (event) => {
+        const elem = event.target as HTMLInputElement;
+        setFilterCheckBox(type, value, elem.checked);
+    });
     label.append(input);
 
     const span = document.createElement('span');
@@ -214,6 +220,53 @@ function createCheckbox(value: string, type: string, amount: number) {
     label.append(spanAmount);
 
     return label;
+}
+
+function setFilterCheckBox(key: string, value: string, checked: boolean) {
+    if (checked) {
+        if (parameters[key] === undefined) {
+            parameters[key] = [value];
+            orderParams.push(key);
+        } else {
+            parameters[key].push(value);
+        }
+    } else {
+        if (parameters[key].length > 1) {
+            parameters[key].splice(parameters[key].indexOf(value), 1);
+        } else {
+            delete parameters[key];
+            orderParams.splice(orderParams.indexOf(key), 1);
+        }
+    }
+    fillProductList(filterProductList());
+}
+
+function filterProductList() {
+    let result: ProductCard[] = dataProducts;
+    let temp: ProductCard[];
+
+    orderParams.forEach((param) => {
+        switch (param) {
+            case 'category':
+                temp = [];
+                parameters['category'].forEach((category) => {
+                    temp.push(...result.filter((obj) => obj.category === category));
+                });
+                result = temp;
+                break;
+            case 'brand':
+                temp = [];
+                parameters['brand'].forEach((brand) => {
+                    temp.push(...result.filter((obj) => obj.brand === brand));
+                });
+                result = temp;
+                break;
+            default:
+                break;
+        }
+    });
+
+    return result;
 }
 
 export default generateContentCatalog;
