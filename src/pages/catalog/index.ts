@@ -1,6 +1,6 @@
 import { route } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { ProductCard } from '../../types/types';
+import type { ProductCard, ParamsObjGenerate } from '../../types/types';
 
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
@@ -11,7 +11,9 @@ let mainBlockG: HTMLDivElement;
 const parameters: { [key: string]: string[] } = {};
 const orderParams: string[] = [];
 
-function generateContentCatalog() {
+function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string[]) {
+    console.log(params);
+    console.log(orderParams);
     console.log(route);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';

@@ -17,4 +17,8 @@ type CartProduct = {
     count: number;
 };
 
-export type { ProductCard, CartProduct };
+type ParamsObjGenerate = {
+    [key: string]: string | string[];
+};
+
+export type { ProductCard, CartProduct, ParamsObjGenerate };
