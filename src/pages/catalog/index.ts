@@ -239,7 +239,13 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
             orderParams.splice(orderParams.indexOf(key), 1);
         }
     }
+    generateQueryParameters();
     fillProductList(filterProductList());
+}
+
+async function generateQueryParameters() {
+    const res = orderParams.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+    window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
 function filterProductList() {
