@@ -229,7 +229,56 @@ function createTwoRange(min: number, max: number) {
     </div>
     `;
 
+    const paragValue1 = dualSlider.querySelector('.value-1') as HTMLElement;
+    const paragValue2 = dualSlider.querySelector('.value-2') as HTMLElement;
+
+    const slider1 = dualSlider.querySelector('.range-1') as HTMLInputElement;
+    const slider2 = dualSlider.querySelector('.range-2') as HTMLInputElement;
+
+    const minPercent = getPercentBetweenTwoValues(min, max, min);
+    const maxPercent = getPercentBetweenTwoValues(min, max, max);
+
+    slider2.setAttribute(
+        'style',
+        `background: linear-gradient(to right, #C6C6C6, #C6C6C6 ${minPercent}%, #46C2CB ${minPercent}%, #46C2CB ${maxPercent}%, #C6C6C6 ${maxPercent}%);`
+    );
+
+    slider1.addEventListener('input', () => {
+        inputEventForDualSlider(slider1, slider2, min, max, paragValue1, paragValue2);
+    });
+
+    slider2.addEventListener('input', () => {
+        inputEventForDualSlider(slider1, slider2, min, max, paragValue1, paragValue2);
+    });
+
     return dualSlider;
+}
+
+function getPercentBetweenTwoValues(min: number, max: number, value: number) {
+    return Math.round((value / (max + min)) * 100);
+}
+
+function inputEventForDualSlider(
+    slider1: HTMLInputElement,
+    slider2: HTMLInputElement,
+    min: number,
+    max: number,
+    paragValue1: HTMLElement,
+    paragValue2: HTMLElement
+) {
+    const minValue = Math.min(+slider1.value, +slider2.value);
+    const maxValue = Math.max(+slider1.value, +slider2.value);
+
+    paragValue1.textContent = `${minValue}`;
+    paragValue2.textContent = `${maxValue}`;
+
+    const minPercent = getPercentBetweenTwoValues(min, max, minValue);
+    const maxPercent = getPercentBetweenTwoValues(min, max, maxValue);
+
+    slider2.setAttribute(
+        'style',
+        `background: linear-gradient(to right, #C6C6C6, #C6C6C6 ${minPercent}%, #46C2CB ${minPercent}%, #46C2CB ${maxPercent}%, #C6C6C6 ${maxPercent}%);`
+    );
 }
 
 function setFilterCheckBox(key: string, value: string, checked: boolean) {
