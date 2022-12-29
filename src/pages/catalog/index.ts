@@ -195,6 +195,7 @@ function generateFilterPanel() {
 function createCheckbox(value: string, type: string, amount: number) {
     const label = document.createElement('label');
     label.className = 'checkbox-container';
+    label.dataset.value = value;
 
     const spanText = document.createElement('span');
     spanText.textContent = value;
@@ -266,7 +267,25 @@ function filterProductList() {
         }
     });
 
+    adjustFilterAmounts(result);
+
     return result;
+}
+
+async function adjustFilterAmounts(list: ProductCard[]) {
+    const filterPanel = mainBlockG.querySelector('.filter-panel') as HTMLDivElement;
+    const filterCategoryList = filterPanel.querySelector('.filter-category-list') as HTMLDivElement;
+    const filterBrandList = filterPanel.querySelector('.filter-brand-list') as HTMLDivElement;
+
+    ([...filterCategoryList.childNodes] as HTMLLabelElement[]).forEach((label: HTMLLabelElement) => {
+        const amount = label.querySelector('.amount') as Element;
+        amount.textContent = `(${list.filter((elem) => elem.category === label.dataset.value).length})`;
+    });
+
+    ([...filterBrandList.childNodes] as HTMLLabelElement[]).forEach((label: HTMLLabelElement) => {
+        const amount = label.querySelector('.amount') as Element;
+        amount.textContent = `(${list.filter((elem) => elem.brand === label.dataset.value).length})`;
+    });
 }
 
 export default generateContentCatalog;
