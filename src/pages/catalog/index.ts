@@ -322,32 +322,17 @@ function filterProductList() {
     orderParams.forEach((param) => {
         switch (param) {
             case 'category':
-                temp = [];
-                parameters['category'].forEach((category) => {
-                    temp.push(...result.filter((obj) => obj.category === category));
-                });
-                result = temp;
-                break;
             case 'brand':
                 temp = [];
-                parameters['brand'].forEach((brand) => {
-                    temp.push(...result.filter((obj) => obj.brand === brand));
+                parameters[param].forEach((value) => {
+                    temp.push(...result.filter((obj) => obj[param] === value));
                 });
                 result = temp;
                 break;
             case 'price':
-                temp = [
-                    ...result.filter(
-                        (obj) => obj.price > +parameters['price'][0] && obj.price < +parameters['price'][1]
-                    ),
-                ];
-                result = temp;
-                break;
             case 'stock':
                 temp = [
-                    ...result.filter(
-                        (obj) => obj.stock > +parameters['stock'][0] && obj.stock < +parameters['stock'][1]
-                    ),
+                    ...result.filter((obj) => obj[param] > +parameters[param][0] && obj[param] < +parameters[param][1]),
                 ];
                 result = temp;
                 break;
