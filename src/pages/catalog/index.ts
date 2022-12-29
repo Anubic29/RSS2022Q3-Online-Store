@@ -128,6 +128,8 @@ function generateProductCard(data: ProductCard) {
 function generateFilterPanel() {
     const categoryValues = [...new Set(dataProducts.map((obj) => obj.category))];
     const brandValues = [...new Set(dataProducts.map((obj) => obj.brand))];
+    const priceValues = dataProducts.map((obj) => obj.price);
+    const stockValues = dataProducts.map((obj) => obj.stock);
 
     const filter = document.createElement('div');
     filter.className = 'filter-inner';
@@ -143,31 +145,9 @@ function generateFilterPanel() {
         </div>
         <div class="filter-price filter-feature-2-range">
             <h2 class="filter-title">Price<h2>
-            <div class="dual-slider-container">
-                <div class="values-container">
-                    <p class="value-1">10</p>
-                    <p>-</p>
-                    <p class="value-2">80</p>
-                </div>
-                <div class="sliders-control">
-                    <input type="range" value="20" min="0" max="100">
-                    <input type="range" value="80" min="0" max="100">
-                </div>
-            </div>
         </div>
         <div class="filter-stock filter-feature-2-range">
             <h2 class="filter-title">Stock<h2>
-            <div class="dual-slider-container">
-                <div class="values-container">
-                    <p class="value-1">10</p>
-                    <p>-</p>
-                    <p class="value-2">80</p>
-                </div>
-                <div class="sliders-control">
-                    <input type="range" value="20" min="0" max="100">
-                    <input type="range" value="80" min="0" max="100">
-                </div>
-            </div>
         </div>
     `;
 
@@ -187,6 +167,16 @@ function generateFilterPanel() {
                 createCheckbox(value, 'brand', dataProducts.filter((obj) => obj.brand === value).length)
             );
         });
+    }
+
+    const filterPrice = filter.querySelector('.filter-price.filter-feature-2-range');
+    if (filterPrice instanceof Element) {
+        filterPrice.append(createTwoRange(Math.min(...priceValues), Math.max(...priceValues)));
+    }
+
+    const filterStock = filter.querySelector('.filter-stock.filter-feature-2-range');
+    if (filterStock instanceof Element) {
+        filterStock.append(createTwoRange(Math.min(...stockValues), Math.max(...stockValues)));
     }
 
     return filter;
@@ -221,6 +211,25 @@ function createCheckbox(value: string, type: string, amount: number) {
     label.append(spanAmount);
 
     return label;
+}
+
+function createTwoRange(min: number, max: number) {
+    const dualSlider = document.createElement('div');
+    dualSlider.className = 'dual-slider-container';
+
+    dualSlider.innerHTML = `
+    <div class="values-container">
+        <p class="value-1">${min}</p>
+        <p>-</p>
+        <p class="value-2">${max}</p>
+    </div>
+    <div class="sliders-control">
+        <input class="range-1" type="range" value="${min}" min="${min}" max="${max}">
+        <input class="range-2" type="range" value="${max}" min="${min}" max="${max}">
+    </div>
+    `;
+
+    return dualSlider;
 }
 
 function setFilterCheckBox(key: string, value: string, checked: boolean) {
