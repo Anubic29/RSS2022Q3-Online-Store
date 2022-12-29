@@ -46,7 +46,7 @@ function convertQueryParams(strParams: string): [ParamsObjGenerate, string[]] {
                     if (value.includes('↕')) {
                         paramsObj[name] = value.split('↕');
                     } else {
-                        paramsObj[name] = value;
+                        paramsObj[name] = [value];
                     }
                     orderParams.push(name);
                 }

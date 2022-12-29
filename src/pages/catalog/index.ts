@@ -8,12 +8,12 @@ import '../../../assets/icons/4-dots.svg';
 import '../../../assets/icons/5-dots-g.svg';
 
 let mainBlockG: HTMLDivElement;
-const parameters: { [key: string]: string[] } = {};
-const orderParams: string[] = [];
+let parameters: ParamsObjGenerate;
+let orderParameters: string[];
 
 function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string[]) {
-    console.log(params);
-    console.log(orderParams);
+    parameters = params ? params : {};
+    orderParameters = orderParams ? orderParams : [];
     console.log(route);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';
@@ -61,12 +61,12 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
 
     mainBlockG = mainBlock;
 
-    fillProductList(dataProducts);
-
     const filters = mainBlock.querySelector('.filter-panel');
     if (filters instanceof Element) {
         filters.append(generateFilterPanel());
     }
+
+    fillProductList(filterProductList());
 
     return mainBlock;
 }
@@ -173,12 +173,28 @@ function generateFilterPanel() {
 
     const filterPrice = filter.querySelector('.filter-price.filter-feature-2-range');
     if (filterPrice instanceof Element) {
-        filterPrice.append(createTwoRange(Math.min(...priceValues), Math.max(...priceValues), 'price'));
+        filterPrice.append(
+            createTwoRange(
+                Math.min(...priceValues),
+                Math.max(...priceValues),
+                'price',
+                parameters['price'] ? +parameters['price'][0] : parameters['price'],
+                parameters['price'] ? +parameters['price'][1] : parameters['price']
+            )
+        );
     }
 
     const filterStock = filter.querySelector('.filter-stock.filter-feature-2-range');
     if (filterStock instanceof Element) {
-        filterStock.append(createTwoRange(Math.min(...stockValues), Math.max(...stockValues), 'stock'));
+        filterStock.append(
+            createTwoRange(
+                Math.min(...stockValues),
+                Math.max(...stockValues),
+                'stock',
+                parameters['stock'] ? +parameters['stock'][0] : parameters['stock'],
+                parameters['stock'] ? +parameters['stock'][1] : parameters['stock']
+            )
+        );
     }
 
     return filter;
@@ -197,6 +213,7 @@ function createCheckbox(value: string, type: string, amount: number) {
     input.type = 'checkbox';
     input.value = value;
     input.name = `filter-${type}`;
+    input.checked = parameters[type] && parameters[type].includes(value);
     input.addEventListener('change', (event) => {
         const elem = event.target as HTMLInputElement;
         setFilterCheckBox(type, value, elem.checked);
@@ -215,19 +232,19 @@ function createCheckbox(value: string, type: string, amount: number) {
     return label;
 }
 
-function createTwoRange(min: number, max: number, name: string) {
+function createTwoRange(min: number, max: number, name: string, getMin?: number, getMax?: number) {
     const dualSlider = document.createElement('div');
     dualSlider.className = 'dual-slider-container';
 
     dualSlider.innerHTML = `
     <div class="values-container">
-        <p class="value-1">${min}</p>
+        <p class="value-1">${getMin ?? min}</p>
         <p>-</p>
-        <p class="value-2">${max}</p>
+        <p class="value-2">${getMax ?? max}</p>
     </div>
     <div class="sliders-control">
-        <input class="range-1" type="range" value="${min}" min="${min}" max="${max}">
-        <input class="range-2" type="range" value="${max}" min="${min}" max="${max}">
+        <input class="range-1" type="range" value="${getMin ?? min}" min="${min}" max="${max}">
+        <input class="range-2" type="range" value="${getMax ?? max}" min="${min}" max="${max}">
     </div>
     `;
 
@@ -237,8 +254,8 @@ function createTwoRange(min: number, max: number, name: string) {
     const slider1 = dualSlider.querySelector('.range-1') as HTMLInputElement;
     const slider2 = dualSlider.querySelector('.range-2') as HTMLInputElement;
 
-    const minPercent = getPercentBetweenTwoValues(min, max, min);
-    const maxPercent = getPercentBetweenTwoValues(min, max, max);
+    const minPercent = getPercentBetweenTwoValues(min, max, getMin ?? min);
+    const maxPercent = getPercentBetweenTwoValues(min, max, getMax ?? max);
 
     slider2.setAttribute(
         'style',
@@ -284,7 +301,7 @@ function inputEventForDualSlider(
     );
 
     if (parameters[paramName] == undefined) {
-        orderParams.push(paramName);
+        orderParameters.push(paramName);
     }
     parameters[paramName] = [`${minValue}`, `${maxValue}`];
 
@@ -296,7 +313,7 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
     if (checked) {
         if (parameters[key] === undefined) {
             parameters[key] = [value];
-            orderParams.push(key);
+            orderParameters.push(key);
         } else {
             parameters[key].push(value);
         }
@@ -305,7 +322,7 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
             parameters[key].splice(parameters[key].indexOf(value), 1);
         } else {
             delete parameters[key];
-            orderParams.splice(orderParams.indexOf(key), 1);
+            orderParameters.splice(orderParameters.indexOf(key), 1);
         }
     }
     generateQueryParameters();
@@ -313,7 +330,7 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
 }
 
 async function generateQueryParameters() {
-    const res = orderParams.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+    const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
@@ -321,7 +338,7 @@ function filterProductList() {
     let result: ProductCard[] = dataProducts;
     let temp: ProductCard[];
 
-    orderParams.forEach((param) => {
+    orderParameters.forEach((param) => {
         switch (param) {
             case 'category':
             case 'brand':

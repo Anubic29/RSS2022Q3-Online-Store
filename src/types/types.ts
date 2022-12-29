@@ -18,7 +18,7 @@ type CartProduct = {
 };
 
 type ParamsObjGenerate = {
-    [key: string]: string | string[];
+    [key: string]: string[];
 };
 
 export type { ProductCard, CartProduct, ParamsObjGenerate };
