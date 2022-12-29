@@ -1,4 +1,4 @@
-import { route } from '../../router/router';
+import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, ParamsObjGenerate } from '../../types/types';
 
@@ -58,6 +58,19 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         </div>
     </div>
     `;
+
+    const btnReset = mainBlock.querySelector('.reset-filter') as HTMLDivElement;
+    btnReset.addEventListener('click', () => {
+        window.history.pushState({}, '', '/');
+        handleLocation();
+    });
+
+    const btnCopyLink = mainBlock.querySelector('.copy-link') as HTMLDivElement;
+    btnCopyLink.addEventListener('click', () => {
+        navigator.clipboard.writeText(window.location.href).catch((err) => {
+            console.log('Something went wrong', err);
+        });
+    });
 
     mainBlockG = mainBlock;
 
