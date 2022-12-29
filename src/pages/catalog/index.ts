@@ -7,8 +7,9 @@ import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/4-dots.svg';
 import '../../../assets/icons/5-dots-g.svg';
 
-function generateContentCatalog(params?: ParamsObjGenerate) {
+function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);
+    console.log(orderParams);
     console.log(route);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';

@@ -15,7 +15,7 @@ const route = (event: Event) => {
     handleLocation();
 };
 
-const routes: { [index: string]: (params?: ParamsObjGenerate) => HTMLElement } = {
+const routes: { [index: string]: (params?: ParamsObjGenerate, orderParams?: string[]) => HTMLElement } = {
     '404': generateContent404,
     '/': generateContentCatalog,
     '/cart': generateContentCart,
@@ -30,12 +30,13 @@ const handleLocation = async () => {
     const mainPage = document.getElementById('main-page');
     if (mainPage instanceof Element) {
         mainPage.innerHTML = '';
-        mainPage.append(route(convertQueryParams(window.location.search.substring(1))));
+        mainPage.append(route(...convertQueryParams(window.location.search.substring(1))));
     }
 };
 
-function convertQueryParams(strParams: string) {
+function convertQueryParams(strParams: string): [ParamsObjGenerate, string[]] {
     const paramsObj: ParamsObjGenerate = {};
+    const orderParams: string[] = [];
     if (strParams !== '') {
         decodeURI(strParams)
             .split('&')
@@ -47,10 +48,11 @@ function convertQueryParams(strParams: string) {
                     } else {
                         paramsObj[name] = value;
                     }
+                    orderParams.push(name);
                 }
             });
     }
-    return paramsObj;
+    return [paramsObj, orderParams];
 }
 
 export { route, handleLocation };

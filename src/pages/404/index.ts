@@ -2,8 +2,9 @@ import { route } from '../../router/router';
 import type { ParamsObjGenerate } from '../../types/types';
 import './_style.scss';
 
-function generateContent404(params?: ParamsObjGenerate) {
+function generateContent404(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);
+    console.log(orderParams);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-404';
 

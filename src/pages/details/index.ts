@@ -5,8 +5,9 @@ import '../../../assets/icons/rate-star.svg';
 
 const currentProduct: ProductCard = dataProducts[0];
 
-function generateContentDetails(params?: ParamsObjGenerate) {
+function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);
+    console.log(orderParams);
     console.log(route);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-details';
