@@ -69,7 +69,7 @@ function generateContentCatalog() {
     return mainBlock;
 }
 
-function fillProductList(products: ProductCard[]) {
+async function fillProductList(products: ProductCard[]) {
     const cardsArea = mainBlockG.querySelector('.cards-area');
     if (cardsArea instanceof Element) {
         cardsArea.innerHTML = '';
@@ -171,12 +171,12 @@ function generateFilterPanel() {
 
     const filterPrice = filter.querySelector('.filter-price.filter-feature-2-range');
     if (filterPrice instanceof Element) {
-        filterPrice.append(createTwoRange(Math.min(...priceValues), Math.max(...priceValues)));
+        filterPrice.append(createTwoRange(Math.min(...priceValues), Math.max(...priceValues), 'price'));
     }
 
     const filterStock = filter.querySelector('.filter-stock.filter-feature-2-range');
     if (filterStock instanceof Element) {
-        filterStock.append(createTwoRange(Math.min(...stockValues), Math.max(...stockValues)));
+        filterStock.append(createTwoRange(Math.min(...stockValues), Math.max(...stockValues), 'stock'));
     }
 
     return filter;
@@ -213,7 +213,7 @@ function createCheckbox(value: string, type: string, amount: number) {
     return label;
 }
 
-function createTwoRange(min: number, max: number) {
+function createTwoRange(min: number, max: number, name: string) {
     const dualSlider = document.createElement('div');
     dualSlider.className = 'dual-slider-container';
 
@@ -244,11 +244,11 @@ function createTwoRange(min: number, max: number) {
     );
 
     slider1.addEventListener('input', () => {
-        inputEventForDualSlider(slider1, slider2, min, max, paragValue1, paragValue2);
+        inputEventForDualSlider(slider1, slider2, min, max, paragValue1, paragValue2, name);
     });
 
     slider2.addEventListener('input', () => {
-        inputEventForDualSlider(slider1, slider2, min, max, paragValue1, paragValue2);
+        inputEventForDualSlider(slider1, slider2, min, max, paragValue1, paragValue2, name);
     });
 
     return dualSlider;
@@ -264,7 +264,8 @@ function inputEventForDualSlider(
     min: number,
     max: number,
     paragValue1: HTMLElement,
-    paragValue2: HTMLElement
+    paragValue2: HTMLElement,
+    paramName: string
 ) {
     const minValue = Math.min(+slider1.value, +slider2.value);
     const maxValue = Math.max(+slider1.value, +slider2.value);
@@ -279,6 +280,14 @@ function inputEventForDualSlider(
         'style',
         `background: linear-gradient(to right, #C6C6C6, #C6C6C6 ${minPercent}%, #46C2CB ${minPercent}%, #46C2CB ${maxPercent}%, #C6C6C6 ${maxPercent}%);`
     );
+
+    if (parameters[paramName] == undefined) {
+        orderParams.push(paramName);
+    }
+    parameters[paramName] = [`${minValue}`, `${maxValue}`];
+
+    generateQueryParameters();
+    fillProductList(filterProductList());
 }
 
 function setFilterCheckBox(key: string, value: string, checked: boolean) {
@@ -324,6 +333,22 @@ function filterProductList() {
                 parameters['brand'].forEach((brand) => {
                     temp.push(...result.filter((obj) => obj.brand === brand));
                 });
+                result = temp;
+                break;
+            case 'price':
+                temp = [
+                    ...result.filter(
+                        (obj) => obj.price > +parameters['price'][0] && obj.price < +parameters['price'][1]
+                    ),
+                ];
+                result = temp;
+                break;
+            case 'stock':
+                temp = [
+                    ...result.filter(
+                        (obj) => obj.stock > +parameters['stock'][0] && obj.stock < +parameters['stock'][1]
+                    ),
+                ];
                 result = temp;
                 break;
             default:
