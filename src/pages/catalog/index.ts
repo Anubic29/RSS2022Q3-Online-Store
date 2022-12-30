@@ -66,10 +66,19 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     });
 
     const btnCopyLink = mainBlock.querySelector('.copy-link') as HTMLDivElement;
+    const spanBtnCopyLink = btnCopyLink.querySelector('.copy-span') as HTMLSpanElement;
     btnCopyLink.addEventListener('click', () => {
-        navigator.clipboard.writeText(window.location.href).catch((err) => {
-            console.log('Something went wrong', err);
-        });
+        if (!btnCopyLink.classList.contains('active-copy-link')) {
+            navigator.clipboard.writeText(window.location.href).catch((err) => {
+                console.log('Something went wrong', err);
+            });
+            btnCopyLink.classList.add('active-copy-link');
+            spanBtnCopyLink.textContent = 'copied!';
+            setTimeout(() => {
+                btnCopyLink.classList.remove('active-copy-link');
+                spanBtnCopyLink.textContent = 'copy link';
+            }, 1000);
+        }
     });
 
     mainBlockG = mainBlock;
