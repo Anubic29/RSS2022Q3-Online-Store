@@ -35,7 +35,7 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
             </div>
         </div>
         <p class="prods-per-page">Products on the page:
-            <span class="prods-count">${dataProducts.length}</span>
+            <span class="prods-count"></span>
         </p>
         <div class="sort-by-wrap">
             <select name="sort-variant" class="sort-by-select">
@@ -91,6 +91,11 @@ async function fillProductList(products: ProductCard[]) {
         products.forEach((product) => {
             cardsArea.append(generateProductCard(product));
         });
+        if (products.length === 0) {
+            const hTitle = document.createElement('h1');
+            hTitle.textContent = 'No products found';
+            cardsArea.append(hTitle);
+        }
     }
 }
 
@@ -415,6 +420,11 @@ async function adjustFilterAmounts(list: ProductCard[]) {
             label.classList.remove('actual');
         }
     });
+
+    const productsAmount = mainBlockG.querySelector('.prods-count');
+    if (productsAmount instanceof Element) {
+        productsAmount.textContent = `${list.length}`;
+    }
 }
 
 export default generateContentCatalog;
