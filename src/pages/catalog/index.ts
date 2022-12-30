@@ -237,10 +237,19 @@ function createCheckbox(value: string, type: string, amount: number) {
     span.className = 'checkmark';
     label.append(span);
 
-    const spanAmount = document.createElement('span');
-    spanAmount.className = 'amount';
-    spanAmount.textContent = `(${amount})`;
-    label.append(spanAmount);
+    const amountBlock = document.createElement('span');
+    amountBlock.className = 'amount-block';
+
+    const currAmount = document.createElement('span');
+    currAmount.className = 'curr-amount';
+
+    const genAmount = document.createElement('span');
+    genAmount.className = 'gen-amount';
+    genAmount.textContent = `${amount}`;
+
+    amountBlock.append('(', currAmount, '/', genAmount, ')');
+
+    label.append(amountBlock);
 
     return label;
 }
@@ -386,13 +395,25 @@ async function adjustFilterAmounts(list: ProductCard[]) {
     const filterBrandList = filterPanel.querySelector('.filter-brand-list') as HTMLDivElement;
 
     ([...filterCategoryList.childNodes] as HTMLLabelElement[]).forEach((label: HTMLLabelElement) => {
-        const amount = label.querySelector('.amount') as Element;
-        amount.textContent = `(${list.filter((elem) => elem.category === label.dataset.value).length})`;
+        const amount = list.filter((elem) => elem.category === label.dataset.value).length;
+        const spanAmount = label.querySelector('.curr-amount') as Element;
+        spanAmount.textContent = `${amount}`;
+        if (amount > 0) {
+            label.classList.add('actual');
+        } else {
+            label.classList.remove('actual');
+        }
     });
 
     ([...filterBrandList.childNodes] as HTMLLabelElement[]).forEach((label: HTMLLabelElement) => {
-        const amount = label.querySelector('.amount') as Element;
-        amount.textContent = `(${list.filter((elem) => elem.brand === label.dataset.value).length})`;
+        const amount = list.filter((elem) => elem.brand === label.dataset.value).length;
+        const spanAmount = label.querySelector('.curr-amount') as Element;
+        spanAmount.textContent = `${amount}`;
+        if (amount > 0) {
+            label.classList.add('actual');
+        } else {
+            label.classList.remove('actual');
+        }
     });
 }
 
