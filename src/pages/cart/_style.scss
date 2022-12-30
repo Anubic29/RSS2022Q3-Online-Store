@@ -73,6 +73,7 @@
   .one-item-block {
     display: grid;
     grid-template-columns: 4fr 1fr 1fr;
+    margin-top: 40px;
   }
 
   .prod-card-inner {
@@ -314,4 +315,19 @@
   .empty-cart-div {
     text-align: center;
   }
+
+  .user-set-count {
+    border: none;
+    text-align: center;
+  }
+
+  .user-set-count:focus-visible {
+    outline: none;
+  }
+
+  .user-set-count::-webkit-outer-spin-button,
+  .user-set-count::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
 }

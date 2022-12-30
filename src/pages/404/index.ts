@@ -1,5 +1,4 @@
 import { route } from '../../router/router';
-import './_style.scss';
 
 function generateContent404() {
     const mainBlock = document.createElement('div');
