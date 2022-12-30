@@ -364,7 +364,9 @@ function filterProductList() {
             case 'price':
             case 'stock':
                 temp = [
-                    ...result.filter((obj) => obj[param] > +parameters[param][0] && obj[param] < +parameters[param][1]),
+                    ...result.filter(
+                        (obj) => obj[param] >= +parameters[param][0] && obj[param] <= +parameters[param][1]
+                    ),
                 ];
                 result = temp;
                 break;
