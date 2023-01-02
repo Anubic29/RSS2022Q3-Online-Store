@@ -1,5 +1,3 @@
-@import '../../../assets/style/_vars.scss';
-
 .card-page {
   max-width: 1500px;
   margin: auto;
@@ -46,17 +44,28 @@
   }
 
   .pagination-number {
-    border: $lightGreyElements 1px solid;
-    border-radius: 5px;
     line-height: 27px;
-    width: 27px;
+    width: 50px;
     text-align: center;
     margin-left: 10px;
     margin-right: 10px;
     cursor: default;
   }
 
-  .pagination-controller {
+  .pagination-number-input {
+    border: $lightGreyElements 1px solid;
+    padding: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+  }
+
+  .pagination-number-input:focus-visible {
+    outline: none;
+  }
+
+  .pagination-container {
     display: flex;
     align-items: center;
   }
@@ -73,9 +82,19 @@
   .one-item-block {
     display: grid;
     grid-template-columns: 4fr 1fr 1fr;
+    position: relative;
+  }
+
+  .one-item-block:has(.item-card) {
     margin-top: 40px;
   }
 
+  .list-market {
+    position: absolute;
+    left: -50px;
+    color: $lightGreyText;
+    font-size: 20px;
+  }
   .prod-card-inner {
     display: flex;
     flex-direction: row;
@@ -95,7 +114,6 @@
     align-items: flex-end;
   }
 
-
   .summary-block {
     margin-top: 70px;
     margin-bottom: 200px;
@@ -109,6 +127,7 @@
   .summary-block *{
     color: $darkGreyText;
   }
+
   .summary-title {
     margin-right: auto;
     margin-left: 20px;
@@ -325,9 +344,12 @@
     outline: none;
   }
 
+  // .pagination-number-input::-webkit-outer-spin-button,
+  // .pagination-number-input::-webkit-inner-spin-button,
   .user-set-count::-webkit-outer-spin-button,
   .user-set-count::-webkit-inner-spin-button {
   appearance: none;
   margin: 0;
 }
+
 }

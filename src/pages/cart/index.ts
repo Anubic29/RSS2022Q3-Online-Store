@@ -1,12 +1,17 @@
 // import { route } from '../../router/router';
+import { setPaginationListeners, setProdsPerPageListeners } from './_pagination';
+import { setCurRange, setPrevRange, paginationLimit, currentPage, pageCount } from './_pagination';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
 import dataProducts from '../../../assets/libs/data';
 import { CartProduct, ProductCard } from '../../types/types';
 import '../../../assets/icons/empty-cart.svg';
 
+const currRange = setCurRange(1);
+const prevRange = setPrevRange(1);
 const cartCountHead = document.getElementById('cart-prod-count') as HTMLElement;
 const totalCountHead = document.getElementById('total-numbers') as HTMLElement;
+export let cartBody: HTMLOListElement;
 const productsArray = (): Array<CartProduct> => JSON.parse(localStorage.getItem('cartList') as string) ?? [];
 const totalSum = () => productsArray().reduce((acc: number, cur: CartProduct) => acc + cur.finalPrice * cur.count, 0);
 const productsInCart = (prodAr: CartProduct[]): Array<ProductCard> => {
@@ -76,24 +81,26 @@ function generateContentCart() {
         </div>
         <div class="items-count counter">
           <span class="items-count-span">items</span>
-          <div class="pagination-controller">
-            <div class="pag-array pag-left">
+          <div class="pagination-container">
+            <div class="pag-array pag-left pagination-button" id="subtr-prods-p-p">
               <img src="../assets/icons/arrow.svg">
             </div>
-            <div class="pagination-number">1</div>
-            <div class="pag-array pag-right">
+            <div class="pagination-number">
+                <input  id="prods-p-p-inp" class="pagination-number-input" type="number" value="${paginationLimit}">
+            </div>
+            <div class="pag-array pag-right pagination-button" id="add-prods-p-p">
               <img src="../assets/icons/arrow.svg">
             </div>
           </div>
         </div>
         <div class="pages-count counter">
           <span class="items-count-span">page</span>
-          <div class="pagination-controller">
-            <div class="pag-array pag-left">
+          <div class="pagination-container">
+            <div class="pag-array pag-left pagination-button" id ="page-prev-button">
               <img src="../assets/icons/arrow.svg">
             </div>
-            <div class="pagination-number">1</div>
-            <div class="pag-array pag-right">
+            <div class="pagination-number" id="page-pagination-number">${currentPage} / ${pageCount}</div>
+            <div class="pag-array pag-right pagination-button" id ="page-next-button">
               <img src="../assets/icons/arrow.svg">
             </div>
           </div>
@@ -101,8 +108,8 @@ function generateContentCart() {
       </nav>
       <div class="cart-body">
         <div class="cart-body-wrap">
-          <div id="items-holder" class="all-items-holder">
-          </div>
+          <ol id="paginated-list" class="all-items-holder">
+          </ol>
           <div class="coupon-block">
             <div></div>
             <form action="#" class="coupon-form">
@@ -123,11 +130,22 @@ function generateContentCart() {
       </div>
     </div>
     `;
-    const cartBody = mainBlock.querySelector('.all-items-holder');
+    const paginationNumber = mainBlock.querySelector('#page-pagination-number') as HTMLDivElement;
+    const nextButton = mainBlock.querySelector('#page-next-button') as HTMLDivElement;
+    const prevButton = mainBlock.querySelector('#page-prev-button') as HTMLDivElement;
+    const prodsPerPage = mainBlock.querySelector('#prods-p-p-inp') as HTMLInputElement;
+    setPaginationListeners(paginationNumber, prevButton, nextButton);
+    setProdsPerPageListeners(prodsPerPage, paginationNumber);
+    cartBody = mainBlock.querySelector('.all-items-holder') as HTMLOListElement;
+    cartBodyGenerator(cartBody, currRange, prevRange);
+    return mainBlock;
+}
+
+export function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev: number) {
     if (cartBody instanceof Element) {
         const products = productsInCart(productsArray());
         if (products.length > 0) {
-            products.map((obj: ProductCard) => cartBody.append(itemsGenerator(obj)));
+            products.map((obj: ProductCard) => cartBody.appendChild(itemsGenerator(obj, cur, prev)));
         }
         if (products.length === 0) {
             const emptyCartDiv = document.createElement('div') as HTMLDivElement;
@@ -137,80 +155,85 @@ function generateContentCart() {
             emptyCartDiv.append(emptyCartImg);
             cartBody.append(emptyCartDiv);
         }
+        const minusProdsOnPage = Array.from(cartBody.querySelectorAll('.prod-count') as NodeListOf<HTMLDivElement>);
+        const countInputs = Array.from(cartBody.querySelectorAll('.user-set-count') as NodeListOf<HTMLInputElement>);
+        setMinusListeners(minusProdsOnPage);
+        setInputsListenes(countInputs);
     }
-
-    const minusProdsOnPage = Array.from(mainBlock.querySelectorAll('.prod-count') as NodeListOf<HTMLDivElement>);
-    const countInputs = Array.from(mainBlock.querySelectorAll('.user-set-count') as NodeListOf<HTMLInputElement>);
-    setMinusListeners(minusProdsOnPage);
-    setInputsListenes(countInputs);
-    return mainBlock;
+    return cartBody;
 }
 
-const itemsGenerator = (obj: ProductCard) => {
-    const item = document.createElement('div') as HTMLElement;
+const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
+    const item = document.createElement('li') as HTMLLIElement;
+    let itemNo = 0;
     const itemInCart = productsArray().filter((item: CartProduct) => {
+        itemNo = productsArray().findIndex((item) => item.id === obj.id) as number;
         if (item.id === obj.id) {
             return item;
         }
     })[0];
-
     item.className = 'one-item-block';
-    item.innerHTML = `
-            <div class="item-card">
-              <div class="prod-card-inner">
-                <div class="image-block">
-                  <div class="discount">-${obj.discountPercentage} %</div>
-                  <div class="prod-img-wrap">
-                    <div class="prod-img" style="background-image: url(${obj.thumbnail})">
-                      <img src="/assets/icons/search-plus.svg" alt="more info icon" class="img-more-info-icon">
+    if (itemNo >= prev && itemNo < cur) {
+        item.innerHTML = `
+                <span class='list-market'>${(itemNo + 1).toString()}</span>
+                <div class="item-card">
+                  <div class="prod-card-inner">
+                    <div class="image-block">
+                      <div class="discount">-${obj.discountPercentage} %</div>
+                      <div class="prod-img-wrap">
+                        <div class="prod-img" style="background-image: url(${obj.thumbnail})">
+                          <img src="/assets/icons/search-plus.svg" alt="more info icon" class="img-more-info-icon">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-block">
+                    <p class="category">${obj.category}</p>
+                    <p class="title">${obj.title}</p>
+                    <p class="brand">${obj.brand}</p>
+                      <div class="rating-line">
+                        <div class="rating-stars">
+                          <div class="stars-wrap">
+                            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r1">
+                            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r2">
+                            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r3">
+                            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r4">
+                            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r5">
+                          </div>
+                          <p class="rating-nums">${obj.rating}</p>
+                        </div>
+                        </div>
+                        <p class="desctiption">${obj.description}</p>
                     </div>
                   </div>
+                  <hr>
                 </div>
-                <div class="text-block">
-                <p class="category">${obj.category}</p>
-                <p class="title">${obj.title}</p>
-                <p class="brand">${obj.brand}</p>
-                  <div class="rating-line">
-                    <div class="rating-stars">
-                      <div class="stars-wrap">
-                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r1">
-                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r2">
-                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r3">
-                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r4">
-                        <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r5">
-                      </div>
-                      <p class="rating-nums">${obj.rating}</p>
+                <div class="item-count">
+                  <div class="prod-count-control" data-id=${obj.id}>
+                    <div id="minus" class="prod-count" data-type="minus" data-id=${obj.id}>—</div>
+                    <div class="prod-count-number">
+                      <input class="user-set-count" data-id="${obj.id}" type="number" min="0" max="${
+            obj.stock
+        }" value="${itemInCart.count}">
                     </div>
+                    <div id="plus" class="prod-count" data-type="plus" data-id=${obj.id}>+</div>
+                    <div class="stock">${obj.stock} in stock</div>
+                  </div>
+                </div>
+                <div class="item-sum-col">
+                  <div class="price-wrap">
+                    <p class="price" data-id=${obj.id}>${obj.price * theProdInCartCount(obj.id)}  ₴</p>
+                    <p class="reduced-price" data-id=${obj.id}>${
+            Math.round(obj.price - (obj.discountPercentage / 100) * obj.price) * theProdInCartCount(obj.id)
+        } ₴</p>
                     </div>
-                    <p class="desctiption">${obj.description}</p>
+                    <div class="continue-btn">
+                      <a href="/" class="continue-btn-text">Continue shopping</a>
+                    </div>
                 </div>
-              </div>
-              <hr>
-            </div>
-            <div class="item-count">
-              <div class="prod-count-control" data-id=${obj.id}>
-                <div id="minus" class="prod-count" data-type="minus" data-id=${obj.id}>—</div>
-                <div class="prod-count-number">
-                  <input class="user-set-count" data-id="${obj.id}" type="number" min="0" max="${obj.stock}" value="${
-        itemInCart.count
-    }">
-                </div>
-                <div id="plus" class="prod-count" data-type="plus" data-id=${obj.id}>+</div>
-                <div class="stock">${obj.stock} in stock</div>
-              </div>
-            </div>
-            <div class="item-sum-col">
-              <div class="price-wrap">
-                <p class="price" data-id=${obj.id}>${obj.price * theProdInCartCount(obj.id)}  ₴</p>
-                <p class="reduced-price" data-id=${obj.id}>${
-        Math.round(obj.price - (obj.discountPercentage / 100) * obj.price) * theProdInCartCount(obj.id)
-    } ₴</p>
-                </div>
-                <div class="continue-btn">
-                  <a href="/" class="continue-btn-text">Continue shopping</a>
-                </div>
-            </div>
-            `;
+                `;
+    } else {
+        item.innerHTML = '';
+    }
     return item;
 };
 
