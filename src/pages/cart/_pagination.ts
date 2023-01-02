@@ -1,7 +1,8 @@
-import { CartProduct } from '../../types/types';
+import { CartProduct, ParamsObjGenerate } from '../../types/types';
 import { cartBody, cartBodyGenerator } from './index';
 export let currentPage = 1;
-export let paginationLimit = 5;
+let userLimit: number | undefined;
+export let paginationLimit = userLimit || 5;
 const productsArray = (): Array<CartProduct> => JSON.parse(localStorage.getItem('cartList') as string) ?? [];
 
 export let pageCount = Math.ceil(productsArray().length / paginationLimit);
@@ -16,7 +17,12 @@ export function setPrevRange(curPage: number) {
 let prevRange: number;
 let currRange: number;
 
+let parameters: ParamsObjGenerate;
+let orderParameters: string[];
+
 export function setPaginationListeners(num: HTMLDivElement, prev: HTMLDivElement, next: HTMLDivElement) {
+    parameters = {};
+    orderParameters = [];
     prev.addEventListener('click', () => {
         if (currentPage === 1) {
             return;
@@ -28,9 +34,13 @@ export function setPaginationListeners(num: HTMLDivElement, prev: HTMLDivElement
             cartBodyGenerator(cartBody, currRange, prevRange);
         }
         num.innerText = `${currentPage.toString()} / ${pageCount.toString()}`;
+        parameters['page'] = [currentPage.toString()];
+        if (!orderParameters.includes('page')) {
+            orderParameters.push('page');
+        }
+        generateQueryParameters();
     });
     next.addEventListener('click', () => {
-        console.log(currentPage, pageCount);
         if (currentPage === pageCount) {
             return;
         } else {
@@ -41,6 +51,11 @@ export function setPaginationListeners(num: HTMLDivElement, prev: HTMLDivElement
             cartBodyGenerator(cartBody, currRange, prevRange);
             num.innerText = `${currentPage.toString()} / ${pageCount.toString()}`;
         }
+        parameters['page'] = [currentPage.toString()];
+        if (!orderParameters.includes('page')) {
+            orderParameters.push('page');
+        }
+        generateQueryParameters();
     });
 }
 
@@ -52,15 +67,47 @@ export function setProdsPerPageListeners(input: HTMLInputElement, pages: HTMLDiv
             this.value = '1';
             return;
         }
-        const length = productsArray().length;
         const value = this.value;
         paginationLimit = Number(value);
-        pageCount = Math.ceil(length / paginationLimit);
-        currentPage = 1;
+        pageCount = Math.ceil(productsArray().length / paginationLimit);
+        if (parameters['page']) {
+            console.log(parameters['page']);
+            checkIfPageTrue(Number(parameters['page']));
+        } else {
+            currentPage = 1;
+        }
         pagesNumber.innerText = `${currentPage} / ${pageCount}`;
         currRange = currentPage * paginationLimit;
         prevRange = (currentPage - 1) * paginationLimit;
         cartBody.innerHTML = '';
         cartBodyGenerator(cartBody, currRange, prevRange);
+        if (this.value) {
+            parameters['limit'] = [this.value];
+            parameters['page'] = currentPage.toString();
+        }
+        if (!orderParameters.includes('limit')) {
+            orderParameters.push('limit');
+        }
+        generateQueryParameters();
     });
+}
+export function checkIfPageTrue(numOfPage: number) {
+    currentPage = numOfPage <= pageCount ? numOfPage : pageCount;
+}
+
+export function calcPageCount() {
+    pageCount = Math.ceil(productsArray().length / paginationLimit);
+}
+
+export function refreshPageInQueryParams() {
+    if (orderParameters.includes('page')) {
+        parameters['page'] = currentPage.toString();
+        generateQueryParameters();
+    }
+}
+
+async function generateQueryParameters() {
+    orderParameters.sort((a, b) => a.length - b.length);
+    const res = orderParameters.map((param) => `${param}=${parameters[param]}`).join('&');
+    window.history.pushState({}, '', res ? `?${res}` : '/cart');
 }

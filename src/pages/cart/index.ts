@@ -1,12 +1,17 @@
 // import { route } from '../../router/router';
-import { setPaginationListeners, setProdsPerPageListeners } from './_pagination';
+import {
+    setPaginationListeners,
+    setProdsPerPageListeners,
+    checkIfPageTrue,
+    calcPageCount,
+    refreshPageInQueryParams,
+} from './_pagination';
 import { setCurRange, setPrevRange, paginationLimit, currentPage, pageCount } from './_pagination';
+import dataProducts from '../../../assets/libs/data';
+import type { CartProduct, ProductCard, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
-import dataProducts from '../../../assets/libs/data';
-import { CartProduct, ProductCard } from '../../types/types';
 import '../../../assets/icons/empty-cart.svg';
-import type { ParamsObjGenerate } from '../../types/types';
 // import { route } from '../../router/router';
 
 const currRange = setCurRange(1);
@@ -170,10 +175,12 @@ export function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev:
 const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
     const item = document.createElement('li') as HTMLLIElement;
     let itemNo = 0;
-    const itemInCart = productsArray().filter((item: CartProduct) => {
-        itemNo = productsArray().findIndex((item) => item.id === obj.id) as number;
+    const ar = productsArray().sort((a, b) => a.id - b.id);
+    const itemInCart = ar.filter((item: CartProduct) => {
+        itemNo = ar.findIndex((item) => item.id === obj.id) as number;
         if (item.id === obj.id) {
-            return item;
+            const selected = item;
+            return selected;
         }
     })[0];
     item.className = 'one-item-block';
@@ -326,11 +333,19 @@ function resetProdsCount(id: string, type: string) {
 
 function deleteTheItem(list: CartProduct[], id: string) {
     const ind = list.map((object) => object.id).indexOf(Number(id));
+    const pageNumDiv = document.querySelector('#page-pagination-number') as HTMLDivElement;
     list.splice(ind, 1);
     localStorage.setItem('cartList', JSON.stringify(list));
-    document.location.reload();
+    const cartBody = document.querySelector('.all-items-holder') as HTMLOListElement;
+    cartBody.innerHTML = '';
+    calcPageCount();
+    checkIfPageTrue(currentPage);
+    refreshPageInQueryParams();
+    pageNumDiv.innerHTML = `${currentPage} / ${pageCount}`;
+    cartBodyGenerator(cartBody, setCurRange(currentPage), setPrevRange(currentPage));
     return;
 }
+
 function refresCoundInput(item: HTMLInputElement, count: string) {
     const theItem: HTMLInputElement = item;
     theItem.setAttribute('value', count);
