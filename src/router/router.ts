@@ -19,7 +19,7 @@ const routes: { [index: string]: (params?: ParamsObjGenerate, orderParams?: stri
     '404': generateContent404,
     '/': generateContentCatalog,
     '/cart': generateContentCart,
-    '/details': generateContentDetails,
+    '/details/': generateContentDetails,
     '/index.html': generateContentCatalog,
 };
 
@@ -27,7 +27,10 @@ const handleLocation = async () => {
     window.scroll({ top: 0 });
 
     const path = window.location.pathname;
-    const route = routes[path] || routes['404'];
+    let route = routes[path] || routes['404'];
+    if (path.match(/^\/details\//) && path.indexOf('/', 1) === path.lastIndexOf('/')) {
+        route = routes['/details/'];
+    }
     const mainPage = document.getElementById('main-page');
     if (mainPage instanceof Element) {
         mainPage.innerHTML = '';

@@ -1,6 +1,6 @@
-import { route } from '../../router/router';
+import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { ProductCard, ParamsObjGenerate } from '../../types/types';
+import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
@@ -112,6 +112,48 @@ function generateProductCard(data: ProductCard) {
         </div>
     </div>
     `;
+
+    const prodImg = card.querySelector('.prod-img');
+    if (prodImg instanceof Element) {
+        prodImg.addEventListener('click', () => {
+            window.history.pushState({}, '', `/details/${data.id}`);
+            handleLocation();
+        });
+    }
+
+    const btnMoreInfo = card.querySelector('.card-btn-info');
+    if (btnMoreInfo instanceof Element) {
+        btnMoreInfo.addEventListener('click', () => {
+            window.history.pushState({}, '', `/details/${data.id}`);
+            handleLocation();
+        });
+    }
+
+    const btnBuy = card.querySelector('.card-btn-cart');
+    if (btnBuy instanceof Element) {
+        const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
+        if (cartList.findIndex((product) => product.id === data.id) !== -1) {
+            btnBuy.classList.add('remove');
+        } else {
+            btnBuy.classList.remove('remove');
+        }
+        btnBuy.addEventListener('click', () => {
+            const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
+            const idProdCart = cartList.findIndex((product) => product.id === data.id);
+            if (idProdCart === -1) {
+                cartList.push({
+                    id: data.id,
+                    count: 1,
+                    finalPrice: Math.round(data.price - (data.discountPercentage / 100) * data.price),
+                });
+                btnBuy.classList.add('remove');
+            } else {
+                cartList.splice(idProdCart, 1);
+                btnBuy.classList.remove('remove');
+            }
+            localStorage.setItem('cartList', JSON.stringify(cartList));
+        });
+    }
 
     return card;
 }
