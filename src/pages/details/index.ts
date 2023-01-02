@@ -1,12 +1,14 @@
 import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { ProductCard, CartProduct } from '../../types/types';
+import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
 import { refreshCartHead } from '../cart/index';
 
 const currentProduct: ProductCard = dataProducts[0];
 
-function generateContentDetails() {
+function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string[]) {
+    console.log(params);
+    console.log(orderParams);
     console.log(route);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-details';
