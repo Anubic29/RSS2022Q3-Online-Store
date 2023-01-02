@@ -4,7 +4,7 @@ import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/ty
 import '../../../assets/icons/rate-star.svg';
 import { refreshCartHead } from '../cart/index';
 
-const currentProduct: ProductCard = dataProducts[0];
+// const currentProduct: ProductCard = dataProducts[0];
 
 function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);

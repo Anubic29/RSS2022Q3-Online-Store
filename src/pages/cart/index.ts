@@ -6,6 +6,8 @@ import '../../../assets/icons/arrow.svg';
 import dataProducts from '../../../assets/libs/data';
 import { CartProduct, ProductCard } from '../../types/types';
 import '../../../assets/icons/empty-cart.svg';
+import type { ParamsObjGenerate } from '../../types/types';
+// import { route } from '../../router/router';
 
 const currRange = setCurRange(1);
 const prevRange = setPrevRange(1);
@@ -68,8 +70,6 @@ function refreshCountInProdRow(id: string): void {
         theProdFromStorage.count
     } ₴`;
 }
-import { route } from '../../router/router';
-import type { ParamsObjGenerate } from '../../types/types';
 
 function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);

@@ -1,6 +1,7 @@
 import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
+import { refreshCartHead } from '../cart/index';
 
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
@@ -152,6 +153,7 @@ function generateProductCard(data: ProductCard) {
                 btnBuy.classList.remove('remove');
             }
             localStorage.setItem('cartList', JSON.stringify(cartList));
+            refreshCartHead();
         });
     }
 
