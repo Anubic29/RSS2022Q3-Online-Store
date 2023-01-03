@@ -37,13 +37,7 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         <p class="prods-per-page">Products on the page:
             <span class="prods-count"></span>
         </p>
-        <div class="sort-by-wrap">
-            <select name="sort-variant" class="sort-by-select">
-                <option value="" disabled selected hidden>Sort by:</option>
-                <option class="sort-option" value="by-price">increasing price</option>
-                <option class="sort-option" value="by-rating">increasing rating</option>
-            </select>
-        </div>
+        <div class="sort-by-wrap"></div>
 
         <label class="switch-layout">
             <img class="left-dots-bg" src="../assets/icons/5-dots-g.svg" alt="">
@@ -82,6 +76,11 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     });
 
     mainBlockG = mainBlock;
+
+    const sortPanel = mainBlock.querySelector('.sort-by-wrap');
+    if (sortPanel instanceof Element) {
+        sortPanel.append(generateSortPanel());
+    }
 
     const filters = mainBlock.querySelector('.filter-panel');
     if (filters instanceof Element) {
@@ -152,6 +151,31 @@ function generateProductCard(data: ProductCard) {
     `;
 
     return card;
+}
+
+function generateSortPanel() {
+    const fieldsForSort = ['price', 'rating', 'discount'];
+
+    const sortSelect = document.createElement('select');
+    sortSelect.name = 'sort-variant';
+    sortSelect.className = 'sort-by-select';
+
+    sortSelect.innerHTML = `
+        <option value="" disabled selected hidden>Sort by:</option>
+    `;
+
+    fieldsForSort.forEach((name) => {
+        sortSelect.innerHTML += `
+            <option class="sort-option" value="${name}-ASC">Sort by ${name} ASC</option>
+            <option class="sort-option" value="${name}-DESC">Sort by ${name} DESC</option>
+        `;
+    });
+
+    sortSelect.addEventListener('change', () => {
+        console.log(sortSelect.value);
+    });
+
+    return sortSelect;
 }
 
 function generateFilterPanel() {
