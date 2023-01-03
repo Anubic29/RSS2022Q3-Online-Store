@@ -1,24 +1,22 @@
-// import { route } from '../../router/router';
-import {
-    setPaginationListeners,
-    setProdsPerPageListeners,
-    checkIfPageTrue,
-    calcPageCount,
-    refreshPageInQueryParams,
-} from './_pagination';
-import { setCurRange, setPrevRange, paginationLimit, currentPage, pageCount } from './_pagination';
 import dataProducts from '../../../assets/libs/data';
 import type { CartProduct, ProductCard, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
 import '../../../assets/icons/empty-cart.svg';
-// import { route } from '../../router/router';
 
-const currRange = setCurRange(1);
-const prevRange = setPrevRange(1);
+let parameters: ParamsObjGenerate;
+let orderParameters: string[];
+
+let currentPage = 1;
+let paginationLimit = 5;
+
+let currRange = setCurRange(1);
+let prevRange = setPrevRange(1);
+
 const cartCountHead = document.getElementById('cart-prod-count') as HTMLElement;
 const totalCountHead = document.getElementById('total-numbers') as HTMLElement;
 export let cartBody: HTMLOListElement;
+
 const productsArray = (): Array<CartProduct> => JSON.parse(localStorage.getItem('cartList') as string) ?? [];
 const totalSum = () => productsArray().reduce((acc: number, cur: CartProduct) => acc + cur.finalPrice * cur.count, 0);
 const productsInCart = (prodAr: CartProduct[]): Array<ProductCard> => {
@@ -29,6 +27,131 @@ const productsInCart = (prodAr: CartProduct[]): Array<ProductCard> => {
         }
     });
 };
+
+let pageCount = Math.ceil(productsArray().length / paginationLimit);
+
+function setCurRange(curPage: number, limit?: number) {
+    const pageLim = limit || paginationLimit;
+    return curPage * pageLim;
+}
+
+function setPrevRange(curPage: number, limit?: number) {
+    const pageLim = limit || paginationLimit;
+    return (curPage - 1) * pageLim;
+}
+
+function setPaginationListeners(
+    num: HTMLDivElement,
+    prev: HTMLDivElement,
+    next: HTMLDivElement,
+    params?: ParamsObjGenerate,
+    orderParams?: string[]
+) {
+    parameters = params ? params : {};
+    orderParameters = orderParams ? orderParams : [];
+    prev.addEventListener('click', () => {
+        if (currentPage === 1) {
+            return;
+        } else {
+            cartBody.innerHTML = '';
+            currentPage -= 1;
+            currRange = currentPage * paginationLimit;
+            prevRange = (currentPage - 1) * paginationLimit;
+            cartBodyGenerator(cartBody, currRange, prevRange);
+        }
+        num.innerText = `${currentPage.toString()} / ${pageCount.toString()}`;
+        parameters['page'] = [currentPage.toString()];
+        if (!orderParameters.includes('page')) {
+            orderParameters.push('page');
+        }
+        if (!orderParameters.includes('limit')) {
+            parameters['limit'] = paginationLimit.toString() as string;
+            orderParameters.push('limit');
+        }
+        generateQueryParameters();
+    });
+    next.addEventListener('click', () => {
+        if (currentPage === pageCount) {
+            return;
+        } else {
+            cartBody.innerHTML = '';
+            currentPage += 1;
+            currRange = currentPage * paginationLimit;
+            prevRange = (currentPage - 1) * paginationLimit;
+            cartBodyGenerator(cartBody, currRange, prevRange);
+            num.innerText = `${currentPage.toString()} / ${pageCount.toString()}`;
+        }
+        parameters['page'] = [currentPage.toString()];
+        if (!orderParameters.includes('page')) {
+            orderParameters.push('page');
+        }
+        if (!orderParameters.includes('limit')) {
+            parameters['limit'] = paginationLimit.toString() as string;
+            orderParameters.push('limit');
+        }
+        generateQueryParameters();
+    });
+}
+
+function setProdsPerPageListeners(
+    input: HTMLInputElement,
+    pages: HTMLDivElement,
+    params?: ParamsObjGenerate,
+    orderParams?: string[]
+) {
+    parameters = params ? params : {};
+    orderParameters = orderParams ? orderParams : [];
+    const inputNumber = input;
+    const pagesNumber = pages;
+    inputNumber.addEventListener('change', function () {
+        if (Number(this.value) < 1) {
+            this.value = '1';
+            return;
+        }
+        const value = this.value;
+        paginationLimit = Number(value);
+        pageCount = Math.ceil(productsArray().length / paginationLimit);
+        if (parameters['page']) {
+            checkIfPageTrue(Number(parameters['page']));
+        } else {
+            currentPage = 1;
+        }
+        pagesNumber.innerText = `${currentPage} / ${pageCount}`;
+        currRange = currentPage * paginationLimit;
+        prevRange = (currentPage - 1) * paginationLimit;
+        cartBody.innerHTML = '';
+        cartBodyGenerator(cartBody, currRange, prevRange);
+        if (this.value) {
+            parameters['limit'] = [this.value];
+            parameters['page'] = currentPage.toString();
+        }
+        if (!orderParameters.includes('limit')) {
+            orderParameters.push('limit');
+        }
+        generateQueryParameters();
+    });
+}
+function checkIfPageTrue(numOfPage: number) {
+    currentPage = numOfPage <= pageCount ? numOfPage : pageCount;
+}
+
+function calcPageCount(limit: number) {
+    pageCount = Math.ceil(productsArray().length / limit);
+}
+
+function refreshPageInQueryParams() {
+    if (orderParameters.includes('page')) {
+        checkIfPageTrue(currentPage);
+        parameters['page'] = currentPage.toString();
+        generateQueryParameters();
+    }
+}
+
+async function generateQueryParameters() {
+    orderParameters.sort((a, b) => a.length - b.length);
+    const res = orderParameters.map((param) => `${param}=${parameters[param]}`).join('&');
+    window.history.pushState({}, '', res ? `?${res}` : '/cart');
+}
 
 refreshCartHead();
 prodsInCartCount();
@@ -60,7 +183,7 @@ function refreshSummary(): void {
     totalSumPlace.innerText = `${totalSum()} ₴`;
 }
 
-function refreshCountInProdRow(id: string): void {
+function refreshCountInProdRow(id: string, value?: string): void {
     const theProdFullData = dataProducts.find((prod) => prod.id === Number(id)) as ProductCard;
     const theProdFromStorage = productsArray().find((prod) => prod.id === Number(id)) as CartProduct;
     const totalSumPlace = Array.from<HTMLParagraphElement>(document.querySelectorAll('p.reduced-price')).find(
@@ -69,16 +192,25 @@ function refreshCountInProdRow(id: string): void {
     const countProdsPlace = Array.from<HTMLParagraphElement>(document.querySelectorAll('p.price')).find(
         (p) => p.dataset.id === id
     ) as HTMLParagraphElement;
-    countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
-    totalSumPlace.innerText = `${
-        Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
-        theProdFromStorage.count
-    } ₴`;
+    if (value) {
+        countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
+        totalSumPlace.innerText = `${
+            Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
+            theProdFromStorage.count
+        } ₴`;
+    }
 }
 
 function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[]) {
-    console.log(params);
-    console.log(orderParams);
+    if (params && params.page) {
+        currentPage = Number(params.page);
+    }
+    if (params && params.limit) {
+        paginationLimit = Number(params.limit);
+    }
+    currRange = currentPage * paginationLimit;
+    prevRange = (currentPage - 1) * paginationLimit;
+    calcPageCount(paginationLimit);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-cart';
     mainBlock.innerHTML = `
@@ -143,7 +275,7 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
     const nextButton = mainBlock.querySelector('#page-next-button') as HTMLDivElement;
     const prevButton = mainBlock.querySelector('#page-prev-button') as HTMLDivElement;
     const prodsPerPage = mainBlock.querySelector('#prods-p-p-inp') as HTMLInputElement;
-    setPaginationListeners(paginationNumber, prevButton, nextButton);
+    setPaginationListeners(paginationNumber, prevButton, nextButton, params, orderParams);
     setProdsPerPageListeners(prodsPerPage, paginationNumber);
     cartBody = mainBlock.querySelector('.all-items-holder') as HTMLOListElement;
     cartBodyGenerator(cartBody, currRange, prevRange);
@@ -273,9 +405,7 @@ function setInputsListenes(inputs: HTMLInputElement[]) {
                 const productsFromStorage = productsArray();
                 const id = this.dataset.id as string;
                 let value = this.value as string;
-                console.log(id, value);
                 const input = getCountInput(id);
-                console.log(input);
                 if (Number(value) <= 0) {
                     const ifDelete = confirm(`Are you sure you want to delete this product from the cart?`);
                     if (ifDelete) {
@@ -296,7 +426,7 @@ function setInputsListenes(inputs: HTMLInputElement[]) {
                 localStorage.setItem('cartList', JSON.stringify(productsFromStorage));
                 refreshCartHead();
                 refreshSummary();
-                refreshCountInProdRow(id);
+                refreshCountInProdRow(id, value);
             });
         }
     });
@@ -338,7 +468,7 @@ function deleteTheItem(list: CartProduct[], id: string) {
     localStorage.setItem('cartList', JSON.stringify(list));
     const cartBody = document.querySelector('.all-items-holder') as HTMLOListElement;
     cartBody.innerHTML = '';
-    calcPageCount();
+    calcPageCount(paginationLimit);
     checkIfPageTrue(currentPage);
     refreshPageInQueryParams();
     pageNumDiv.innerHTML = `${currentPage} / ${pageCount}`;
