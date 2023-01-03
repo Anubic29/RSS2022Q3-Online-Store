@@ -161,7 +161,7 @@ function generateSortPanel() {
     sortSelect.className = 'sort-by-select';
 
     sortSelect.innerHTML = `
-        <option value="" disabled selected hidden>Sort by:</option>
+        <option value="" disabled hidden>Sort by:</option>
     `;
 
     fieldsForSort.forEach((name) => {
@@ -171,8 +171,27 @@ function generateSortPanel() {
         `;
     });
 
+    const arrSortOptions = [...sortSelect.childNodes].filter(
+        (node) => node.nodeType == Node.ELEMENT_NODE
+    ) as HTMLOptionElement[];
+    const foundedOption =
+        parameters['sort'] !== undefined
+            ? arrSortOptions.find((option) => option.value === parameters['sort'][0])
+            : parameters['sort'];
+
+    if (foundedOption !== undefined) {
+        foundedOption.setAttribute('selected', 'selected');
+    } else {
+        arrSortOptions[0].setAttribute('selected', 'selected');
+    }
+
     sortSelect.addEventListener('change', () => {
+        if (!orderParameters.includes('sort')) {
+            orderParameters.push('sort');
+        }
         parameters['sort'] = [sortSelect.value];
+
+        generateQueryParameters();
         fillProductList(adjustProductList());
     });
 
@@ -396,7 +415,7 @@ async function generateQueryParameters() {
 }
 
 function adjustProductList() {
-    let result: ProductCard[] = dataProducts;
+    let result: ProductCard[] = [...dataProducts];
 
     result = filterProductList(result);
     result = sortProductList(result);
@@ -407,7 +426,7 @@ function adjustProductList() {
 }
 
 function filterProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = receivedList;
+    let result: ProductCard[] = [...receivedList];
     let temp: ProductCard[];
 
     orderParameters.forEach((param) => {
@@ -438,7 +457,7 @@ function filterProductList(receivedList: ProductCard[]) {
 }
 
 function sortProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = receivedList;
+    let result: ProductCard[] = [...receivedList];
 
     const sort = parameters['sort'];
     if (sort === undefined) return result;
