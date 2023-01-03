@@ -87,7 +87,7 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         filters.append(generateFilterPanel());
     }
 
-    fillProductList(filterProductList());
+    fillProductList(adjustProductList());
 
     return mainBlock;
 }
@@ -172,7 +172,8 @@ function generateSortPanel() {
     });
 
     sortSelect.addEventListener('change', () => {
-        console.log(sortSelect.value);
+        parameters['sort'] = [sortSelect.value];
+        fillProductList(adjustProductList());
     });
 
     return sortSelect;
@@ -366,7 +367,7 @@ function inputEventForDualSlider(
     parameters[paramName] = [`${minValue}`, `${maxValue}`];
 
     generateQueryParameters();
-    fillProductList(filterProductList());
+    fillProductList(adjustProductList());
 }
 
 function setFilterCheckBox(key: string, value: string, checked: boolean) {
@@ -386,7 +387,7 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
         }
     }
     generateQueryParameters();
-    fillProductList(filterProductList());
+    fillProductList(adjustProductList());
 }
 
 async function generateQueryParameters() {
@@ -394,8 +395,19 @@ async function generateQueryParameters() {
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
-function filterProductList() {
+function adjustProductList() {
     let result: ProductCard[] = dataProducts;
+
+    result = filterProductList(result);
+    result = sortProductList(result);
+
+    adjustFilterAmounts(result);
+
+    return result;
+}
+
+function filterProductList(receivedList: ProductCard[]) {
+    let result: ProductCard[] = receivedList;
     let temp: ProductCard[];
 
     orderParameters.forEach((param) => {
@@ -422,7 +434,36 @@ function filterProductList() {
         }
     });
 
-    adjustFilterAmounts(result);
+    return result;
+}
+
+function sortProductList(receivedList: ProductCard[]) {
+    let result: ProductCard[] = receivedList;
+
+    const sort = parameters['sort'];
+    if (sort === undefined) return result;
+    if (sort[0] === undefined) return result;
+
+    const [sortValue, sortOrder] = sort[0].split('-');
+    let isValidValue = false;
+
+    switch (sortValue) {
+        case 'price':
+        case 'rating':
+            result = result.sort((a, b) => a[sortValue] - b[sortValue]);
+            isValidValue = true;
+            break;
+        case 'discount':
+            result = result.sort((a, b) => a['discountPercentage'] - b['discountPercentage']);
+            isValidValue = true;
+            break;
+        default:
+            break;
+    }
+
+    if (isValidValue && sortOrder === 'DESC') {
+        result = result.reverse();
+    }
 
     return result;
 }
