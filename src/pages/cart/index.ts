@@ -1,8 +1,10 @@
 import dataProducts from '../../../assets/libs/data';
-import type { CartProduct, ProductCard, ParamsObjGenerate } from '../../types/types';
+import type { CartProduct, ProductCard, ParamsObjGenerate, promoObj } from '../../types/types';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
 import '../../../assets/icons/empty-cart.svg';
+import promogenerator from './_promo';
+import { createNewTotalSpan, addActiveCoupon } from './_promo';
 
 let parameters: ParamsObjGenerate;
 let orderParameters: string[];
@@ -12,12 +14,17 @@ let paginationLimit = 5;
 
 let currRange = setCurRange(1);
 let prevRange = setPrevRange(1);
+let totalSumSpanGlobal: HTMLSpanElement;
+let newTotalSpanGlobal: HTMLSpanElement;
 
 const cartCountHead = document.getElementById('cart-prod-count') as HTMLElement;
 const totalCountHead = document.getElementById('total-numbers') as HTMLElement;
 export let cartBody: HTMLOListElement;
 
 const productsArray = (): Array<CartProduct> => JSON.parse(localStorage.getItem('cartList') as string) ?? [];
+const promosArray: promoObj[] = JSON.parse(localStorage.getItem('promo') as string)
+    ? JSON.parse(localStorage.getItem('promo') as string)
+    : [];
 const totalSum = () => productsArray().reduce((acc: number, cur: CartProduct) => acc + cur.finalPrice * cur.count, 0);
 const productsInCart = (prodAr: CartProduct[]): Array<ProductCard> => {
     const idArray = prodAr.map((obj) => obj.id);
@@ -181,6 +188,7 @@ function refreshSummary(): void {
     const totalSumPlace = document.querySelector('.total-prod-sum span') as HTMLSpanElement;
     countProdsPlace.innerText = `${counter.toString()}`;
     totalSumPlace.innerText = `${totalSum()} ₴`;
+    createNewTotalSpan(totalSumSpanGlobal, newTotalSpanGlobal);
 }
 
 function refreshCountInProdRow(id: string, value?: string): void {
@@ -253,32 +261,50 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
           </ol>
           <div class="coupon-block">
             <div></div>
-            <form action="#" class="coupon-form">
+            <form class="coupon-form">
               <label class="coupon-q">Got a coupon?</label>
               <input type="text" placeholder="Enter promocode" class="coupon-input">
-              <button type="submit" class="coupon-submit">Enter code</button>
-              <span class="coupon-status">Status unknown.</span>
+              <button class="coupon-submit" disabled>Enter code</button>
+              <span class="coupon-status">Promo for test: 'RS', 'EPM'</span>
+              <div class="active-coupons"></div>
             </form>
           </div>
           <section class="summary-block">
             <h2 class="summary-title">Summary</h2>
-            <p class="total-prod-count">Products count:<span class="total-span total-count-num">${prodsInCartCount()}
-                </span></p>
-            <p class="total-prod-sum">Total:<span class="total-span total-sum-num">${totalSum()} ₴</span></p>
+              <p class="total-prod-count">Products count:
+                <span class="total-span total-count-num">${prodsInCartCount()}</span>
+              </p>
+            <p class="total-prod-sum">Total:
+              <span class="total-span total-sum-num">${totalSum()} ₴</span>
+              <span class="new-total"> </span>
+            </p>
             <button class="cart-order-btn">Place order</button>
           </section>
         </div>
       </div>
     </div>
     `;
+
     const paginationNumber = mainBlock.querySelector('#page-pagination-number') as HTMLDivElement;
     const nextButton = mainBlock.querySelector('#page-next-button') as HTMLDivElement;
     const prevButton = mainBlock.querySelector('#page-prev-button') as HTMLDivElement;
     const prodsPerPage = mainBlock.querySelector('#prods-p-p-inp') as HTMLInputElement;
+    const promoInput = mainBlock.querySelector('.coupon-input') as HTMLInputElement;
+    const promoBtn = mainBlock.querySelector('.coupon-submit') as HTMLButtonElement;
+    const totalSumSpan = mainBlock.querySelector('.total-sum-num') as HTMLSpanElement;
+    const newTotalSpan = mainBlock.querySelector('.new-total') as HTMLSpanElement;
+    const couponDiv = mainBlock.querySelector('.active-coupons') as HTMLDivElement;
+    totalSumSpanGlobal = totalSumSpan;
+    newTotalSpanGlobal = newTotalSpan;
     setPaginationListeners(paginationNumber, prevButton, nextButton, params, orderParams);
     setProdsPerPageListeners(prodsPerPage, paginationNumber);
+    promogenerator(promoInput, promoBtn, totalSumSpan, newTotalSpan, couponDiv);
     cartBody = mainBlock.querySelector('.all-items-holder') as HTMLOListElement;
     cartBodyGenerator(cartBody, currRange, prevRange);
+    if (promosArray.length > 0) {
+        createNewTotalSpan(totalSumSpan, newTotalSpan);
+        addActiveCoupon(couponDiv);
+    }
     return mainBlock;
 }
 

@@ -262,6 +262,7 @@
     border-radius: 5px;
     height: 30px;
     border: $lightGreyText 1px solid;
+    padding-left: 10px;
   }
 
   .coupon-input::placeholder{
@@ -275,13 +276,16 @@
     right: 0;
     height: 30px;
     border-radius: 0 5px 5px 0;
-    background-color: $blueAccentColor;
-    border: $blueAccentColor 1px solid;
+    background-color: $lightGreyElements;
+    border: $lightGreyElements 1px solid;
     color: white;
     width: 110px;
+      &.active-promo {
+          background-color: $blueAccentColor;
+      }
   }
 
-  .coupon-submit:hover {
+  .coupon-submit.active-promo:hover {
     background-color: $lightBlueOnHover;
   }
 
@@ -297,18 +301,46 @@
   }
 
   .coupon-status {
-    display: none;
     position: absolute;
     left: 0;
     bottom: -20px;
-    width: auto;
+    width: 100%;
     font-size: 14px;
     color: $lightGreyText;
+    text-align: center;
   }
 
   .total-span {
     font-size: 24px;
     margin-left: 20px;
+  }
+
+  .total-sum-num.crossed {
+    color: $lightGreyText;
+    font-size: 18px;
+    text-decoration: line-through;
+  }
+
+  .active-coupons {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .active-coupons * {
+    color: $lightGreyText;
+    margin-top: 5px;
+    font-size: 14px;
+  }
+
+  .active-promo-line {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .new-total {
+    padding-left: 20px;
+    font-size: 24px;
+    color:  $blueAccentColor;
   }
 
   .cart-order-btn {
