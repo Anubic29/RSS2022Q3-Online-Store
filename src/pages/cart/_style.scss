@@ -50,19 +50,53 @@
     margin-left: 10px;
     margin-right: 10px;
     cursor: default;
+    position: relative;
   }
 
   .pagination-number-input {
     border: $lightGreyElements 1px solid;
-    padding: 5px;
+    padding-left: 5px;
     border-radius: 5px;
     display: inline-block;
-    width: 40px;
-    text-align: center;
+    width: 50px;
+    height: 40px;
+    line-height: 40px;
   }
 
   .pagination-number-input:focus-visible {
     outline: none;
+  }
+
+  .pagination-number-p::before {
+    content: '▲';
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: $blueAccentColor;
+    pointer-events: none;
+  }
+
+    .pagination-number-p::after {
+    content: '▼';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: $blueAccentColor;
+    pointer-events: none;
+  }
+
+  .pagination-number-input::-webkit-outer-spin-button,
+  .pagination-number-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    background: white;
+    position: absolute;
+    top: 0;
+    right: 0px;
+    bottom: 0;
+    width: 1em;
+    border-left: 1px solid $lightGreyText;
+    opacity: 0.5;
+    z-index: 2;
   }
 
   .pagination-container {
@@ -382,6 +416,5 @@
   .user-set-count::-webkit-inner-spin-button {
   appearance: none;
   margin: 0;
-}
-
+  }
 }

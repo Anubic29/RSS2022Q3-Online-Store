@@ -231,14 +231,8 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
         <div class="items-count counter">
           <span class="items-count-span">items</span>
           <div class="pagination-container">
-            <div class="pag-array pag-left pagination-button" id="subtr-prods-p-p">
-              <img src="../assets/icons/arrow.svg">
-            </div>
-            <div class="pagination-number">
+            <div class="pagination-number pagination-number-p">
                 <input  id="prods-p-p-inp" class="pagination-number-input" type="number" value="${paginationLimit}">
-            </div>
-            <div class="pag-array pag-right pagination-button" id="add-prods-p-p">
-              <img src="../assets/icons/arrow.svg">
             </div>
           </div>
         </div>
@@ -294,6 +288,7 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
     const totalSumSpan = mainBlock.querySelector('.total-sum-num') as HTMLSpanElement;
     const newTotalSpan = mainBlock.querySelector('.new-total') as HTMLSpanElement;
     const couponDiv = mainBlock.querySelector('.active-coupons') as HTMLDivElement;
+
     totalSumSpanGlobal = totalSumSpan;
     newTotalSpanGlobal = newTotalSpan;
     setPaginationListeners(paginationNumber, prevButton, nextButton, params, orderParams);
