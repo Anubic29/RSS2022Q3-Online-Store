@@ -109,9 +109,10 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
 async function fillProductList(products: ProductCard[]) {
     const cardsArea = mainBlockG.querySelector('.cards-area');
     if (cardsArea instanceof Element) {
+        const isBigCard = parameters['big'] && parameters['big'][0] === 'true';
         cardsArea.innerHTML = '';
         products.forEach((product) => {
-            cardsArea.append(generateProductCard(product));
+            cardsArea.append(generateProductCard(product, isBigCard));
         });
         if (products.length === 0) {
             const hTitle = document.createElement('h1');
@@ -121,9 +122,9 @@ async function fillProductList(products: ProductCard[]) {
     }
 }
 
-function generateProductCard(data: ProductCard) {
+function generateProductCard(data: ProductCard, isBigCard: boolean) {
     const card = document.createElement('article');
-    card.className = 'prod-card';
+    card.className = `prod-card ${isBigCard ? 'prod-card-big' : ''}`;
 
     card.innerHTML = `
     <div class="v prod-card-inner">
