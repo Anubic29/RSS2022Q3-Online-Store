@@ -1,4 +1,4 @@
-import { route, handleLocation } from '../../router/router';
+import { route, handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, ParamsObjGenerate } from '../../types/types';
 
@@ -191,7 +191,7 @@ function generateSortPanel() {
         }
         parameters['sort'] = [sortSelect.value];
 
-        generateQueryParameters();
+        pushQueryParameters();
         fillProductList(adjustProductList());
     });
 
@@ -385,7 +385,7 @@ function inputEventForDualSlider(
     }
     parameters[paramName] = [`${minValue}`, `${maxValue}`];
 
-    generateQueryParameters();
+    pushQueryParameters();
     fillProductList(adjustProductList());
 }
 
@@ -405,12 +405,12 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
             orderParameters.splice(orderParameters.indexOf(key), 1);
         }
     }
-    generateQueryParameters();
+    pushQueryParameters();
     fillProductList(adjustProductList());
 }
 
-async function generateQueryParameters() {
-    const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+async function pushQueryParameters() {
+    const res = generateQueryParameters(orderParameters, parameters);
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
