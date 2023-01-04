@@ -275,11 +275,8 @@ input:checked + .layout-slider:before {
 }
 
 .cards-area {
-  display: grid;
-  grid-template-columns: repeat(5, 250px);
-  &.cards-area-big {
-    width: 100%;
-    justify-content: center;
-    grid-template-columns: repeat(4, 300px);
-  }
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
 }
