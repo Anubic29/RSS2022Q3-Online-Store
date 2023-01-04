@@ -116,6 +116,7 @@ async function fillProductList(products: ProductCard[]) {
         });
         if (products.length === 0) {
             const hTitle = document.createElement('h1');
+            hTitle.className = 'not-found';
             hTitle.textContent = 'No products found';
             cardsArea.append(hTitle);
         }

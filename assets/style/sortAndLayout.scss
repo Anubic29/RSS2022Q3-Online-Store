@@ -280,8 +280,13 @@ input:checked + .layout-slider:before {
 }
 
 .cards-area {
+  width: 100%;
+  max-width: 1250px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
+  .not-found {
+    margin-top: 50px;
+  }
 }
