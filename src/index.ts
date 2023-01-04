@@ -17,6 +17,9 @@ if (searchBarInput instanceof Element) {
             startSearch(searchBarInput.value);
         }
     });
+    searchBarInput.addEventListener('input', () => {
+        searchBarInput.value = searchBarInput.value.toLowerCase();
+    });
 }
 
 if (searchBarBtn instanceof Element) {

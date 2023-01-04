@@ -434,6 +434,9 @@ function adjustProductList() {
     let result: ProductCard[] = [...dataProducts];
 
     result = filterProductList(result);
+    if (parameters['search'] && parameters['search'][0]) {
+        result = searchProductInList(result, parameters['search'][0]);
+    }
     result = sortProductList(result);
 
     adjustFilterAmounts(result);
@@ -501,6 +504,31 @@ function sortProductList(receivedList: ProductCard[]) {
     }
 
     return result;
+}
+
+function searchProductInList(receivedList: ProductCard[], value: string) {
+    let result: { [key: string]: number | string | string[] }[] = [...receivedList];
+    const fieldsForSearch = [
+        'title',
+        'brand',
+        'category',
+        'price',
+        'stock',
+        'description',
+        'rating',
+        'discountPercentage',
+    ];
+
+    result = result.filter((obj) => {
+        for (let i = 0; i < fieldsForSearch.length; i++) {
+            if (`${obj[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    return result as ProductCard[];
 }
 
 async function adjustFilterAmounts(list: ProductCard[]) {
