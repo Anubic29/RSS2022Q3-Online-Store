@@ -55,4 +55,9 @@ function convertQueryParams(strParams: string): [ParamsObjGenerate, string[]] {
     return [paramsObj, orderParams];
 }
 
-export { route, handleLocation };
+function generateQueryParameters(orderParameters: string[], parameters: ParamsObjGenerate) {
+    const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+    return res;
+}
+
+export { route, handleLocation, convertQueryParams, generateQueryParameters };
