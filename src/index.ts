@@ -9,7 +9,7 @@ window.route = route;
 handleLocation();
 
 const searchBarInput = document.querySelector('#product-search') as HTMLInputElement;
-const searchBarBtn = document.querySelector('.search-btn') as HTMLButtonElement;
+const searchBarBtn = document.querySelector('.search-btn-find') as HTMLButtonElement;
 
 if (searchBarInput instanceof Element) {
     searchBarInput.addEventListener('keyup', (event) => {

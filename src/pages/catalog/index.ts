@@ -53,6 +53,22 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     </div>
     `;
 
+    const searchBarInput = document.querySelector('#product-search') as HTMLInputElement;
+    const btnSearchReset = document.querySelector('.search-btn-reset') as HTMLButtonElement;
+    if (searchBarInput instanceof Element) {
+        searchBarInput.value = parameters['search'] ? parameters['search'][0] : '';
+
+        if (btnSearchReset instanceof Element && parameters['search'] && parameters['search'][0]) {
+            btnSearchReset.style.display = 'block';
+            btnSearchReset.addEventListener('click', async () => {
+                btnSearchReset.style.display = 'none';
+                orderParameters.splice(orderParameters.indexOf('search'), 1);
+                await pushQueryParameters();
+                handleLocation();
+            });
+        }
+    }
+
     const btnReset = mainBlock.querySelector('.reset-filter') as HTMLDivElement;
     btnReset.addEventListener('click', () => {
         window.history.pushState({}, '', '/');
