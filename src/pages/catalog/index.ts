@@ -48,7 +48,7 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         <label class="switch-layout">
             <img class="left-dots-bg" src="../assets/icons/5-dots-g.svg" alt="">
             <img src="../assets/icons/4-dots.svg" alt="" class="right-dots-bg">
-            <input type="checkbox">
+            <input id="switch-layout-checkbox" type="checkbox">
             <span class="layout-slider"></span>
         </label>
         </div>
@@ -79,6 +79,19 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
                 spanBtnCopyLink.textContent = 'copy link';
             }, 1000);
         }
+    });
+
+    const checkboxSwitchLayout = mainBlock.querySelector('#switch-layout-checkbox') as HTMLInputElement;
+    if (parameters['big'] && parameters['big'][0] === 'true') {
+        checkboxSwitchLayout.checked = true;
+    }
+    checkboxSwitchLayout.addEventListener('change', () => {
+        if (!orderParameters.includes('big')) {
+            orderParameters.push('big');
+        }
+        parameters['big'] = [`${checkboxSwitchLayout.checked}`];
+        generateQueryParameters();
+        fillProductList(filterProductList());
     });
 
     mainBlockG = mainBlock;
