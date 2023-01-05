@@ -100,8 +100,8 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
             orderParameters.push('big');
         }
         parameters['big'] = [`${checkboxSwitchLayout.checked}`];
-        generateQueryParameters();
-        fillProductList(filterProductList());
+        pushQueryParameters();
+        fillProductList(adjustProductList());
     });
 
     mainBlockG = mainBlock;
