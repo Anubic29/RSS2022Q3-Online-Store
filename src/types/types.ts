@@ -19,7 +19,7 @@ type CartProduct = {
 };
 
 type ParamsObjGenerate = {
-    [key: string]: string | string[];
+    [key: string]: string[];
 };
 
 type promoObj ={

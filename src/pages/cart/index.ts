@@ -72,7 +72,7 @@ function setPaginationListeners(
             orderParameters.push('page');
         }
         if (!orderParameters.includes('limit')) {
-            parameters['limit'] = paginationLimit.toString() as string;
+            parameters['limit'] = [paginationLimit.toString() as string];
             orderParameters.push('limit');
         }
         generateQueryParameters();
@@ -93,7 +93,7 @@ function setPaginationListeners(
             orderParameters.push('page');
         }
         if (!orderParameters.includes('limit')) {
-            parameters['limit'] = paginationLimit.toString() as string;
+            parameters['limit'] = [paginationLimit.toString() as string];
             orderParameters.push('limit');
         }
         generateQueryParameters();
@@ -130,7 +130,7 @@ function setProdsPerPageListeners(
         cartBodyGenerator(cartBody, currRange, prevRange);
         if (this.value) {
             parameters['limit'] = [this.value];
-            parameters['page'] = currentPage.toString();
+            parameters['page'] = [currentPage.toString()];
         }
         if (!orderParameters.includes('limit')) {
             orderParameters.push('limit');
@@ -149,7 +149,7 @@ function calcPageCount(limit: number) {
 function refreshPageInQueryParams() {
     if (orderParameters.includes('page')) {
         checkIfPageTrue(currentPage);
-        parameters['page'] = currentPage.toString();
+        parameters['page'] = [currentPage.toString() as string];
         generateQueryParameters();
     }
 }
