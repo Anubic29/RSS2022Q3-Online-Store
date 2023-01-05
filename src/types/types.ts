@@ -18,4 +18,8 @@ type CartProduct = {
     finalPrice: number;
 };
 
-export type { ProductCard, CartProduct };
+type ParamsObjGenerate = {
+    [key: string]: string[];
+};
+
+export type { ProductCard, CartProduct, ParamsObjGenerate };

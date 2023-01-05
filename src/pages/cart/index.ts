@@ -1,8 +1,8 @@
-// import { route } from '../../router/router';
+
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
 import dataProducts from '../../../assets/libs/data';
-import { CartProduct, ProductCard } from '../../types/types';
+import { CartProduct, ProductCard, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/empty-cart.svg';
 
 const cartCountHead = document.getElementById('cart-prod-count') as HTMLElement;
@@ -28,7 +28,7 @@ export function refreshCartHead(): void {
     totalCountHead.innerText = `${totalSum()} ₴`;
 }
 
-function generateContentCart() {
+function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[]) {
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-cart';
     mainBlock.innerHTML = `
