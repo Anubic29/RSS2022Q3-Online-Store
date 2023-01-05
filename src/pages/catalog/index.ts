@@ -37,13 +37,7 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         <p class="prods-per-page">Products on the page:
             <span class="prods-count"></span>
         </p>
-        <div class="sort-by-wrap">
-            <select name="sort-variant" class="sort-by-select">
-                <option value="" disabled selected hidden>Sort by:</option>
-                <option class="sort-option" value="by-price">increasing price</option>
-                <option class="sort-option" value="by-rating">increasing rating</option>
-            </select>
-        </div>
+        <div class="sort-by-wrap"></div>
 
         <label class="switch-layout">
             <img class="left-dots-bg" src="../assets/icons/5-dots-g.svg" alt="">
@@ -83,12 +77,17 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
 
     mainBlockG = mainBlock;
 
+    const sortPanel = mainBlock.querySelector('.sort-by-wrap');
+    if (sortPanel instanceof Element) {
+        sortPanel.append(generateSortPanel());
+    }
+
     const filters = mainBlock.querySelector('.filter-panel');
     if (filters instanceof Element) {
         filters.append(generateFilterPanel());
     }
 
-    fillProductList(filterProductList());
+    fillProductList(adjustProductList());
 
     return mainBlock;
 }
@@ -190,6 +189,51 @@ function generateProductCard(data: ProductCard) {
     }
 
     return card;
+}
+
+function generateSortPanel() {
+    const fieldsForSort = ['price', 'rating', 'discount'];
+
+    const sortSelect = document.createElement('select');
+    sortSelect.name = 'sort-variant';
+    sortSelect.className = 'sort-by-select';
+
+    sortSelect.innerHTML = `
+        <option value="" disabled hidden>Sort by:</option>
+    `;
+
+    fieldsForSort.forEach((name) => {
+        sortSelect.innerHTML += `
+            <option class="sort-option" value="${name}-ASC">Sort by ${name} ASC</option>
+            <option class="sort-option" value="${name}-DESC">Sort by ${name} DESC</option>
+        `;
+    });
+
+    const arrSortOptions = [...sortSelect.childNodes].filter(
+        (node) => node.nodeType == Node.ELEMENT_NODE
+    ) as HTMLOptionElement[];
+    const foundedOption =
+        parameters['sort'] !== undefined
+            ? arrSortOptions.find((option) => option.value === parameters['sort'][0])
+            : parameters['sort'];
+
+    if (foundedOption !== undefined) {
+        foundedOption.setAttribute('selected', 'selected');
+    } else {
+        arrSortOptions[0].setAttribute('selected', 'selected');
+    }
+
+    sortSelect.addEventListener('change', () => {
+        if (!orderParameters.includes('sort')) {
+            orderParameters.push('sort');
+        }
+        parameters['sort'] = [sortSelect.value];
+
+        generateQueryParameters();
+        fillProductList(adjustProductList());
+    });
+
+    return sortSelect;
 }
 
 function generateFilterPanel() {
@@ -380,7 +424,7 @@ function inputEventForDualSlider(
     parameters[paramName] = [`${minValue}`, `${maxValue}`];
 
     generateQueryParameters();
-    fillProductList(filterProductList());
+    fillProductList(adjustProductList());
 }
 
 function setFilterCheckBox(key: string, value: string, checked: boolean) {
@@ -400,7 +444,7 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
         }
     }
     generateQueryParameters();
-    fillProductList(filterProductList());
+    fillProductList(adjustProductList());
 }
 
 async function generateQueryParameters() {
@@ -408,8 +452,19 @@ async function generateQueryParameters() {
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
-function filterProductList() {
-    let result: ProductCard[] = dataProducts;
+function adjustProductList() {
+    let result: ProductCard[] = [...dataProducts];
+
+    result = filterProductList(result);
+    result = sortProductList(result);
+
+    adjustFilterAmounts(result);
+
+    return result;
+}
+
+function filterProductList(receivedList: ProductCard[]) {
+    let result: ProductCard[] = [...receivedList];
     let temp: ProductCard[];
 
     orderParameters.forEach((param) => {
@@ -436,7 +491,36 @@ function filterProductList() {
         }
     });
 
-    adjustFilterAmounts(result);
+    return result;
+}
+
+function sortProductList(receivedList: ProductCard[]) {
+    let result: ProductCard[] = [...receivedList];
+
+    const sort = parameters['sort'];
+    if (sort === undefined) return result;
+    if (sort[0] === undefined) return result;
+
+    const [sortValue, sortOrder] = sort[0].split('-');
+    let isValidValue = false;
+
+    switch (sortValue) {
+        case 'price':
+        case 'rating':
+            result = result.sort((a, b) => a[sortValue] - b[sortValue]);
+            isValidValue = true;
+            break;
+        case 'discount':
+            result = result.sort((a, b) => a['discountPercentage'] - b['discountPercentage']);
+            isValidValue = true;
+            break;
+        default:
+            break;
+    }
+
+    if (isValidValue && sortOrder === 'DESC') {
+        result = result.reverse();
+    }
 
     return result;
 }
