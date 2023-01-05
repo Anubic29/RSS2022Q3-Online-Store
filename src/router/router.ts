@@ -19,14 +19,18 @@ const routes: { [index: string]: (params?: ParamsObjGenerate, orderParams?: stri
     '404': generateContent404,
     '/': generateContentCatalog,
     '/cart': generateContentCart,
-    '/details': generateContentDetails,
+    '/details/': generateContentDetails,
 };
 
 const handleLocation = async () => {
     window.scroll({ top: 0 });
 
     const path = window.location.pathname;
-    const route = routes[path] || routes['404'];
+    console.log(window.location.search.substring(1));
+    let route = routes[path] || routes['404'];
+    if (path.match(/^\/details\//) && path.indexOf('/', 1) === path.lastIndexOf('/')) {
+        route = routes['/details/'];
+    }
     const mainPage = document.getElementById('main-page');
     if (mainPage instanceof Element) {
         mainPage.innerHTML = '';
@@ -55,4 +59,9 @@ function convertQueryParams(strParams: string): [ParamsObjGenerate, string[]] {
     return [paramsObj, orderParams];
 }
 
-export { route, handleLocation };
+function generateQueryParameters(orderParameters: string[], parameters: ParamsObjGenerate) {
+    const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+    return res;
+}
+
+export { route, handleLocation, convertQueryParams, generateQueryParameters };
