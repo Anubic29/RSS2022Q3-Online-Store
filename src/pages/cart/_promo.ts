@@ -7,10 +7,6 @@ let promosArray: promoObj[] = JSON.parse(localStorage.getItem('promo') as string
 let cartTotalSpan: HTMLSpanElement;
 let newTotalSp: HTMLSpanElement;
 
-// promos.forEach((promo: promoObj) => promosArray.push(promo));
-
-// localStorage.setItem('promo', JSON.stringify(promosArray));
-
 function promogenerator(
     input: HTMLInputElement,
     button: HTMLButtonElement,
@@ -81,7 +77,6 @@ export function addActiveCoupon(couponDiv: HTMLDivElement) {
         const promoLine = document.createElement('div') as HTMLDivElement;
         promoLine.classList.add('active-promo-line');
         promoLine.innerHTML = `<span>${promo.name} -${promo.disc}%</span> <button data-id='${promo.id}' class="promo-remove-btn">Remove</button>`;
-        // promoLine.innerText = `${promo.name} -${promo.disc}%`;
         couponHolder.append(promoLine);
         setDeleteListeners(promoLine.children);
     });
