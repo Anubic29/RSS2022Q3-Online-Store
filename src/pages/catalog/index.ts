@@ -96,7 +96,7 @@ function generateProductCard(data: ProductCard) {
         </div>
         <p class="category">${data.category}</p>
         <p class="title">${data.title}</p>
-        <p class="brand">${data.brand}</p>
+        <p class="brand">${data.brand.length > 24 ? data.brand.substring(0, 21).trim() + '...' : data.brand}</p>
         <div class="price-wrap">
             <p class="price">${data.price} ₴</p>
             <p class="reduced-price">${Math.round(data.price - (data.discountPercentage / 100) * data.price)} ₴</p>

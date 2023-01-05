@@ -101,6 +101,15 @@
 
 .prod-card-big {
   width: 300px;
+
+  .title,
+  .brand {
+    font-size: 20px;
+  }
+
+  .title {
+    height: 46px;
+  }
 }
 
 .prod-card-big .prod-img-wrap {
@@ -136,14 +145,15 @@
 
 .title {
   margin-top: 12px;
-  font-size: 20px;
+  font-size: 18px;
+  height: 40px;
   white-space: break-spaces;
 }
 
 .brand {
   font-weight: bold;
   margin-top: 10px;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .price-wrap{
