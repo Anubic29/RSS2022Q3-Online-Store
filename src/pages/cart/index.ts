@@ -5,6 +5,7 @@ import '../../../assets/icons/arrow.svg';
 import '../../../assets/icons/empty-cart.svg';
 import promogenerator from './_promo';
 import { createNewTotalSpan, addActiveCoupon } from './_promo';
+import { setInputListeners } from './_modal';
 
 let parameters: ParamsObjGenerate;
 let orderParameters: string[];
@@ -222,6 +223,48 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-cart';
     mainBlock.innerHTML = `
+        <div class="modal" id="modal">
+        <button class="close-btn">&times;</button>
+          <form class="form">
+            <div class="modal-header">
+              <h2 class="modal-title">Personal details</h2>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input customer-name" id="user-name" type="text" name="customer-name" placeholder="Name & surname">
+              <small></small>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input tel" id="tel" type="tel" name="tel" placeholder="Phone number">
+              <small></small>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input adress" id="adress" type="text" name="adress" placeholder="Delivery adress">
+              <small></small>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input email" id="email" type="email" name="email" placeholder="E-mail adress">
+              <small></small>
+            </div>
+            <h2 class="payment-title">Payment information</h2>
+            <div class="card-num-wrap">
+              <input class="form-input card-no" id="card" type="number" name="card-no" placeholder="Payment card number"  maxlength="16">
+              <img class="card-type">
+              <small></small>
+            </div>
+            <div class="card-details">
+              <div class="input-wrap">
+                <input class="form-input valid" id="date" type="text" name="valid" placeholder="MM/YY" maxlength="5">
+                <small></small>
+              </div>
+              <div class="input-wrap">
+                <input class="form-input cvv" id="cvv" type="number" name="cvv" placeholder="CVV" maxlength="3">
+                <small></small>
+              </div>
+            </div>
+            <button type="submit" class="order-btn">Confirm order</button>
+            </form>
+        </div>
+        <div class="overlay" id="overlay"></div>
         <div class="main-inner card-page">
       <nav class="cart-nav-line">
         <div class="header-h2-wrap">
@@ -288,6 +331,9 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
     const totalSumSpan = mainBlock.querySelector('.total-sum-num') as HTMLSpanElement;
     const newTotalSpan = mainBlock.querySelector('.new-total') as HTMLSpanElement;
     const couponDiv = mainBlock.querySelector('.active-coupons') as HTMLDivElement;
+    const checkoutBtn = mainBlock.querySelector('.cart-order-btn') as HTMLButtonElement;
+    const modal = mainBlock.querySelector('.modal') as HTMLDivElement;
+    const bg = mainBlock.querySelector('.overlay') as HTMLDivElement;
 
     totalSumSpanGlobal = totalSumSpan;
     newTotalSpanGlobal = newTotalSpan;
@@ -300,6 +346,7 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
         createNewTotalSpan(totalSumSpan, newTotalSpan);
         addActiveCoupon(couponDiv);
     }
+    setInputListeners(checkoutBtn, modal, bg, cartBody);
     return mainBlock;
 }
 
@@ -502,5 +549,4 @@ function refresCoundInput(item: HTMLInputElement, count: string) {
     theItem.setAttribute('value', count);
     theItem.value = count;
 }
-
 export default generateContentCart;
