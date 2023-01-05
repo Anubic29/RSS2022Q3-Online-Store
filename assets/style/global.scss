@@ -180,10 +180,13 @@ img {
 }
 
 .total-sum {
+  display: flex;
+  justify-content: baseline;
+  align-items: baseline;
   margin-right: 130px;
   margin-top: auto;
   font-size: 14px;
-  width: 90px;
+  width: 120px;
   margin-left: 20px;
 }
 

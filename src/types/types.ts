@@ -15,6 +15,7 @@ type ProductCard = {
 type CartProduct = {
     id: number;
     count: number;
+    finalPrice: number;
 };
 
 type ParamsObjGenerate = {

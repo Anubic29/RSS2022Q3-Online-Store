@@ -2,6 +2,7 @@ import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
+import { refreshCartHead } from '../cart/index';
 
 function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);
@@ -102,6 +103,7 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
 
     return mainBlock;
 }
+console.log(JSON.parse(localStorage.getItem('cartList') as string));
 
 function generateBtnsBlock(currentProduct: ProductCard) {
     const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
@@ -116,13 +118,20 @@ function generateBtnsBlock(currentProduct: ProductCard) {
     btnAddRem.addEventListener('click', () => {
         const idProdCart = cartList.findIndex((product) => product.id === currentProduct.id);
         if (idProdCart === -1) {
-            cartList.push({ id: currentProduct.id, count: 1 });
+            cartList.push({
+                id: currentProduct.id,
+                count: 1,
+                finalPrice: Math.round(
+                    currentProduct.price - (currentProduct.discountPercentage / 100) * currentProduct.price
+                ),
+            });
             btnAddRem.textContent = 'Remove from cart';
         } else {
             cartList.splice(idProdCart, 1);
             btnAddRem.textContent = 'Add to cart';
         }
         localStorage.setItem('cartList', JSON.stringify(cartList));
+        refreshCartHead();
     });
 
     const btnBuyNow = document.createElement('button');
@@ -130,9 +139,16 @@ function generateBtnsBlock(currentProduct: ProductCard) {
     btnBuyNow.textContent = 'Buy now';
     btnBuyNow.addEventListener('click', () => {
         if (cartList.findIndex((product) => product.id === currentProduct.id) === -1) {
-            cartList.push({ id: currentProduct.id, count: 1 });
+            cartList.push({
+                id: currentProduct.id,
+                count: 1,
+                finalPrice: Math.round(
+                    currentProduct.price - (currentProduct.discountPercentage / 100) * currentProduct.price
+                ),
+            });
             localStorage.setItem('cartList', JSON.stringify(cartList));
         }
+        refreshCartHead();
         window.history.pushState({}, '', '/cart');
         handleLocation();
     });

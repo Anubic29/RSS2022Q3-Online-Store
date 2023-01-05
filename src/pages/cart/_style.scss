@@ -1,3 +1,317 @@
-.page-cart {
-  color: yellow;
+@import '../../../assets/style/_vars.scss';
+
+.card-page {
+  max-width: 1500px;
+  margin: auto;
+
+  .cart-nav-line {
+    height: 120px;
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr;
+    align-items: center;
+  }
+
+  .header-h2-wrap {
+    display: flex;
+    margin-right: auto;
+    align-items: flex-end;
+    cursor: default;
+  }
+
+  .cart-header-icon {
+    filter: invert(98%) sepia(69%) saturate(3184%) hue-rotate(138deg) brightness(86%) contrast(81%);
+    margin-bottom: 4px;
+    margin-left: 10px;
+    height: 25px;
+  }
+
+  .counter {
+    display: flex;
+    color: $darkGreyText;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .counter *{
+    color: inherit;
+  }
+
+  .counter:last-child {
+    margin-left: 170px;
+  }
+
+  .items-count-span {
+    margin-right: 15px;
+    cursor: default;
+  }
+
+  .pagination-number {
+    border: $lightGreyElements 1px solid;
+    border-radius: 5px;
+    line-height: 27px;
+    width: 27px;
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: default;
+  }
+
+  .pagination-controller {
+    display: flex;
+    align-items: center;
+  }
+
+  .pag-right {
+    transform: rotateZ(180deg);
+  }
+
+  .pag-array:hover {
+    filter: brightness(204%) contrast(104%);
+    cursor: pointer;
+  }
+
+  .one-item-block {
+    display: grid;
+    grid-template-columns: 4fr 1fr 1fr;
+  }
+
+  .prod-card-inner {
+    display: flex;
+    flex-direction: row;
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  .prod-card-inner {
+    margin-top: 0;
+  }
+
+  .coupon-block {
+    display: grid;
+    grid-template-columns: 5fr 1fr;
+    justify-content: flex-end;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+
+  .summary-block {
+    margin-top: 70px;
+    margin-bottom: 200px;
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    border: $blueAccentColor 1px solid;
+    height: 90px;
+    align-items: center;
+  }
+
+  .summary-block *{
+    color: $darkGreyText;
+  }
+  .summary-title {
+    margin-right: auto;
+    margin-left: 20px;
+  }
+
+  .prod-img {
+    width: 250px;
+  }
+
+  .text-block {
+    margin-left: 20px;
+    margin-bottom: auto;
+    cursor: default;
+  }
+
+  .category {
+    margin-top: 0;
+  }
+
+  .prod-card-inner {
+    width: auto;
+    align-items: flex-start;
+  }
+
+  .item-count {
+    width: 250px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .rating-line {
+    max-width: 250px;
+  }
+
+  .desctiption {
+    margin-top: 20px;
+    color: $darkGreyText;
+  }
+
+  .prod-count-number {
+    border: $lightGreyElements 1px solid;
+    border-radius: 5px;
+    line-height: 40px;
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .prod-count-control {
+    display: flex;
+    align-items: baseline;
+    margin-right: 60px;
+    position: relative;
+  }
+
+  .stock {
+    top: 50px;
+    left: 0;
+    text-align: center;
+    cursor: default;
+  }
+
+  .prod-count {
+    font-weight: 600;
+    font-size: 24px;
+    cursor: pointer;
+    color: $darkGreyText;
+  }
+
+  .prod-count:hover {
+    color: $lightBlueOnHover;
+  }
+
+  hr {
+    border-top: $veryLightGreyElements 0.5px solid;
+    margin-top: 20px;
+  }
+
+  .item-sum-col {
+    max-width: 250px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .price-wrap {
+    align-items: center;
+    margin-top: 0;
+    cursor: default;
+  }
+
+  .price {
+    margin-top: 0;
+  }
+
+  .continue-btn {
+    border: $blueAccentColor 1px solid;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: auto;
+    margin-bottom: 50px;
+    text-align: center;
+    line-height: 50px;
+    transition: all 200ms ease-in-out;
+  }
+  .continue-btn:hover {
+    background-color: $lightBlueOnHover;
+    border: 1px solid $lightBlueOnHover;
+
+      .continue-btn-text {
+        color: white;
+      }
+  }
+
+  .continue-btn-text {
+    color: $blueAccentColor;
+  }
+
+  .coupon-form {
+    position: relative;
+  }
+
+  .coupon-q {
+    display: block;
+    color: $blueAccentColor;
+    padding-bottom: 5px;
+  }
+
+  .coupon-input {
+    width: 100%;
+    border-radius: 5px;
+    height: 30px;
+    border: $lightGreyText 1px solid;
+  }
+
+  .coupon-input::placeholder{
+    padding-left: 10px;
+    color: $lightGreyText;
+    font-size: 14px;
+  }
+
+  .coupon-submit {
+    position: absolute;
+    right: 0;
+    height: 30px;
+    border-radius: 0 5px 5px 0;
+    background-color: $blueAccentColor;
+    border: $blueAccentColor 1px solid;
+    color: white;
+    width: 110px;
+  }
+
+  .coupon-submit:hover {
+    background-color: $lightBlueOnHover;
+  }
+
+  .coupon-input:focus-visible,
+  .coupon-input:focus,
+  .coupon-input:active {
+    outline: none;
+    padding-left: 10px;
+
+    &::placeholder{
+      padding-left: 0;
+    }
+  }
+
+  .coupon-status {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: -20px;
+    width: auto;
+    font-size: 14px;
+    color: $lightGreyText;
+  }
+
+  .total-span {
+    font-size: 24px;
+    margin-left: 20px;
+  }
+
+  .cart-order-btn {
+    height: 90px;
+    border: none;
+    background-color: $blueAccentColor;
+    border: $blueAccentColor 1px solid;
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    transition: all 200ms ease-in-out;
+    position: relative;
+    top: -1px;
+    right: -2px;
+  }
+
+  .cart-order-btn:hover {
+    background-color: $lightBlueOnHover;
+    border: $lightBlueOnHover 1px solid;
+    color: white;
+  }
+
+  .empty-cart-div {
+    text-align: center;
+  }
 }
