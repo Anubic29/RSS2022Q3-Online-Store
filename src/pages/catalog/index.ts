@@ -1,4 +1,4 @@
-import { route, handleLocation } from '../../router/router';
+import { route, handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';
 
@@ -52,6 +52,22 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         </div>
     </div>
     `;
+
+    const searchBarInput = document.querySelector('#product-search') as HTMLInputElement;
+    const btnSearchReset = document.querySelector('.search-btn-reset') as HTMLButtonElement;
+    if (searchBarInput instanceof Element) {
+        searchBarInput.value = parameters['search'] ? parameters['search'][0] : '';
+
+        if (btnSearchReset instanceof Element && parameters['search'] && parameters['search'][0]) {
+            btnSearchReset.style.display = 'block';
+            btnSearchReset.addEventListener('click', async () => {
+                btnSearchReset.style.display = 'none';
+                orderParameters.splice(orderParameters.indexOf('search'), 1);
+                await pushQueryParameters();
+                handleLocation();
+            });
+        }
+    }
 
     const btnReset = mainBlock.querySelector('.reset-filter') as HTMLDivElement;
     btnReset.addEventListener('click', () => {
@@ -229,7 +245,7 @@ function generateSortPanel() {
         }
         parameters['sort'] = [sortSelect.value];
 
-        generateQueryParameters();
+        pushQueryParameters();
         fillProductList(adjustProductList());
     });
 
@@ -423,7 +439,7 @@ function inputEventForDualSlider(
     }
     parameters[paramName] = [`${minValue}`, `${maxValue}`];
 
-    generateQueryParameters();
+    pushQueryParameters();
     fillProductList(adjustProductList());
 }
 
@@ -443,12 +459,12 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
             orderParameters.splice(orderParameters.indexOf(key), 1);
         }
     }
-    generateQueryParameters();
+    pushQueryParameters();
     fillProductList(adjustProductList());
 }
 
-async function generateQueryParameters() {
-    const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+async function pushQueryParameters() {
+    const res = generateQueryParameters(orderParameters, parameters);
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
@@ -456,6 +472,9 @@ function adjustProductList() {
     let result: ProductCard[] = [...dataProducts];
 
     result = filterProductList(result);
+    if (parameters['search'] && parameters['search'][0]) {
+        result = searchProductInList(result, parameters['search'][0]);
+    }
     result = sortProductList(result);
 
     adjustFilterAmounts(result);
@@ -523,6 +542,31 @@ function sortProductList(receivedList: ProductCard[]) {
     }
 
     return result;
+}
+
+function searchProductInList(receivedList: ProductCard[], value: string) {
+    let result: { [key: string]: number | string | string[] }[] = [...receivedList];
+    const fieldsForSearch = [
+        'title',
+        'brand',
+        'category',
+        'price',
+        'stock',
+        'description',
+        'rating',
+        'discountPercentage',
+    ];
+
+    result = result.filter((obj) => {
+        for (let i = 0; i < fieldsForSearch.length; i++) {
+            if (`${obj[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    return result as ProductCard[];
 }
 
 async function adjustFilterAmounts(list: ProductCard[]) {
