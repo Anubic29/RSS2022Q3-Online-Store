@@ -42,7 +42,7 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         <label class="switch-layout">
             <img class="left-dots-bg" src="../assets/icons/5-dots-g.svg" alt="">
             <img src="../assets/icons/4-dots.svg" alt="" class="right-dots-bg">
-            <input type="checkbox">
+            <input id="switch-layout-checkbox" type="checkbox">
             <span class="layout-slider"></span>
         </label>
         </div>
@@ -91,6 +91,19 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
         }
     });
 
+    const checkboxSwitchLayout = mainBlock.querySelector('#switch-layout-checkbox') as HTMLInputElement;
+    if (parameters['big'] && parameters['big'][0] === 'true') {
+        checkboxSwitchLayout.checked = true;
+    }
+    checkboxSwitchLayout.addEventListener('change', () => {
+        if (!orderParameters.includes('big')) {
+            orderParameters.push('big');
+        }
+        parameters['big'] = [`${checkboxSwitchLayout.checked}`];
+        pushQueryParameters();
+        fillProductList(adjustProductList());
+    });
+
     mainBlockG = mainBlock;
 
     const sortPanel = mainBlock.querySelector('.sort-by-wrap');
@@ -111,21 +124,23 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
 async function fillProductList(products: ProductCard[]) {
     const cardsArea = mainBlockG.querySelector('.cards-area');
     if (cardsArea instanceof Element) {
+        const isBigCard = parameters['big'] && parameters['big'][0] === 'true';
         cardsArea.innerHTML = '';
         products.forEach((product) => {
-            cardsArea.append(generateProductCard(product));
+            cardsArea.append(generateProductCard(product, isBigCard));
         });
         if (products.length === 0) {
             const hTitle = document.createElement('h1');
+            hTitle.className = 'not-found';
             hTitle.textContent = 'No products found';
             cardsArea.append(hTitle);
         }
     }
 }
 
-function generateProductCard(data: ProductCard) {
+function generateProductCard(data: ProductCard, isBigCard: boolean) {
     const card = document.createElement('article');
-    card.className = 'prod-card';
+    card.className = `prod-card ${isBigCard ? 'prod-card-big' : ''}`;
 
     card.innerHTML = `
     <div class="v prod-card-inner">
