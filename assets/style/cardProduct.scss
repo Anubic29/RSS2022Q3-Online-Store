@@ -30,6 +30,9 @@
   background-size: cover;
   background-position: center;
   transition: all 200ms ease-in-out;
+  &:hover {
+    cursor: pointer;
+  }
 }
 .img-more-info-icon {
   // display: none;
@@ -196,6 +199,27 @@
   border: none;
   background-color: $blueAccentColor;
   transition: all 200ms ease-in-out;
+  position: relative;
+
+  &.remove {
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      height: 3px;
+      width: 50px;
+      background-color: $veryLightGreyElements;
+      left: 50%;
+      top: 45%;
+      transform: translate(-50%, -50%);
+    }
+    &::before {
+      transform: translate(-50%, -50%) rotateZ(45deg);
+    } 
+    &::after {
+      transform: translate(-50%, -50%) rotateZ(-45deg);
+    }
+  }
 }
 
 .card-btn-cart:hover {
