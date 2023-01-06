@@ -24,8 +24,12 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
             <li class="path-step path-step-store">
                 <a href="/" onclick="route()">Store</a>
             </li>
-            <li class="path-step path-step-category">${currentProduct.category}</li>
-            <li class="path-step path-step-brand">${currentProduct.brand}</li>
+            <li class="path-step path-step-category">
+                <a href="/?category=${currentProduct.category}" onclick="route()">${currentProduct.category}</a>
+            </li>
+            <li class="path-step path-step-brand">
+                <a href="/?brand=${currentProduct.brand}" onclick="route()">${currentProduct.brand}</a>
+            </li>
             <li class="path-step path-step-product">${currentProduct.title}</li>
         </ul>
         <div class="details-block">
