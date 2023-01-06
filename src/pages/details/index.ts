@@ -4,8 +4,6 @@ import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/ty
 import '../../../assets/icons/rate-star.svg';
 import { refreshCartHead } from '../cart/index';
 
-// const currentProduct: ProductCard = dataProducts[0];
-
 function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);
     console.log(orderParams);
@@ -33,11 +31,7 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
             <h2 class="title">${currentProduct.title}</h2>
             <div class="rating-block">
                 <div class="rating-stars">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
+                <div class="rate-stars"></div>
                 </div>
                 <p class="rating">Rating: ${currentProduct.rating}</p>
             </div>
@@ -70,6 +64,10 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
         </div>
         </div>
         `;
+
+        const rateStars = mainBlock.querySelector('.rate-stars') as HTMLDivElement;
+        const ratePercent = (+currentProduct.rating.toFixed(1) / 5) * 100;
+        rateStars.style.background = `linear-gradient(to right, yellow 0%, yellow ${ratePercent}%, lightgray ${ratePercent}%)`;
 
         const imageBlock = mainBlock.querySelector('.image-block') as Element;
 
