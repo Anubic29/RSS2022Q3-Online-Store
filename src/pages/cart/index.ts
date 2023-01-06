@@ -1,3 +1,4 @@
+import { handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { CartProduct, ProductCard, ParamsObjGenerate, promoObj } from '../../types/types';
 import '../../../assets/icons/search-plus.svg';
@@ -195,7 +196,7 @@ function refreshSummary(): void {
     createNewTotalSpan(totalSumSpanGlobal, newTotalSpanGlobal);
 }
 
-function refreshCountInProdRow(id: string, value?: string): void {
+function refreshCountInProdRow(id: string): void {
     const theProdFullData = dataProducts.find((prod) => prod.id === Number(id)) as ProductCard;
     const theProdFromStorage = productsArray().find((prod) => prod.id === Number(id)) as CartProduct;
     const totalSumPlace = Array.from<HTMLParagraphElement>(document.querySelectorAll('p.reduced-price')).find(
@@ -204,13 +205,11 @@ function refreshCountInProdRow(id: string, value?: string): void {
     const countProdsPlace = Array.from<HTMLParagraphElement>(document.querySelectorAll('p.price')).find(
         (p) => p.dataset.id === id
     ) as HTMLParagraphElement;
-    if (value) {
-        countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
-        totalSumPlace.innerText = `${
-            Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
-            theProdFromStorage.count
-        } ₴`;
-    }
+    countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
+    totalSumPlace.innerText = `${
+        Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
+        theProdFromStorage.count
+    } ₴`;
 }
 
 function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[]) {
@@ -460,6 +459,13 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
     } else {
         item.innerHTML = '';
     }
+    const prodImg = item.querySelector('.prod-img');
+    if (prodImg instanceof Element) {
+        prodImg.addEventListener('click', () => {
+            window.history.pushState({}, '', `/details/${obj.id}`);
+            handleLocation();
+        });
+    }
     return item;
 };
 
@@ -484,18 +490,13 @@ function getCountInput(id: string): HTMLInputElement {
 function setInputsListenes(inputs: HTMLInputElement[]) {
     inputs.forEach((input) => {
         if (input) {
-            input.addEventListener('change', function (): void {
+            input.addEventListener('input', function (): void {
                 const productsFromStorage = productsArray();
                 const id = this.dataset.id as string;
                 let value = this.value as string;
                 const input = getCountInput(id);
                 if (Number(value) <= 0) {
-                    const ifDelete = confirm(`Are you sure you want to delete this product from the cart?`);
-                    if (ifDelete) {
-                        deleteTheItem(productsFromStorage, id);
-                    } else {
-                        return;
-                    }
+                    deleteTheItem(productsFromStorage, id);
                 }
                 if (Number(value) > Number(input.max)) {
                     value = input.max;
@@ -509,7 +510,7 @@ function setInputsListenes(inputs: HTMLInputElement[]) {
                 localStorage.setItem('cartList', JSON.stringify(productsFromStorage));
                 refreshCartHead();
                 refreshSummary();
-                refreshCountInProdRow(id, value);
+                refreshCountInProdRow(id);
             });
         }
     });
