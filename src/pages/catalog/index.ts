@@ -429,7 +429,7 @@ function createTwoRange(min: number, max: number, name: string, getMin?: number,
 }
 
 function getPercentBetweenTwoValues(min: number, max: number, value: number) {
-    return Math.round((value / (max + min)) * 100);
+    return Math.round(((value - min) / (max - min)) * 100);
 }
 
 function inputEventForDualSlider(
@@ -623,4 +623,4 @@ async function adjustFilterAmounts(list: ProductCard[]) {
     }
 }
 
-export default generateContentCatalog;
+export { generateContentCatalog, getPercentBetweenTwoValues };

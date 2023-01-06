@@ -160,4 +160,4 @@ function generateBtnsBlock(currentProduct: ProductCard) {
     return btnsBlock;
 }
 
-export default generateContentDetails;
+export { generateContentDetails };

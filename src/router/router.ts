@@ -1,7 +1,7 @@
-import generateContent404 from '../pages/404';
-import generateContentCart from '../pages/cart';
-import generateContentCatalog from '../pages/catalog';
-import generateContentDetails from '../pages/details';
+import { generateContent404 } from '../pages/404';
+import { generateContentCart } from '../pages/cart';
+import { generateContentCatalog } from '../pages/catalog';
+import { generateContentDetails } from '../pages/details';
 import type { ParamsObjGenerate } from '../types/types';
 
 const route = (event: Event) => {
