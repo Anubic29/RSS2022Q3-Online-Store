@@ -105,7 +105,6 @@ export function setInputListeners(
 
     const isTelValid = (tel: string) => {
         const re = /\+[0-9]{9,}/;
-        console.log(re.test(tel));
         return re.test(tel);
     };
 

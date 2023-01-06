@@ -349,7 +349,6 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
     promogenerator(promoInput, promoBtn, totalSumSpan, newTotalSpan, couponDiv);
     cartBody = mainBlock.querySelector('.all-items-holder') as HTMLOListElement;
     cartBodyGenerator(cartBody, currRange, prevRange);
-    console.log(cartBody);
     if (promosArray.length > 0) {
         createNewTotalSpan(totalSumSpan, newTotalSpan);
         addActiveCoupon(couponDiv);
@@ -372,7 +371,6 @@ function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev: number
             products.map((obj: ProductCard) => cartBody.appendChild(itemsGenerator(obj, cur, prev)));
         }
         if (products.length === 0) {
-            console.log(products.length);
             const emptyCartDiv = document.createElement('div') as HTMLDivElement;
             emptyCartDiv.className = 'empty-cart-div';
             const emptyCartImg = document.createElement('img') as HTMLImageElement;
@@ -393,19 +391,14 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
     const item = document.createElement('li') as HTMLLIElement;
     let itemNo = 0;
     const ar = productsArray().sort((a, b) => a.id - b.id);
-    console.log(ar[0].id);
-    console.log('obj', obj);
     const itemInCart = ar.filter((item: CartProduct) => {
         itemNo = ar.findIndex((item) => item.id === obj.id) as number;
-        console.log('itemNo', itemNo);
         if (item.id === obj.id) {
             const selected = item;
             return selected;
         }
     })[0];
-    console.log(itemInCart);
     item.className = 'one-item-block';
-    console.log(itemNo, prev, cur);
     if (itemNo >= prev && itemNo < cur) {
         item.innerHTML = `
                 <span class='list-market'>${(itemNo + 1).toString()}</span>
