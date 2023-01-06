@@ -1,4 +1,5 @@
-import { route, handleLocation } from '../../router/router';
+// import { route, handleLocation } from '../../router/router';
+import { handleLocation, route } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
@@ -151,6 +152,7 @@ function generateBtnsBlock(currentProduct: ProductCard) {
             localStorage.setItem('cartList', JSON.stringify(cartList));
         }
         refreshCartHead();
+        sessionStorage.setItem('buy', 'true');
         window.history.pushState({}, '', '/cart');
         handleLocation();
     });

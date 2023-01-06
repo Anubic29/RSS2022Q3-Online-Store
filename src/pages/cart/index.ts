@@ -17,6 +17,9 @@ let currRange = setCurRange(1);
 let prevRange = setPrevRange(1);
 let totalSumSpanGlobal: HTMLSpanElement;
 let newTotalSpanGlobal: HTMLSpanElement;
+let modalG: HTMLDivElement;
+let bgG: HTMLDivElement;
+const body = document.querySelector('body') as HTMLBodyElement;
 
 const cartCountHead = document.getElementById('cart-prod-count') as HTMLElement;
 const totalCountHead = document.getElementById('total-numbers') as HTMLElement;
@@ -211,6 +214,7 @@ function refreshCountInProdRow(id: string, value?: string): void {
 }
 
 function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[]) {
+    currentPage = 1;
     if (params && params.page) {
         currentPage = Number(params.page);
     }
@@ -248,12 +252,12 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
             <h2 class="payment-title">Payment information</h2>
             <div class="card-num-wrap">
               <input class="form-input card-no" id="card" type="number" name="card-no" placeholder="Payment card number"  maxlength="16">
-              <img class="card-type">
+              <div class="card-type"></div>
               <small></small>
             </div>
             <div class="card-details">
               <div class="input-wrap">
-                <input class="form-input valid" id="date" type="text" name="valid" placeholder="MM/YY" maxlength="5">
+                <input class="form-input valid" id="date" type="text" name="valid" placeholder="MM/YY">
                 <small></small>
               </div>
               <div class="input-wrap">
@@ -337,26 +341,38 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
 
     totalSumSpanGlobal = totalSumSpan;
     newTotalSpanGlobal = newTotalSpan;
+    modalG = modal;
+    bgG = bg;
+
     setPaginationListeners(paginationNumber, prevButton, nextButton, params, orderParams);
     setProdsPerPageListeners(prodsPerPage, paginationNumber);
     promogenerator(promoInput, promoBtn, totalSumSpan, newTotalSpan, couponDiv);
     cartBody = mainBlock.querySelector('.all-items-holder') as HTMLOListElement;
     cartBodyGenerator(cartBody, currRange, prevRange);
+    console.log(cartBody);
     if (promosArray.length > 0) {
         createNewTotalSpan(totalSumSpan, newTotalSpan);
         addActiveCoupon(couponDiv);
     }
     setInputListeners(checkoutBtn, modal, bg, cartBody);
+    if (sessionStorage.getItem('buy') === 'true') {
+        modalG.classList.add('active');
+        bgG.classList.add('active');
+        body.classList.add('modal-active');
+        sessionStorage.clear();
+    }
     return mainBlock;
 }
 
-export function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev: number) {
+function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev: number) {
     if (cartBody instanceof Element) {
         const products = productsInCart(productsArray());
+        pageCount = Math.ceil(productsArray().length / paginationLimit);
         if (products.length > 0) {
             products.map((obj: ProductCard) => cartBody.appendChild(itemsGenerator(obj, cur, prev)));
         }
         if (products.length === 0) {
+            console.log(products.length);
             const emptyCartDiv = document.createElement('div') as HTMLDivElement;
             emptyCartDiv.className = 'empty-cart-div';
             const emptyCartImg = document.createElement('img') as HTMLImageElement;
@@ -369,6 +385,7 @@ export function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev:
         setMinusListeners(minusProdsOnPage);
         setInputsListenes(countInputs);
     }
+
     return cartBody;
 }
 
@@ -376,14 +393,19 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
     const item = document.createElement('li') as HTMLLIElement;
     let itemNo = 0;
     const ar = productsArray().sort((a, b) => a.id - b.id);
+    console.log(ar[0].id);
+    console.log('obj', obj);
     const itemInCart = ar.filter((item: CartProduct) => {
         itemNo = ar.findIndex((item) => item.id === obj.id) as number;
+        console.log('itemNo', itemNo);
         if (item.id === obj.id) {
             const selected = item;
             return selected;
         }
     })[0];
+    console.log(itemInCart);
     item.className = 'one-item-block';
+    console.log(itemNo, prev, cur);
     if (itemNo >= prev && itemNo < cur) {
         item.innerHTML = `
                 <span class='list-market'>${(itemNo + 1).toString()}</span>
@@ -549,4 +571,5 @@ function refresCoundInput(item: HTMLInputElement, count: string) {
     theItem.setAttribute('value', count);
     theItem.value = count;
 }
+
 export default generateContentCart;

@@ -1,13 +1,15 @@
 import { refreshCartHead } from './index';
+import '../../../assets/img/master.png';
+import '../../../assets/img/express.png';
+import '../../../assets/img/visa.png';
 
 function checkout(modal: HTMLDivElement, bg: HTMLDivElement, bodyOfCart: HTMLOListElement) {
-    console.log('chdjksh');
     const modalForm = modal;
     const overlay = bg;
     const body = document.querySelector('body') as HTMLBodyElement;
     const cartBody = bodyOfCart;
     localStorage.setItem('cartList', '[]');
-    // handleLocation();
+    localStorage.setItem('promo', '[]');
     modalForm.classList.remove('active');
     overlay.classList.remove('active');
     body.classList.remove('modal-active');
@@ -40,18 +42,17 @@ function checkout(modal: HTMLDivElement, bg: HTMLDivElement, bodyOfCart: HTMLOLi
     const text = document.createElement('p');
     text.classList.add('redirect-p');
     mainBlock.append(text);
-    text.innerText = `Thanks! Flying·to·main...\n3 seconds left`;
+    text.innerText = `Thanks! Flying to main...\n3 seconds left`;
     let secs = 2;
     setInterval(function () {
-        text.innerText = `Thanks! Flying·to·main...\n${secs} seconds left`;
+        text.innerText = `Thanks! Flying to main...\n${secs} seconds left`;
         secs -= 1;
     }, 1000);
     window.setTimeout(callback, 3000);
 }
 
 function callback() {
-    window.history.pushState({}, '', '/');
-    location.reload();
+    window.location.href = '/';
 }
 
 export function setInputListeners(
@@ -91,6 +92,7 @@ export function setInputListeners(
     const validInput = block.querySelector('.form-input.valid') as HTMLInputElement;
     const cvvInput = block.querySelector('.form-input.cvv') as HTMLInputElement;
     const form = block.querySelector('form') as HTMLFormElement;
+    const cardTypeImg = block.querySelector('.card-type') as HTMLDivElement;
 
     const isRequired = (val: string) => {
         return val === '' ? false : true;
@@ -216,6 +218,21 @@ export function setInputListeners(
     const checkCardNom = () => {
         let valid = false;
         const card = cardNoInput.value.trim();
+        cardTypeImg.setAttribute('style', 'background-image: url()');
+        switch (card[0]) {
+            case '4':
+                cardTypeImg.setAttribute('style', 'background-image: url(../assets/img/visa.png)');
+                break;
+            case '5':
+                cardTypeImg.setAttribute('style', 'background-image: url(../assets/img/master.png)');
+                break;
+            case '6':
+                cardTypeImg.setAttribute('style', 'background-image: url(../assets/img/express.png)');
+                break;
+            default:
+                cardTypeImg.setAttribute('style', 'background-image: url()');
+                break;
+        }
         if (card.length > 16) {
             cardNoInput.value = card.slice(0, -1);
         }
@@ -234,7 +251,7 @@ export function setInputListeners(
     const checkData = () => {
         let valid = false;
         const data = validInput.value.trim();
-        if (isNaN(Number(data))) {
+        if (data.toLocaleLowerCase() !== data.toLocaleUpperCase()) {
             validInput.value = '';
         }
         if (data.length === 2) {
