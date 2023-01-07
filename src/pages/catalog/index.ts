@@ -3,7 +3,7 @@ import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 import { refreshCartHead } from '../cart/index';
 
-import { getPercentBetweenTwoValues, filterProductList } from './functions';
+import { getPercentBetweenTwoValues, filterProductList, sortProductList } from './functions';
 
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
@@ -494,40 +494,9 @@ function adjustProductList() {
     if (parameters['search'] && parameters['search'][0]) {
         result = searchProductInList(result, parameters['search'][0]);
     }
-    result = sortProductList(result);
+    result = sortProductList(result, parameters);
 
     adjustFilterAmounts(result);
-
-    return result;
-}
-
-function sortProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = [...receivedList];
-
-    const sort = parameters['sort'];
-    if (sort === undefined) return result;
-    if (sort[0] === undefined) return result;
-
-    const [sortValue, sortOrder] = sort[0].split('-');
-    let isValidValue = false;
-
-    switch (sortValue) {
-        case 'price':
-        case 'rating':
-            result = result.sort((a, b) => a[sortValue] - b[sortValue]);
-            isValidValue = true;
-            break;
-        case 'discount':
-            result = result.sort((a, b) => a['discountPercentage'] - b['discountPercentage']);
-            isValidValue = true;
-            break;
-        default:
-            break;
-    }
-
-    if (isValidValue && sortOrder === 'DESC') {
-        result = result.reverse();
-    }
 
     return result;
 }

@@ -35,4 +35,35 @@ function filterProductList(receivedList: ProductCard[], parameters: ParamsObjGen
     return result;
 }
 
-export { getPercentBetweenTwoValues, filterProductList };
+function sortProductList(receivedList: ProductCard[], parameters: ParamsObjGenerate) {
+    let result: ProductCard[] = [...receivedList];
+
+    const sort = parameters['sort'];
+    if (sort === undefined) return result;
+    if (sort[0] === undefined) return result;
+
+    const [sortValue, sortOrder] = sort[0].split('-');
+    let isValidValue = false;
+
+    switch (sortValue) {
+        case 'price':
+        case 'rating':
+            result = result.sort((a, b) => a[sortValue] - b[sortValue]);
+            isValidValue = true;
+            break;
+        case 'discount':
+            result = result.sort((a, b) => a['discountPercentage'] - b['discountPercentage']);
+            isValidValue = true;
+            break;
+        default:
+            break;
+    }
+
+    if (isValidValue && sortOrder === 'DESC') {
+        result = result.reverse();
+    }
+
+    return result;
+}
+
+export { getPercentBetweenTwoValues, filterProductList, sortProductList };

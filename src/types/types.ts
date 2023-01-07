@@ -22,10 +22,10 @@ type ParamsObjGenerate = {
     [key: string]: string[];
 };
 
-type promoObj ={
+type promoObj = {
     id: string;
     name: string;
     disc: number;
-}
+};
 
 export type { ProductCard, CartProduct, ParamsObjGenerate, promoObj };
