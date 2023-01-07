@@ -66,4 +66,19 @@ function sortProductList(receivedList: ProductCard[], parameters: ParamsObjGener
     return result;
 }
 
-export { getPercentBetweenTwoValues, filterProductList, sortProductList };
+function searchProductInList(receivedList: ProductCard[], fieldsForSearch: string[], value: string) {
+    let result: { [key: string]: number | string | string[] }[] = [...receivedList];
+
+    result = result.filter((obj) => {
+        for (let i = 0; i < fieldsForSearch.length; i++) {
+            if (`${obj[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
+                return true;
+            }
+        }
+        return false;
+    });
+
+    return result as ProductCard[];
+}
+
+export { getPercentBetweenTwoValues, filterProductList, sortProductList, searchProductInList };

@@ -3,7 +3,7 @@ import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 import { refreshCartHead } from '../cart/index';
 
-import { getPercentBetweenTwoValues, filterProductList, sortProductList } from './functions';
+import { getPercentBetweenTwoValues, filterProductList, sortProductList, searchProductInList } from './functions';
 
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
@@ -487,43 +487,19 @@ async function pushQueryParameters() {
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
+const fieldsForSearch = ['title', 'brand', 'category', 'price', 'stock', 'description', 'rating', 'discountPercentage'];
 function adjustProductList() {
     let result: ProductCard[] = [...dataProducts];
 
     result = filterProductList(result, parameters);
     if (parameters['search'] && parameters['search'][0]) {
-        result = searchProductInList(result, parameters['search'][0]);
+        result = searchProductInList(result, fieldsForSearch, parameters['search'][0]);
     }
     result = sortProductList(result, parameters);
 
     adjustFilterAmounts(result);
 
     return result;
-}
-
-function searchProductInList(receivedList: ProductCard[], value: string) {
-    let result: { [key: string]: number | string | string[] }[] = [...receivedList];
-    const fieldsForSearch = [
-        'title',
-        'brand',
-        'category',
-        'price',
-        'stock',
-        'description',
-        'rating',
-        'discountPercentage',
-    ];
-
-    result = result.filter((obj) => {
-        for (let i = 0; i < fieldsForSearch.length; i++) {
-            if (`${obj[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
-                return true;
-            }
-        }
-        return false;
-    });
-
-    return result as ProductCard[];
 }
 
 async function adjustFilterAmounts(list: ProductCard[]) {
