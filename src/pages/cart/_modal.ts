@@ -1,9 +1,30 @@
+import { CartProduct, soldProducts } from '../../types/types';
 import { refreshCartHead } from './index';
 import '../../../assets/img/master.png';
 import '../../../assets/img/express.png';
 import '../../../assets/img/visa.png';
 
 function checkout(modal: HTMLDivElement, bg: HTMLDivElement, bodyOfCart: HTMLOListElement) {
+    const prodsInCart: CartProduct[] = JSON.parse(localStorage.getItem('cartList') as string);
+    const soldItems: soldProducts[] = localStorage.getItem('soldProducts')
+        ? JSON.parse(localStorage.getItem('soldProducts') as string)
+        : [];
+    if (!prodsInCart || prodsInCart.length === 0) {
+        alert('Your cart is empty! Choose products first.');
+        return;
+    }
+    if (prodsInCart && prodsInCart.length > 0) {
+        prodsInCart.forEach((prod) => {
+            const soldEarlier = soldItems.find((item) => item.id === prod.id);
+            if (soldEarlier) {
+                soldEarlier.sold = soldEarlier.sold + prod.count;
+            } else {
+                const objToPush: soldProducts = { id: prod.id, sold: prod.count };
+                soldItems.push(objToPush);
+            }
+        });
+        localStorage.setItem('soldProducts', JSON.stringify(soldItems));
+    }
     const modalForm = modal;
     const overlay = bg;
     const body = document.querySelector('body') as HTMLBodyElement;
