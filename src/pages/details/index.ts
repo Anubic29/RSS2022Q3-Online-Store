@@ -1,5 +1,6 @@
 import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
+import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
 import { refreshCartHead } from '../cart/index';
@@ -66,8 +67,8 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
         `;
 
         const rateStars = mainBlock.querySelector('.rate-stars') as HTMLDivElement;
-        const ratePercent = (+currentProduct.rating.toFixed(1) / 5) * 100;
-        rateStars.style.background = `linear-gradient(to right, yellow 0%, yellow ${ratePercent}%, lightgray ${ratePercent}%)`;
+        const ratePercent = (+currentProduct.rating.toFixed(1) / maxValueRating) * 100;
+        rateStars.style.background = `linear-gradient(to right, ${colorFilledStar} 0%, ${colorFilledStar} ${ratePercent}%, ${colorEmptyStar} ${ratePercent}%)`;
 
         const imageBlock = mainBlock.querySelector('.image-block') as Element;
 

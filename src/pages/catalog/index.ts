@@ -1,5 +1,6 @@
 import { route, handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
+import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 import { refreshCartHead } from '../cart/index';
 
@@ -180,8 +181,8 @@ function generateProductCard(data: ProductCard, isBigCard: boolean) {
     `;
 
     const rateStars = card.querySelector('.rate-stars') as HTMLDivElement;
-    const ratePercent = (+data.rating.toFixed(1) / 5) * 100;
-    rateStars.style.background = `linear-gradient(to right, yellow 0%, yellow ${ratePercent}%, lightgray ${ratePercent}%)`;
+    const ratePercent = (+data.rating.toFixed(1) / maxValueRating) * 100;
+    rateStars.style.background = `linear-gradient(to right, ${colorFilledStar} 0%, ${colorFilledStar} ${ratePercent}%, ${colorEmptyStar} ${ratePercent}%)`;
 
     const prodImg = card.querySelector('.prod-img');
     if (prodImg instanceof Element) {

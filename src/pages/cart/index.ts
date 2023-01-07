@@ -5,6 +5,7 @@ import '../../../assets/icons/arrow.svg';
 import '../../../assets/icons/empty-cart.svg';
 import promogenerator from './_promo';
 import { createNewTotalSpan, addActiveCoupon } from './_promo';
+import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 
 let parameters: ParamsObjGenerate;
 let orderParameters: string[];
@@ -392,8 +393,8 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
                 </div>
                 `;
         const rateStars = item.querySelector('.rate-stars') as HTMLDivElement;
-        const ratePercent = (+obj.rating.toFixed(1) / 5) * 100;
-        rateStars.style.background = `linear-gradient(to right, yellow 0%, yellow ${ratePercent}%, lightgray ${ratePercent}%)`;
+        const ratePercent = (+obj.rating.toFixed(1) / maxValueRating) * 100;
+        rateStars.style.background = `linear-gradient(to right, ${colorFilledStar} 0%, ${colorFilledStar} ${ratePercent}%, ${colorEmptyStar} ${ratePercent}%)`;
     } else {
         item.innerHTML = '';
     }
