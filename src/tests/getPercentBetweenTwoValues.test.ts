@@ -1,8 +1,4 @@
-// import { getPercentBetweenTwoValues } from '../pages/catalog/index';
-
-function getPercentBetweenTwoValues(min: number, max: number, value: number) {
-    return Math.round(((value - min) / (max - min)) * 100);
-}
+import { getPercentBetweenTwoValues } from '../pages/catalog/functions';
 
 describe('catalog module', () => {
     test('percent value 320 between 175 and 465 to equal 50%', () => {

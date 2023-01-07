@@ -3,6 +3,8 @@ import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 import { refreshCartHead } from '../cart/index';
 
+import { getPercentBetweenTwoValues } from './functions';
+
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/4-dots.svg';
@@ -428,10 +430,6 @@ function createTwoRange(min: number, max: number, name: string, getMin?: number,
     return dualSlider;
 }
 
-function getPercentBetweenTwoValues(min: number, max: number, value: number) {
-    return Math.round(((value - min) / (max - min)) * 100);
-}
-
 function inputEventForDualSlider(
     slider1: HTMLInputElement,
     slider2: HTMLInputElement,
@@ -623,4 +621,4 @@ async function adjustFilterAmounts(list: ProductCard[]) {
     }
 }
 
-export { generateContentCatalog, getPercentBetweenTwoValues };
+export { generateContentCatalog };
