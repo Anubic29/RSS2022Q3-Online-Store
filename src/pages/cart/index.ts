@@ -1,6 +1,6 @@
 import { handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { CartProduct, ProductCard, ParamsObjGenerate, promoObj } from '../../types/types';
+import type { CartProduct, ProductCard, ParamsObjGenerate, promoObj, soldProducts } from '../../types/types';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
 import '../../../assets/icons/empty-cart.svg';
@@ -27,6 +27,7 @@ const totalCountHead = document.getElementById('total-numbers') as HTMLElement;
 export let cartBody: HTMLOListElement;
 
 const productsArray = (): Array<CartProduct> => JSON.parse(localStorage.getItem('cartList') as string) ?? [];
+const soldArray = (): Array<soldProducts> => JSON.parse(localStorage.getItem('soldProducts') as string) ?? [];
 const promosArray: promoObj[] = JSON.parse(localStorage.getItem('promo') as string)
     ? JSON.parse(localStorage.getItem('promo') as string)
     : [];
@@ -397,6 +398,12 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
             return selected;
         }
     })[0];
+    let leftInStock = obj.stock;
+    soldArray().find((item) => {
+        if (item.id === itemInCart.id) {
+            leftInStock = obj.stock - item.sold;
+        }
+    });
     item.className = 'one-item-block';
     if (itemNo >= prev && itemNo < cur) {
         item.innerHTML = `
@@ -436,12 +443,12 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
                   <div class="prod-count-control" data-id=${obj.id}>
                     <div id="minus" class="prod-count" data-type="minus" data-id=${obj.id}>—</div>
                     <div class="prod-count-number">
-                      <input class="user-set-count" data-id="${obj.id}" type="number" min="0" max="${
-            obj.stock
-        }" value="${itemInCart.count}">
+                      <input class="user-set-count" data-id="${
+                          obj.id
+                      }" type="number" min="0" max="${leftInStock}" value="${itemInCart.count}">
                     </div>
                     <div id="plus" class="prod-count" data-type="plus" data-id=${obj.id}>+</div>
-                    <div class="stock">${obj.stock} in stock</div>
+                    <div class="stock">${leftInStock} in stock</div>
                   </div>
                 </div>
                 <div class="item-sum-col">
