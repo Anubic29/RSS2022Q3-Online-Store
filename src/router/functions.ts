@@ -21,4 +21,9 @@ function convertQueryParams(strParams: string): [ParamsObjGenerate, string[]] {
     return [paramsObj, orderParams];
 }
 
-export { convertQueryParams };
+function generateQueryParameters(orderParameters: string[], parameters: ParamsObjGenerate) {
+    const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+    return res;
+}
+
+export { convertQueryParams, generateQueryParameters };
