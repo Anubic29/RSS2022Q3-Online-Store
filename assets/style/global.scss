@@ -18,6 +18,12 @@ body {
   flex-direction: column;
 }
 
+body.modal-active {
+  height: 100vh;
+  overflow-y: hidden;
+  padding-right: 20px;
+}
+
 img {
   user-select: none;
   user-drag: none;
