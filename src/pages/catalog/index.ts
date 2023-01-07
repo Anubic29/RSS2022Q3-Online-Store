@@ -12,12 +12,16 @@ let mainBlockG: HTMLDivElement;
 let parameters: ParamsObjGenerate;
 let orderParameters: string[];
 
+let canAdjustSliders = false;
+
 function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string[]) {
     parameters = params ? params : {};
     orderParameters = orderParams ? orderParams : [];
     console.log(route);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';
+
+    canAdjustSliders = true;
 
     mainBlock.innerHTML = `
     <div class="main-inner">
@@ -480,6 +484,7 @@ function setFilterCheckBox(key: string, value: string, checked: boolean) {
             orderParameters.splice(orderParameters.indexOf(key), 1);
         }
     }
+    canAdjustSliders = true;
     pushQueryParameters();
     fillProductList(adjustProductList());
 }
@@ -499,6 +504,9 @@ function adjustProductList() {
     result = sortProductList(result);
 
     adjustFilterAmounts(result);
+    if (canAdjustSliders) {
+        adjustDualSliderValues(result);
+    }
 
     return result;
 }
@@ -621,6 +629,40 @@ async function adjustFilterAmounts(list: ProductCard[]) {
     if (productsAmount instanceof Element) {
         productsAmount.textContent = `${list.length}`;
     }
+}
+
+async function adjustDualSliderValues(list: ProductCard[]) {
+    const filterPanel = mainBlockG.querySelector('.filter-panel') as HTMLDivElement;
+    const filterPriceDualSlider = filterPanel.querySelector('.filter-price.filter-feature-2-range') as HTMLDivElement;
+    const filterStockDualSlider = filterPanel.querySelector('.filter-stock.filter-feature-2-range') as HTMLDivElement;
+    const priceValues = list.map((elem) => elem.price);
+    const stockValues = list.map((elem) => elem.stock);
+    const valuesArr = [priceValues, stockValues];
+
+    [filterPriceDualSlider, filterStockDualSlider].forEach((dualSlider, idx) => {
+        const min = Math.min(...valuesArr[idx]);
+        const max = Math.max(...valuesArr[idx]);
+        const paragValue1 = dualSlider.querySelector('.value-1') as HTMLElement;
+        const paragValue2 = dualSlider.querySelector('.value-2') as HTMLElement;
+
+        const slider1 = dualSlider.querySelector('.range-1') as HTMLInputElement;
+        const slider2 = dualSlider.querySelector('.range-2') as HTMLInputElement;
+
+        paragValue1.textContent = `${min}`;
+        paragValue2.textContent = `${max}`;
+        slider1.value = `${min}`;
+        slider2.value = `${max}`;
+
+        const minPercent = getPercentBetweenTwoValues(+slider2.min, +slider2.max, min);
+        const maxPercent = getPercentBetweenTwoValues(+slider2.min, +slider2.max, max);
+
+        slider2.setAttribute(
+            'style',
+            `background: linear-gradient(to right, #C6C6C6, #C6C6C6 ${minPercent}%, #46C2CB ${minPercent}%, #46C2CB ${maxPercent}%, #C6C6C6 ${maxPercent}%);`
+        );
+    });
+
+    canAdjustSliders = false;
 }
 
 export default generateContentCatalog;
