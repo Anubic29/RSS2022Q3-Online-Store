@@ -3,7 +3,7 @@ import dataProducts from '../../../assets/libs/data';
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 import { refreshCartHead } from '../cart/index';
 
-import { getPercentBetweenTwoValues } from './functions';
+import { getPercentBetweenTwoValues, filterProductList } from './functions';
 
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/icons/search-plus.svg';
@@ -490,44 +490,13 @@ async function pushQueryParameters() {
 function adjustProductList() {
     let result: ProductCard[] = [...dataProducts];
 
-    result = filterProductList(result);
+    result = filterProductList(result, parameters);
     if (parameters['search'] && parameters['search'][0]) {
         result = searchProductInList(result, parameters['search'][0]);
     }
     result = sortProductList(result);
 
     adjustFilterAmounts(result);
-
-    return result;
-}
-
-function filterProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = [...receivedList];
-    let temp: ProductCard[];
-
-    orderParameters.forEach((param) => {
-        switch (param) {
-            case 'category':
-            case 'brand':
-                temp = [];
-                parameters[param].forEach((value) => {
-                    temp.push(...result.filter((obj) => obj[param] === value));
-                });
-                result = temp;
-                break;
-            case 'price':
-            case 'stock':
-                temp = [
-                    ...result.filter(
-                        (obj) => obj[param] >= +parameters[param][0] && obj[param] <= +parameters[param][1]
-                    ),
-                ];
-                result = temp;
-                break;
-            default:
-                break;
-        }
-    });
 
     return result;
 }

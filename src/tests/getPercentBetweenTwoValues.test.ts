@@ -1,6 +1,6 @@
 import { getPercentBetweenTwoValues } from '../pages/catalog/functions';
 
-describe('catalog module', () => {
+describe('catalog module - getPercentBetweenTwoValues', () => {
     test('percent value 320 between 175 and 465 to equal 50%', () => {
         expect(getPercentBetweenTwoValues(175, 465, 320)).toBe(50);
     });
