@@ -4,6 +4,8 @@ import { generateContentCatalog } from '../pages/catalog';
 import { generateContentDetails } from '../pages/details';
 import type { ParamsObjGenerate } from '../types/types';
 
+import { convertQueryParams } from './functions';
+
 const route = (event: Event) => {
     event = event || window.event;
     event.preventDefault();
@@ -37,27 +39,6 @@ const handleLocation = async () => {
         mainPage.append(route(...convertQueryParams(window.location.search.substring(1))));
     }
 };
-
-function convertQueryParams(strParams: string): [ParamsObjGenerate, string[]] {
-    const paramsObj: ParamsObjGenerate = {};
-    const orderParams: string[] = [];
-    if (strParams !== '') {
-        decodeURI(strParams)
-            .split('&')
-            .forEach((row) => {
-                if (row.includes('=') && row.length > 3 && row.indexOf('=', row.indexOf('=') + 1) === -1) {
-                    const [name, value] = row.split('=');
-                    if (value.includes('↕')) {
-                        paramsObj[name] = value.split('↕');
-                    } else {
-                        paramsObj[name] = [value];
-                    }
-                    orderParams.push(name);
-                }
-            });
-    }
-    return [paramsObj, orderParams];
-}
 
 function generateQueryParameters(orderParameters: string[], parameters: ParamsObjGenerate) {
     const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
