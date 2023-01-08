@@ -1,6 +1,8 @@
 .card-page {
   max-width: 1500px;
   margin: auto;
+  padding-left: 50px;
+  padding-right: 50px;
 
   .cart-nav-line {
     height: 120px;
@@ -125,7 +127,7 @@
 
   .list-market {
     position: absolute;
-    left: -50px;
+    left: -30px;
     color: $lightGreyText;
     font-size: 20px;
   }
@@ -141,21 +143,24 @@
   }
 
   .coupon-block {
-    display: grid;
-    grid-template-columns: 5fr 1fr;
-    justify-content: flex-end;
+    display: flex;
+    width: 250px;
+    margin-left: auto;
     flex-direction: column;
-    align-items: flex-end;
   }
 
   .summary-block {
     margin-top: 70px;
     margin-bottom: 200px;
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr 1fr;
+    display: flex;
     border: $blueAccentColor 1px solid;
     height: 90px;
     align-items: center;
+  }
+
+  .total-prod-sum {
+    margin-right: 30px;
+    margin-left: 30px;
   }
 
   .summary-block *{
@@ -243,7 +248,7 @@
   }
 
   .item-sum-col {
-    max-width: 250px;
+    width: 250px;
     display: flex;
     flex-direction: column;
   }
@@ -389,6 +394,7 @@
     position: relative;
     top: -1px;
     right: -2px;
+    width: 250px;
   }
 
   .cart-order-btn:hover {

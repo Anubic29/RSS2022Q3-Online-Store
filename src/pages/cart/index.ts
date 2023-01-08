@@ -254,7 +254,6 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
           <ol id="paginated-list" class="all-items-holder">
           </ol>
           <div class="coupon-block">
-            <div></div>
             <form class="coupon-form">
               <label class="coupon-q">Got a coupon?</label>
               <input type="text" placeholder="Enter promocode" class="coupon-input">
