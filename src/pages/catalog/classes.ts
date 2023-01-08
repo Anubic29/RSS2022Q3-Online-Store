@@ -1,18 +1,11 @@
-import type { ProductCard, CartProduct } from '../../types/types';
+import type { ProductCard, CartProduct, CatalogProductCardFunctions } from '../../types/types';
 import { maxValueRating, colorFilledStar, colorEmptyStar } from '../../../assets/libs/vars';
-import { handleLocation } from '../../router/router';
-import { refreshCartHead } from '../cart/index';
-
-function openDetailsPage(id: number) {
-    window.history.pushState({}, '', `/details/${id}`);
-    handleLocation();
-}
 
 class catalogProductCard {
     readonly data: ProductCard & { [key: string]: number | string | string[] };
     readonly htmlElement: HTMLDivElement;
 
-    constructor(data: ProductCard) {
+    constructor(data: ProductCard, functions: CatalogProductCardFunctions) {
         this.data = data;
         this.htmlElement = document.createElement('div');
         this.htmlElement.className = 'prod-card';
@@ -56,12 +49,14 @@ class catalogProductCard {
 
         const prodImg = this.htmlElement.querySelector('.prod-img') as HTMLDivElement;
         prodImg.addEventListener('click', () => {
-            openDetailsPage(data.id);
+            window.history.pushState({}, '', `/details/${data.id}`);
+            functions.handleLocation();
         });
 
         const btnMoreInfo = this.htmlElement.querySelector('.card-btn-info') as HTMLButtonElement;
         btnMoreInfo.addEventListener('click', () => {
-            openDetailsPage(data.id);
+            window.history.pushState({}, '', `/details/${data.id}`);
+            functions.handleLocation();
         });
 
         const btnBuy = this.htmlElement.querySelector('.card-btn-cart') as HTMLButtonElement;
@@ -86,7 +81,7 @@ class catalogProductCard {
                 btnBuy.classList.remove('remove');
             }
             localStorage.setItem('cartList', JSON.stringify(cartList));
-            refreshCartHead();
+            functions.refreshCartHead();
         });
     }
 

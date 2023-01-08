@@ -1,5 +1,4 @@
-// import { route, handleLocation } from '../../router/router';
-import { handleLocation, route } from '../../router/router';
+import { route, handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';

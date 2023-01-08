@@ -12,6 +12,10 @@ type ProductCard = {
     images: string[];
 };
 
+type CatalogProductCardFunctions = {
+    [key: string]: () => void | Promise<void>;
+};
+
 type CartProduct = {
     id: number;
     count: number;
@@ -33,4 +37,4 @@ type soldProducts = {
     sold: number;
 };
 
-export type { ProductCard, CartProduct, ParamsObjGenerate, promoObj, soldProducts };
+export type { ProductCard, CartProduct, ParamsObjGenerate, promoObj, soldProducts, CatalogProductCardFunctions };

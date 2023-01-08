@@ -1,7 +1,8 @@
 import { route, handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { ParamsObjGenerate } from '../../types/types';
+import type { ParamsObjGenerate, CatalogProductCardFunctions } from '../../types/types';
 import { catalogProductCard } from './classes';
+import { refreshCartHead } from '../cart/index';
 
 import { getPercentBetweenTwoValues, filterProductList, sortProductList, searchProductInList } from './functions';
 
@@ -23,7 +24,8 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     parameters = params ? params : {};
     orderParameters = orderParams ? orderParams : [];
     console.log(route);
-    prodList = dataProducts.map((obj) => new catalogProductCard(obj));
+    const functions: CatalogProductCardFunctions = { handleLocation, refreshCartHead };
+    prodList = dataProducts.map((obj) => new catalogProductCard(obj, functions));
 
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';
