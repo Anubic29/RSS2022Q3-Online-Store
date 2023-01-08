@@ -5,7 +5,7 @@ class catalogProductCard {
     readonly data: ProductCard & { [key: string]: number | string | string[] };
     readonly htmlElement: HTMLDivElement;
 
-    constructor(data: ProductCard, functions: CatalogProductCardFunctions) {
+    constructor(data: ProductCard, functions: CatalogProductCardFunctions<() => void | Promise<void>>) {
         this.data = data;
         this.htmlElement = document.createElement('div');
         this.htmlElement.className = 'prod-card';

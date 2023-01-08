@@ -12,8 +12,8 @@ type ProductCard = {
     images: string[];
 };
 
-type CatalogProductCardFunctions = {
-    [key: string]: () => void | Promise<void>;
+type CatalogProductCardFunctions<Type> = {
+    [key: string]: Type;
 };
 
 type CartProduct = {
