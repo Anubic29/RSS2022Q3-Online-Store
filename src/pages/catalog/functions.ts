@@ -1,12 +1,13 @@
-import type { ProductCard, ParamsObjGenerate } from '../../types/types';
+import type { ParamsObjGenerate } from '../../types/types';
+import { catalogProductCard } from './classes';
 
 function getPercentBetweenTwoValues(min: number, max: number, value: number) {
     return Math.round(((value - min) / (max - min)) * 100);
 }
 
-function filterProductList(receivedList: ProductCard[], parameters: ParamsObjGenerate) {
-    let result: ProductCard[] = [...receivedList];
-    let temp: ProductCard[];
+function filterProductList(receivedList: catalogProductCard[], parameters: ParamsObjGenerate) {
+    let result: catalogProductCard[] = [...receivedList];
+    let temp: catalogProductCard[];
 
     Object.keys(parameters).forEach((param) => {
         switch (param) {
@@ -14,7 +15,7 @@ function filterProductList(receivedList: ProductCard[], parameters: ParamsObjGen
             case 'brand':
                 temp = [];
                 parameters[param].forEach((value) => {
-                    temp.push(...result.filter((obj) => obj[param] === value));
+                    temp.push(...result.filter((obj) => obj.data[param] === value));
                 });
                 result = temp;
                 break;
@@ -22,7 +23,7 @@ function filterProductList(receivedList: ProductCard[], parameters: ParamsObjGen
             case 'stock':
                 temp = [
                     ...result.filter(
-                        (obj) => obj[param] >= +parameters[param][0] && obj[param] <= +parameters[param][1]
+                        (obj) => obj.data[param] >= +parameters[param][0] && obj.data[param] <= +parameters[param][1]
                     ),
                 ];
                 result = temp;
@@ -35,8 +36,8 @@ function filterProductList(receivedList: ProductCard[], parameters: ParamsObjGen
     return result;
 }
 
-function sortProductList(receivedList: ProductCard[], parameters: ParamsObjGenerate) {
-    let result: ProductCard[] = [...receivedList];
+function sortProductList(receivedList: catalogProductCard[], parameters: ParamsObjGenerate) {
+    let result: catalogProductCard[] = [...receivedList];
 
     const sort = parameters['sort'];
     if (sort === undefined) return result;
@@ -48,11 +49,11 @@ function sortProductList(receivedList: ProductCard[], parameters: ParamsObjGener
     switch (sortValue) {
         case 'price':
         case 'rating':
-            result = result.sort((a, b) => a[sortValue] - b[sortValue]);
+            result = result.sort((a, b) => a.data[sortValue] - b.data[sortValue]);
             isValidValue = true;
             break;
         case 'discount':
-            result = result.sort((a, b) => a['discountPercentage'] - b['discountPercentage']);
+            result = result.sort((a, b) => a.data['discountPercentage'] - b.data['discountPercentage']);
             isValidValue = true;
             break;
         default:
@@ -66,19 +67,19 @@ function sortProductList(receivedList: ProductCard[], parameters: ParamsObjGener
     return result;
 }
 
-function searchProductInList(receivedList: ProductCard[], fieldsForSearch: string[], value: string) {
-    let result: { [key: string]: number | string | string[] }[] = [...receivedList];
+function searchProductInList(receivedList: catalogProductCard[], fieldsForSearch: string[], value: string) {
+    let result = [...receivedList];
 
     result = result.filter((obj) => {
         for (let i = 0; i < fieldsForSearch.length; i++) {
-            if (`${obj[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
+            if (`${obj.data[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
                 return true;
             }
         }
         return false;
     });
 
-    return result as ProductCard[];
+    return result;
 }
 
 export { getPercentBetweenTwoValues, filterProductList, sortProductList, searchProductInList };

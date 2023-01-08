@@ -9,7 +9,7 @@ function openDetailsPage(id: number) {
 }
 
 class catalogProductCard {
-    readonly data: ProductCard;
+    readonly data: ProductCard & { [key: string]: number | string | string[] };
     readonly htmlElement: HTMLDivElement;
 
     constructor(data: ProductCard) {
@@ -90,11 +90,17 @@ class catalogProductCard {
         });
     }
 
-    getElement(big?: boolean) {
-        const result = this.htmlElement.cloneNode(true) as HTMLDivElement;
-        if (big) result.classList.add('prod-card-big');
-        console.log(this.htmlElement);
-        return result;
+    setBig(big?: boolean) {
+        if (big) {
+            this.htmlElement.classList.add('prod-card-big');
+        } else {
+            this.htmlElement.classList.remove('prod-card-big');
+        }
+        return this;
+    }
+
+    getElement() {
+        return this.htmlElement;
     }
 }
 
