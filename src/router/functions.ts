@@ -21,8 +21,11 @@ function convertQueryParams(strParams: string): [ParamsObjGenerate, string[]] {
     return [paramsObj, orderParams];
 }
 
-function generateQueryParameters(orderParameters: string[], parameters: ParamsObjGenerate) {
-    const res = orderParameters.map((param) => `${param}=${parameters[param].join('↕')}`).join('&');
+function generateQueryParameters<Type extends ParamsObjGenerate, Keys extends keyof Type>(
+    orderParameters: Keys[],
+    parameters: Type
+) {
+    const res = orderParameters.map((param) => `${param.toString()}=${parameters[param].join('↕')}`).join('&');
     return res;
 }
 
