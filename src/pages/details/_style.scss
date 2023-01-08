@@ -151,6 +151,10 @@
         cursor: pointer;
         background-color: $lightBlueOnHover;
       }
+      &.disable {
+        cursor: not-allowed;
+        background-color: $disableBtnColor;
+      }
     }
   }
 }
