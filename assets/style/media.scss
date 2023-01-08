@@ -5,6 +5,10 @@
 
 @media screen and (max-width: 1560px) {
 
+  .page-details {
+    max-width: 1000px;
+  }
+
   .header-inner {
     position: relative;
   }
@@ -40,7 +44,7 @@
   }
 
   .page-details .btns-block .btn {
-    width: 200px;
+    width: 212px;
     font-size: 20px;
   }
 }
@@ -97,6 +101,11 @@
 }
 
 @media screen and (max-width: 1050px) {
+
+  .page-details {
+    max-width: 500px;
+  }
+
   .search-bar {
     flex-basis:450px;
   }
@@ -213,11 +222,20 @@
     z-index: 7;
   }
 
+  .filter-inner {
+    background-color: $white;
+  }
+
+  .dual-slider-container {
+    background-color: $white;
+    padding-bottom: 60px;
+  }
+
   .filter-panel {
     position: absolute;
     transform: translateX(-200%);
     z-index: 3;
-    background-color: white;
+    background-color: $white;
     transition: all 200ms ease-in-out;
     height: 100%;
   }
