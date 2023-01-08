@@ -213,6 +213,15 @@
   transition: all 200ms ease-in-out;
   position: relative;
 
+  &:hover {
+    background-color: $lightBlueOnHover;
+  }
+
+  &.disable {
+    cursor: not-allowed;
+    background-color: $disableBtnColor;
+  }
+
   &.remove {
     &::before,
     &::after {
@@ -232,10 +241,6 @@
       transform: translate(-50%, -50%) rotateZ(-45deg);
     }
   }
-}
-
-.card-btn-cart:hover {
-  background-color: $lightBlueOnHover;
 }
 
 .card-btn-info:hover {

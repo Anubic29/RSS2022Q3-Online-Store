@@ -66,22 +66,25 @@ class catalogProductCard {
         } else {
             btnBuy.classList.remove('remove');
         }
+        if (data.stock === 0) btnBuy.classList.add('disable');
         btnBuy.addEventListener('click', () => {
-            const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
-            const idProdCart = cartList.findIndex((product) => product.id === data.id);
-            if (idProdCart === -1) {
-                cartList.push({
-                    id: data.id,
-                    count: 1,
-                    finalPrice: Math.round(data.price - (data.discountPercentage / 100) * data.price),
-                });
-                btnBuy.classList.add('remove');
-            } else {
-                cartList.splice(idProdCart, 1);
-                btnBuy.classList.remove('remove');
+            if (!btnBuy.classList.contains('disable')) {
+                const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
+                const idProdCart = cartList.findIndex((product) => product.id === data.id);
+                if (idProdCart === -1) {
+                    cartList.push({
+                        id: data.id,
+                        count: 1,
+                        finalPrice: Math.round(data.price - (data.discountPercentage / 100) * data.price),
+                    });
+                    btnBuy.classList.add('remove');
+                } else {
+                    cartList.splice(idProdCart, 1);
+                    btnBuy.classList.remove('remove');
+                }
+                localStorage.setItem('cartList', JSON.stringify(cartList));
+                functions.refreshCartHead();
             }
-            localStorage.setItem('cartList', JSON.stringify(cartList));
-            functions.refreshCartHead();
         });
     }
 

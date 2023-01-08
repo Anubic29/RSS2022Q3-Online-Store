@@ -1,6 +1,6 @@
 import { route, handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { ParamsObjGenerate } from '../../types/types';
+import type { ParamsObjGenerate, soldProducts } from '../../types/types';
 import { catalogProductCard } from './classes';
 import { refreshCartHead } from '../cart/index';
 
@@ -24,7 +24,15 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     parameters = params ? params : {};
     orderParameters = orderParams ? orderParams : [];
     console.log(route);
-    prodList = dataProducts.map((obj) => new catalogProductCard(obj, { handleLocation, refreshCartHead }));
+    const soldProducts: soldProducts[] = JSON.parse(localStorage.getItem('soldProducts') ?? '[]');
+    const computStockList = dataProducts.map((obj) => Object.create(obj));
+    soldProducts.forEach((soldObj) => {
+        const elem = computStockList.find((obj) => obj.id === soldObj.id);
+        if (elem) {
+            elem.stock -= soldObj.sold;
+        }
+    });
+    prodList = computStockList.map((obj) => new catalogProductCard(obj, { handleLocation, refreshCartHead }));
 
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';
@@ -197,10 +205,10 @@ function generateSortPanel() {
 }
 
 function generateFilterPanel() {
-    const categoryValues = [...new Set(dataProducts.map((obj) => obj.category))];
-    const brandValues = [...new Set(dataProducts.map((obj) => obj.brand))];
-    const priceValues = dataProducts.map((obj) => obj.price);
-    const stockValues = dataProducts.map((obj) => obj.stock);
+    const categoryValues = [...new Set(prodList.map((obj) => obj.data.category))];
+    const brandValues = [...new Set(prodList.map((obj) => obj.data.brand))];
+    const priceValues = prodList.map((obj) => obj.data.price);
+    const stockValues = prodList.map((obj) => obj.data.stock);
 
     const filter = document.createElement('div');
     filter.className = 'filter-inner';
@@ -226,7 +234,7 @@ function generateFilterPanel() {
     if (filterCategoryList instanceof Element) {
         categoryValues.forEach((value) => {
             filterCategoryList.append(
-                createCheckbox(value, 'category', dataProducts.filter((obj) => obj.category === value).length)
+                createCheckbox(value, 'category', prodList.filter((obj) => obj.data.category === value).length)
             );
         });
     }
@@ -235,7 +243,7 @@ function generateFilterPanel() {
     if (filterBrandList instanceof Element) {
         brandValues.forEach((value) => {
             filterBrandList.append(
-                createCheckbox(value, 'brand', dataProducts.filter((obj) => obj.brand === value).length)
+                createCheckbox(value, 'brand', prodList.filter((obj) => obj.data.brand === value).length)
             );
         });
     }
