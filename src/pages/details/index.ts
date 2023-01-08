@@ -1,11 +1,10 @@
 // import { route, handleLocation } from '../../router/router';
 import { handleLocation, route } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
+import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';
 import '../../../assets/icons/rate-star.svg';
 import { refreshCartHead } from '../cart/index';
-
-// const currentProduct: ProductCard = dataProducts[0];
 
 function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string[]) {
     console.log(params);
@@ -38,11 +37,7 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
             <h2 class="title">${currentProduct.title}</h2>
             <div class="rating-block">
                 <div class="rating-stars">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
-                <img src="../assets/icons/rate-star.svg" alt="">
+                <div class="rate-stars"></div>
                 </div>
                 <p class="rating">Rating: ${currentProduct.rating}</p>
             </div>
@@ -75,6 +70,10 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
         </div>
         </div>
         `;
+
+        const rateStars = mainBlock.querySelector('.rate-stars') as HTMLDivElement;
+        const ratePercent = (+currentProduct.rating.toFixed(1) / maxValueRating) * 100;
+        rateStars.style.background = `linear-gradient(to right, ${colorFilledStar} 0%, ${colorFilledStar} ${ratePercent}%, ${colorEmptyStar} ${ratePercent}%)`;
 
         const imageBlock = mainBlock.querySelector('.image-block') as Element;
 

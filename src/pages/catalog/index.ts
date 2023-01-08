@@ -1,9 +1,11 @@
 import { route, handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
+import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 import { refreshCartHead } from '../cart/index';
 
 import '../../../assets/icons/rate-star.svg';
+import '../../../assets/img/stars.png';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/4-dots.svg';
 import '../../../assets/icons/5-dots-g.svg';
@@ -159,11 +161,7 @@ function generateProductCard(data: ProductCard, isBigCard: boolean) {
         <div class="rating-line">
         <div class="rating-stars">
             <div class="stars-wrap">
-            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r1">
-            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r2">
-            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r3">
-            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r4">
-            <img src="../assets/icons/rate-star.svg" alt="" class="rate-star r5">
+            <div class="rate-stars"></div>
             </div>
             <p class="rating-nums">${data.rating}</p>
         </div>
@@ -185,6 +183,10 @@ function generateProductCard(data: ProductCard, isBigCard: boolean) {
         </div>
     </div>
     `;
+
+    const rateStars = card.querySelector('.rate-stars') as HTMLDivElement;
+    const ratePercent = (+data.rating.toFixed(1) / maxValueRating) * 100;
+    rateStars.style.background = `linear-gradient(to right, ${colorFilledStar} 0%, ${colorFilledStar} ${ratePercent}%, ${colorEmptyStar} ${ratePercent}%)`;
 
     const prodImg = card.querySelector('.prod-img');
     if (prodImg instanceof Element) {
