@@ -1,10 +1,12 @@
+import { handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import type { CartProduct, ProductCard, ParamsObjGenerate, promoObj } from '../../types/types';
+import type { CartProduct, ProductCard, ParamsObjGenerate, promoObj, soldProducts } from '../../types/types';
 import '../../../assets/icons/search-plus.svg';
 import '../../../assets/icons/arrow.svg';
 import '../../../assets/icons/empty-cart.svg';
 import promogenerator from './_promo';
 import { createNewTotalSpan, addActiveCoupon } from './_promo';
+import { setInputListeners } from './_modal';
 import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 
 let parameters: ParamsObjGenerate;
@@ -17,12 +19,16 @@ let currRange = setCurRange(1);
 let prevRange = setPrevRange(1);
 let totalSumSpanGlobal: HTMLSpanElement;
 let newTotalSpanGlobal: HTMLSpanElement;
+let modalG: HTMLDivElement;
+let bgG: HTMLDivElement;
+const body = document.querySelector('body') as HTMLBodyElement;
 
 const cartCountHead = document.getElementById('cart-prod-count') as HTMLElement;
 const totalCountHead = document.getElementById('total-numbers') as HTMLElement;
 export let cartBody: HTMLOListElement;
 
 const productsArray = (): Array<CartProduct> => JSON.parse(localStorage.getItem('cartList') as string) ?? [];
+const soldArray = (): Array<soldProducts> => JSON.parse(localStorage.getItem('soldProducts') as string) ?? [];
 const promosArray: promoObj[] = JSON.parse(localStorage.getItem('promo') as string)
     ? JSON.parse(localStorage.getItem('promo') as string)
     : [];
@@ -131,7 +137,7 @@ function setProdsPerPageListeners(
         cartBodyGenerator(cartBody, currRange, prevRange);
         if (this.value) {
             parameters['limit'] = [this.value];
-            parameters['page'] = [currentPage.toString()];
+            parameters['page'] = [currentPage.toString() as string];
         }
         if (!orderParameters.includes('limit')) {
             orderParameters.push('limit');
@@ -192,7 +198,7 @@ function refreshSummary(): void {
     createNewTotalSpan(totalSumSpanGlobal, newTotalSpanGlobal);
 }
 
-function refreshCountInProdRow(id: string, value?: string): void {
+function refreshCountInProdRow(id: string): void {
     const theProdFullData = dataProducts.find((prod) => prod.id === Number(id)) as ProductCard;
     const theProdFromStorage = productsArray().find((prod) => prod.id === Number(id)) as CartProduct;
     const totalSumPlace = Array.from<HTMLParagraphElement>(document.querySelectorAll('p.reduced-price')).find(
@@ -201,16 +207,15 @@ function refreshCountInProdRow(id: string, value?: string): void {
     const countProdsPlace = Array.from<HTMLParagraphElement>(document.querySelectorAll('p.price')).find(
         (p) => p.dataset.id === id
     ) as HTMLParagraphElement;
-    if (value) {
-        countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
-        totalSumPlace.innerText = `${
-            Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
-            theProdFromStorage.count
-        } ₴`;
-    }
+    countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
+    totalSumPlace.innerText = `${
+        Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
+        theProdFromStorage.count
+    } ₴`;
 }
 
 function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[]) {
+    currentPage = 1;
     if (params && params.page) {
         currentPage = Number(params.page);
     }
@@ -223,6 +228,48 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-cart';
     mainBlock.innerHTML = `
+        <div class="modal" id="modal">
+        <button class="close-btn">&times;</button>
+          <form class="form">
+            <div class="modal-header">
+              <h2 class="modal-title">Personal details</h2>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input customer-name" id="user-name" type="text" name="customer-name" placeholder="Name & surname">
+              <small></small>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input tel" id="tel" type="tel" name="tel" placeholder="Phone number">
+              <small></small>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input adress" id="adress" type="text" name="adress" placeholder="Delivery adress">
+              <small></small>
+            </div>
+            <div class="input-wrap">
+              <input class="form-input email" id="email" type="email" name="email" placeholder="E-mail adress">
+              <small></small>
+            </div>
+            <h2 class="payment-title">Payment information</h2>
+            <div class="card-num-wrap">
+              <input class="form-input card-no" id="card" type="number" name="card-no" placeholder="Payment card number"  maxlength="16">
+              <div class="card-type"></div>
+              <small></small>
+            </div>
+            <div class="card-details">
+              <div class="input-wrap">
+                <input class="form-input valid" id="date" type="text" name="valid" placeholder="MM/YY">
+                <small></small>
+              </div>
+              <div class="input-wrap">
+                <input class="form-input cvv" id="cvv" type="number" name="cvv" placeholder="CVV" maxlength="3">
+                <small></small>
+              </div>
+            </div>
+            <button type="submit" class="order-btn">Confirm order</button>
+            </form>
+        </div>
+        <div class="overlay" id="overlay"></div>
         <div class="main-inner card-page">
       <nav class="cart-nav-line">
         <div class="header-h2-wrap">
@@ -289,9 +336,15 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
     const totalSumSpan = mainBlock.querySelector('.total-sum-num') as HTMLSpanElement;
     const newTotalSpan = mainBlock.querySelector('.new-total') as HTMLSpanElement;
     const couponDiv = mainBlock.querySelector('.active-coupons') as HTMLDivElement;
+    const checkoutBtn = mainBlock.querySelector('.cart-order-btn') as HTMLButtonElement;
+    const modal = mainBlock.querySelector('.modal') as HTMLDivElement;
+    const bg = mainBlock.querySelector('.overlay') as HTMLDivElement;
 
     totalSumSpanGlobal = totalSumSpan;
     newTotalSpanGlobal = newTotalSpan;
+    modalG = modal;
+    bgG = bg;
+
     setPaginationListeners(paginationNumber, prevButton, nextButton, params, orderParams);
     setProdsPerPageListeners(prodsPerPage, paginationNumber);
     promogenerator(promoInput, promoBtn, totalSumSpan, newTotalSpan, couponDiv);
@@ -301,12 +354,20 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
         createNewTotalSpan(totalSumSpan, newTotalSpan);
         addActiveCoupon(couponDiv);
     }
+    setInputListeners(checkoutBtn, modal, bg, cartBody);
+    if (sessionStorage.getItem('buy') === 'true') {
+        modalG.classList.add('active');
+        bgG.classList.add('active');
+        body.classList.add('modal-active');
+        sessionStorage.clear();
+    }
     return mainBlock;
 }
 
-export function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev: number) {
+function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev: number) {
     if (cartBody instanceof Element) {
         const products = productsInCart(productsArray());
+        pageCount = Math.ceil(productsArray().length / paginationLimit);
         if (products.length > 0) {
             products.map((obj: ProductCard) => cartBody.appendChild(itemsGenerator(obj, cur, prev)));
         }
@@ -323,6 +384,7 @@ export function cartBodyGenerator(cartBody: HTMLOListElement, cur: number, prev:
         setMinusListeners(minusProdsOnPage);
         setInputsListenes(countInputs);
     }
+
     return cartBody;
 }
 
@@ -337,6 +399,12 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
             return selected;
         }
     })[0];
+    let leftInStock = obj.stock;
+    soldArray().find((item) => {
+        if (item.id === itemInCart.id) {
+            leftInStock = obj.stock - item.sold;
+        }
+    });
     item.className = 'one-item-block';
     if (itemNo >= prev && itemNo < cur) {
         item.innerHTML = `
@@ -372,12 +440,12 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
                   <div class="prod-count-control" data-id=${obj.id}>
                     <div id="minus" class="prod-count" data-type="minus" data-id=${obj.id}>—</div>
                     <div class="prod-count-number">
-                      <input class="user-set-count" data-id="${obj.id}" type="number" min="0" max="${
-            obj.stock
-        }" value="${itemInCart.count}">
+                      <input class="user-set-count" data-id="${
+                          obj.id
+                      }" type="number" min="0" max="${leftInStock}" value="${itemInCart.count}">
                     </div>
                     <div id="plus" class="prod-count" data-type="plus" data-id=${obj.id}>+</div>
-                    <div class="stock">${obj.stock} in stock</div>
+                    <div class="stock">${leftInStock} in stock</div>
                   </div>
                 </div>
                 <div class="item-sum-col">
@@ -397,6 +465,13 @@ const itemsGenerator = (obj: ProductCard, cur: number, prev: number) => {
         rateStars.style.background = `linear-gradient(to right, ${colorFilledStar} 0%, ${colorFilledStar} ${ratePercent}%, ${colorEmptyStar} ${ratePercent}%)`;
     } else {
         item.innerHTML = '';
+    }
+    const prodImg = item.querySelector('.prod-img');
+    if (prodImg instanceof Element) {
+        prodImg.addEventListener('click', () => {
+            window.history.pushState({}, '', `/details/${obj.id}`);
+            handleLocation();
+        });
     }
     return item;
 };
@@ -422,18 +497,13 @@ function getCountInput(id: string): HTMLInputElement {
 function setInputsListenes(inputs: HTMLInputElement[]) {
     inputs.forEach((input) => {
         if (input) {
-            input.addEventListener('change', function (): void {
+            input.addEventListener('input', function (): void {
                 const productsFromStorage = productsArray();
                 const id = this.dataset.id as string;
                 let value = this.value as string;
                 const input = getCountInput(id);
                 if (Number(value) <= 0) {
-                    const ifDelete = confirm(`Are you sure you want to delete this product from the cart?`);
-                    if (ifDelete) {
-                        deleteTheItem(productsFromStorage, id);
-                    } else {
-                        return;
-                    }
+                    deleteTheItem(productsFromStorage, id);
                 }
                 if (Number(value) > Number(input.max)) {
                     value = input.max;
@@ -447,7 +517,7 @@ function setInputsListenes(inputs: HTMLInputElement[]) {
                 localStorage.setItem('cartList', JSON.stringify(productsFromStorage));
                 refreshCartHead();
                 refreshSummary();
-                refreshCountInProdRow(id, value);
+                refreshCountInProdRow(id);
             });
         }
     });

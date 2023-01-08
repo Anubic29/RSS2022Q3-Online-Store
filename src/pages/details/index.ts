@@ -1,4 +1,5 @@
-import { route, handleLocation } from '../../router/router';
+// import { route, handleLocation } from '../../router/router';
+import { handleLocation, route } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 import type { ProductCard, CartProduct, ParamsObjGenerate } from '../../types/types';
@@ -23,8 +24,12 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
             <li class="path-step path-step-store">
                 <a href="/" onclick="route()">Store</a>
             </li>
-            <li class="path-step path-step-category">${currentProduct.category}</li>
-            <li class="path-step path-step-brand">${currentProduct.brand}</li>
+            <li class="path-step path-step-category">
+                <a href="/?category=${currentProduct.category}" onclick="route()">${currentProduct.category}</a>
+            </li>
+            <li class="path-step path-step-brand">
+                <a href="/?brand=${currentProduct.brand}" onclick="route()">${currentProduct.brand}</a>
+            </li>
             <li class="path-step path-step-product">${currentProduct.title}</li>
         </ul>
         <div class="details-block">
@@ -150,6 +155,7 @@ function generateBtnsBlock(currentProduct: ProductCard) {
             localStorage.setItem('cartList', JSON.stringify(cartList));
         }
         refreshCartHead();
+        sessionStorage.setItem('buy', 'true');
         window.history.pushState({}, '', '/cart');
         handleLocation();
     });
