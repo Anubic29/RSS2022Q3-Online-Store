@@ -280,7 +280,7 @@
   .filter-icon {
     width: 25px;
     height: 25px;
-    background-image: url(../assets/icons/filtr.svg);
+    background-image: url('../assets/icons/filtr.svg');
     position: relative;
     top: 5px;
   }
@@ -484,6 +484,15 @@
 
   .form {
     width: 70%;
+  }
+
+  .card-page .prod-img {
+    height: 90%;
+    width: 320px;
+  }
+
+  .card-page .item-count {
+    top: 200px;
   }
 }
 
