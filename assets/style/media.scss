@@ -376,6 +376,14 @@
   .card-page .cart-order-btn {
     width: 100%;
   }
+
+  .modal {
+    min-width: 540px;
+  }
+
+  .form {
+    width: 70%;
+  }
 }
 
 @media screen and (max-width: 550px) {
@@ -469,6 +477,13 @@
   .page-details .image-block .images-list li {
     width: 100px;
     height: auto;
+  }
+    .modal {
+    min-width: 320px;
+  }
+
+  .form {
+    width: 70%;
   }
 }
 
