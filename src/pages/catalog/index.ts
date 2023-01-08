@@ -4,6 +4,8 @@ import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets
 import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
 import { refreshCartHead } from '../cart/index';
 
+import { getPercentBetweenTwoValues, filterProductList, sortProductList, searchProductInList } from './functions';
+
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/img/stars.png';
 import '../../../assets/icons/search-plus.svg';
@@ -434,10 +436,6 @@ function createTwoRange(min: number, max: number, name: string, getMin?: number,
     return dualSlider;
 }
 
-function getPercentBetweenTwoValues(min: number, max: number, value: number) {
-    return Math.round((value / (max + min)) * 100);
-}
-
 function inputEventForDualSlider(
     slider1: HTMLInputElement,
     slider2: HTMLInputElement,
@@ -496,14 +494,15 @@ async function pushQueryParameters() {
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
+const fieldsForSearch = ['title', 'brand', 'category', 'price', 'stock', 'description', 'rating', 'discountPercentage'];
 function adjustProductList() {
     let result: ProductCard[] = [...dataProducts];
 
-    result = filterProductList(result);
+    result = filterProductList(result, parameters);
     if (parameters['search'] && parameters['search'][0]) {
-        result = searchProductInList(result, parameters['search'][0]);
+        result = searchProductInList(result, fieldsForSearch, parameters['search'][0]);
     }
-    result = sortProductList(result);
+    result = sortProductList(result, parameters);
 
     adjustFilterAmounts(result);
     if (canAdjustSliders) {
@@ -511,93 +510,6 @@ function adjustProductList() {
     }
 
     return result;
-}
-
-function filterProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = [...receivedList];
-    let temp: ProductCard[];
-
-    orderParameters.forEach((param) => {
-        switch (param) {
-            case 'category':
-            case 'brand':
-                temp = [];
-                parameters[param].forEach((value) => {
-                    temp.push(...result.filter((obj) => obj[param] === value));
-                });
-                result = temp;
-                break;
-            case 'price':
-            case 'stock':
-                temp = [
-                    ...result.filter(
-                        (obj) => obj[param] >= +parameters[param][0] && obj[param] <= +parameters[param][1]
-                    ),
-                ];
-                result = temp;
-                break;
-            default:
-                break;
-        }
-    });
-
-    return result;
-}
-
-function sortProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = [...receivedList];
-
-    const sort = parameters['sort'];
-    if (sort === undefined) return result;
-    if (sort[0] === undefined) return result;
-
-    const [sortValue, sortOrder] = sort[0].split('-');
-    let isValidValue = false;
-
-    switch (sortValue) {
-        case 'price':
-        case 'rating':
-            result = result.sort((a, b) => a[sortValue] - b[sortValue]);
-            isValidValue = true;
-            break;
-        case 'discount':
-            result = result.sort((a, b) => a['discountPercentage'] - b['discountPercentage']);
-            isValidValue = true;
-            break;
-        default:
-            break;
-    }
-
-    if (isValidValue && sortOrder === 'DESC') {
-        result = result.reverse();
-    }
-
-    return result;
-}
-
-function searchProductInList(receivedList: ProductCard[], value: string) {
-    let result: { [key: string]: number | string | string[] }[] = [...receivedList];
-    const fieldsForSearch = [
-        'title',
-        'brand',
-        'category',
-        'price',
-        'stock',
-        'description',
-        'rating',
-        'discountPercentage',
-    ];
-
-    result = result.filter((obj) => {
-        for (let i = 0; i < fieldsForSearch.length; i++) {
-            if (`${obj[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
-                return true;
-            }
-        }
-        return false;
-    });
-
-    return result as ProductCard[];
 }
 
 async function adjustFilterAmounts(list: ProductCard[]) {
@@ -667,4 +579,4 @@ async function adjustDualSliderValues(list: ProductCard[]) {
     canAdjustSliders = false;
 }
 
-export default generateContentCatalog;
+export { generateContentCatalog };

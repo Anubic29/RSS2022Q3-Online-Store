@@ -26,7 +26,7 @@ type promoObj = {
     id: string;
     name: string;
     disc: number;
-}
+};
 
 type soldProducts = {
     id: number;
