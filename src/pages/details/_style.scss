@@ -1,4 +1,7 @@
 .page-details {
+
+  max-width: 1500px;
+
   .main-inner {
     width: 100%;
   }
@@ -90,7 +93,6 @@
     flex: 1;
     .info-list {
       margin-bottom: 65px;
-      width: 500px;
       li {
         font-size: 20px;
         width: 100%;
@@ -137,7 +139,7 @@
     display: flex;
     justify-content: space-between;
     .btn {
-      width: 320px;
+      width: 362px;
       height: 60px;
       background-color: $blueAccentColor;
       border: none;
