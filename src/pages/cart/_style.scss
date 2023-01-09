@@ -91,7 +91,7 @@
   .pagination-number-input::-webkit-inner-spin-button {
     appearance: none;
     -webkit-appearance: none;
-    background: white;
+    background: $white;
     position: absolute;
     top: 0;
     right: 0px;
@@ -279,7 +279,7 @@
     border: 1px solid $lightBlueOnHover;
 
       .continue-btn-text {
-        color: white;
+        color: $white;
       }
   }
 
@@ -318,7 +318,7 @@
     border-radius: 0 5px 5px 0;
     background-color: $lightGreyElements;
     border: $lightGreyElements 1px solid;
-    color: white;
+    color: $white;
     width: 110px;
       &.active-promo {
           background-color: $blueAccentColor;
@@ -390,7 +390,7 @@
     border: $blueAccentColor 1px solid;
     font-size: 24px;
     font-weight: 600;
-    color: white;
+    color: $white;
     transition: all 200ms ease-in-out;
     position: relative;
     top: -1px;
@@ -401,7 +401,7 @@
   .cart-order-btn:hover {
     background-color: $lightBlueOnHover;
     border: $lightBlueOnHover 1px solid;
-    color: white;
+    color: $white;
   }
 
   .empty-cart-div {
@@ -417,8 +417,6 @@
     outline: none;
   }
 
-  // .pagination-number-input::-webkit-outer-spin-button,
-  // .pagination-number-input::-webkit-inner-spin-button,
   .user-set-count::-webkit-outer-spin-button,
   .user-set-count::-webkit-inner-spin-button {
   appearance: none;
