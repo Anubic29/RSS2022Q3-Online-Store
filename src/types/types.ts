@@ -12,6 +12,10 @@ type ProductCard = {
     images: string[];
 };
 
+type CatalogProductCardFunctions<Type> = {
+    [key: string]: Type;
+};
+
 type CartProduct = {
     id: number;
     count: number;
@@ -31,6 +35,6 @@ type promoObj = {
 type soldProducts = {
     id: number;
     sold: number;
-}
+};
 
-export type { ProductCard, CartProduct, ParamsObjGenerate, promoObj, soldProducts };
+export type { ProductCard, CartProduct, ParamsObjGenerate, promoObj, soldProducts, CatalogProductCardFunctions };

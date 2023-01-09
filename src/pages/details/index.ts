@@ -11,7 +11,9 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
     console.log(route);
     const path = window.location.pathname;
     const idProd = path.substring(path.lastIndexOf('/') + 1);
-    const currentProduct: ProductCard | undefined = dataProducts.find((prodCard) => prodCard.id === +idProd);
+    const currentProduct: ProductCard | undefined = Object.create(
+        dataProducts.find((prodCard) => prodCard.id === +idProd) ?? null
+    );
 
     const soldProducts: soldProducts[] = JSON.parse(localStorage.getItem('soldProducts') ?? '[]');
     const soldIdxProd = soldProducts.findIndex((obj) => obj.id === +idProd);
@@ -20,7 +22,7 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-details';
 
-    if (currentProduct !== undefined) {
+    if (currentProduct) {
         currentProduct.stock -= soldAmount;
         mainBlock.innerHTML = `
         <div class="main-inner">
@@ -173,4 +175,4 @@ function generateBtnsBlock(currentProduct: ProductCard) {
     return btnsBlock;
 }
 
-export default generateContentDetails;
+export { generateContentDetails };

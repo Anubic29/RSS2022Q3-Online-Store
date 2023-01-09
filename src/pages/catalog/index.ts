@@ -1,8 +1,10 @@
 import { route, handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
-import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
-import type { ProductCard, ParamsObjGenerate, CartProduct } from '../../types/types';
+import type { ParamsObjGenerate, soldProducts } from '../../types/types';
+import { catalogProductCard } from './classes';
 import { refreshCartHead } from '../cart/index';
+
+import { getPercentBetweenTwoValues, filterProductList, sortProductList, searchProductInList } from './functions';
 
 import '../../../assets/icons/rate-star.svg';
 import '../../../assets/img/stars.png';
@@ -14,12 +16,24 @@ let mainBlockG: HTMLDivElement;
 let parameters: ParamsObjGenerate;
 let orderParameters: string[];
 
+let prodList: catalogProductCard[];
+
 let canAdjustSliders = false;
 
 function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string[]) {
     parameters = params ? params : {};
     orderParameters = orderParams ? orderParams : [];
     console.log(route);
+    const soldProducts: soldProducts[] = JSON.parse(localStorage.getItem('soldProducts') ?? '[]');
+    const computStockList = dataProducts.map((obj) => Object.create(obj));
+    soldProducts.forEach((soldObj) => {
+        const elem = computStockList.find((obj) => obj.id === soldObj.id);
+        if (elem) {
+            elem.stock -= soldObj.sold;
+        }
+    });
+    prodList = computStockList.map((obj) => new catalogProductCard(obj, { handleLocation, refreshCartHead }));
+
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-catalog';
 
@@ -143,13 +157,13 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     return mainBlock;
 }
 
-async function fillProductList(products: ProductCard[]) {
+async function fillProductList(products: catalogProductCard[]) {
     const cardsArea = mainBlockG.querySelector('.cards-area');
     if (cardsArea instanceof Element) {
         const isBigCard = parameters['big'] && parameters['big'][0] === 'true';
         cardsArea.innerHTML = '';
         products.forEach((product) => {
-            cardsArea.append(generateProductCard(product, isBigCard));
+            cardsArea.append(product.setBig(isBigCard).getElement());
         });
         if (products.length === 0) {
             const hTitle = document.createElement('h1');
@@ -158,95 +172,6 @@ async function fillProductList(products: ProductCard[]) {
             cardsArea.append(hTitle);
         }
     }
-}
-
-function generateProductCard(data: ProductCard, isBigCard: boolean) {
-    const card = document.createElement('article');
-    card.className = `prod-card ${isBigCard ? 'prod-card-big' : ''}`;
-
-    card.innerHTML = `
-    <div class="v prod-card-inner">
-        <div class="discount">-${data.discountPercentage}%</div>
-        <div class="stock">${data.stock} in stock</div>
-        <div class="prod-img-wrap">
-        <div class="prod-img" style="background-image: url(${data.thumbnail})">
-            <img src="/assets/icons/search-plus.svg" alt="more info icon" class="img-more-info-icon">
-        </div>
-        </div>
-        <div class="rating-line">
-        <div class="rating-stars">
-            <div class="stars-wrap">
-            <div class="rate-stars"></div>
-            </div>
-            <p class="rating-nums">${data.rating}</p>
-        </div>
-        <p class="category">${data.category}</p>
-        <p class="title">${data.title}</p>
-        <p class="brand">${data.brand.length > 24 ? data.brand.substring(0, 21).trim() + '...' : data.brand}</p>
-        <div class="price-wrap">
-            <p class="price">${data.price} ₴</p>
-            <p class="reduced-price">${Math.round(data.price - (data.discountPercentage / 100) * data.price)} ₴</p>
-        </div>
-        <div class="card-buttons-wrap">
-            <button class="btn card-btn card-btn-info">
-            More info
-            </button>
-            <button class="btn card-btn card-btn-cart">
-            <img src="../assets/icons/cart.svg" alt="cart button icon" class="cart-icon">
-            </button>
-        </div>
-        </div>
-    </div>
-    `;
-
-    const rateStars = card.querySelector('.rate-stars') as HTMLDivElement;
-    const ratePercent = (+data.rating.toFixed(1) / maxValueRating) * 100;
-    rateStars.style.background = `linear-gradient(to right, ${colorFilledStar} 0%, ${colorFilledStar} ${ratePercent}%, ${colorEmptyStar} ${ratePercent}%)`;
-
-    const prodImg = card.querySelector('.prod-img');
-    if (prodImg instanceof Element) {
-        prodImg.addEventListener('click', () => {
-            window.history.pushState({}, '', `/details/${data.id}`);
-            handleLocation();
-        });
-    }
-
-    const btnMoreInfo = card.querySelector('.card-btn-info');
-    if (btnMoreInfo instanceof Element) {
-        btnMoreInfo.addEventListener('click', () => {
-            window.history.pushState({}, '', `/details/${data.id}`);
-            handleLocation();
-        });
-    }
-
-    const btnBuy = card.querySelector('.card-btn-cart');
-    if (btnBuy instanceof Element) {
-        const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
-        if (cartList.findIndex((product) => product.id === data.id) !== -1) {
-            btnBuy.classList.add('remove');
-        } else {
-            btnBuy.classList.remove('remove');
-        }
-        btnBuy.addEventListener('click', () => {
-            const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
-            const idProdCart = cartList.findIndex((product) => product.id === data.id);
-            if (idProdCart === -1) {
-                cartList.push({
-                    id: data.id,
-                    count: 1,
-                    finalPrice: Math.round(data.price - (data.discountPercentage / 100) * data.price),
-                });
-                btnBuy.classList.add('remove');
-            } else {
-                cartList.splice(idProdCart, 1);
-                btnBuy.classList.remove('remove');
-            }
-            localStorage.setItem('cartList', JSON.stringify(cartList));
-            refreshCartHead();
-        });
-    }
-
-    return card;
 }
 
 function generateSortPanel() {
@@ -295,10 +220,10 @@ function generateSortPanel() {
 }
 
 function generateFilterPanel() {
-    const categoryValues = [...new Set(dataProducts.map((obj) => obj.category))];
-    const brandValues = [...new Set(dataProducts.map((obj) => obj.brand))];
-    const priceValues = dataProducts.map((obj) => obj.price);
-    const stockValues = dataProducts.map((obj) => obj.stock);
+    const categoryValues = [...new Set(prodList.map((obj) => obj.data.category))];
+    const brandValues = [...new Set(prodList.map((obj) => obj.data.brand))];
+    const priceValues = prodList.map((obj) => obj.data.price);
+    const stockValues = prodList.map((obj) => obj.data.stock);
 
     const filter = document.createElement('div');
     filter.className = 'filter-inner';
@@ -324,7 +249,7 @@ function generateFilterPanel() {
     if (filterCategoryList instanceof Element) {
         categoryValues.forEach((value) => {
             filterCategoryList.append(
-                createCheckbox(value, 'category', dataProducts.filter((obj) => obj.category === value).length)
+                createCheckbox(value, 'category', prodList.filter((obj) => obj.data.category === value).length)
             );
         });
     }
@@ -333,7 +258,7 @@ function generateFilterPanel() {
     if (filterBrandList instanceof Element) {
         brandValues.forEach((value) => {
             filterBrandList.append(
-                createCheckbox(value, 'brand', dataProducts.filter((obj) => obj.brand === value).length)
+                createCheckbox(value, 'brand', prodList.filter((obj) => obj.data.brand === value).length)
             );
         });
     }
@@ -449,10 +374,6 @@ function createTwoRange(min: number, max: number, name: string, getMin?: number,
     return dualSlider;
 }
 
-function getPercentBetweenTwoValues(min: number, max: number, value: number) {
-    return Math.round((value / (max + min)) * 100);
-}
-
 function inputEventForDualSlider(
     slider1: HTMLInputElement,
     slider2: HTMLInputElement,
@@ -511,14 +432,15 @@ async function pushQueryParameters() {
     window.history.pushState({}, '', res ? `?${res}` : '/');
 }
 
+const fieldsForSearch = ['title', 'brand', 'category', 'price', 'stock', 'description', 'rating', 'discountPercentage'];
 function adjustProductList() {
-    let result: ProductCard[] = [...dataProducts];
+    let result: catalogProductCard[] = [...prodList];
 
-    result = filterProductList(result);
+    result = filterProductList(result, parameters);
     if (parameters['search'] && parameters['search'][0]) {
-        result = searchProductInList(result, parameters['search'][0]);
+        result = searchProductInList(result, fieldsForSearch, parameters['search'][0]);
     }
-    result = sortProductList(result);
+    result = sortProductList(result, parameters);
 
     adjustFilterAmounts(result);
     if (canAdjustSliders) {
@@ -528,100 +450,13 @@ function adjustProductList() {
     return result;
 }
 
-function filterProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = [...receivedList];
-    let temp: ProductCard[];
-
-    orderParameters.forEach((param) => {
-        switch (param) {
-            case 'category':
-            case 'brand':
-                temp = [];
-                parameters[param].forEach((value) => {
-                    temp.push(...result.filter((obj) => obj[param] === value));
-                });
-                result = temp;
-                break;
-            case 'price':
-            case 'stock':
-                temp = [
-                    ...result.filter(
-                        (obj) => obj[param] >= +parameters[param][0] && obj[param] <= +parameters[param][1]
-                    ),
-                ];
-                result = temp;
-                break;
-            default:
-                break;
-        }
-    });
-
-    return result;
-}
-
-function sortProductList(receivedList: ProductCard[]) {
-    let result: ProductCard[] = [...receivedList];
-
-    const sort = parameters['sort'];
-    if (sort === undefined) return result;
-    if (sort[0] === undefined) return result;
-
-    const [sortValue, sortOrder] = sort[0].split('-');
-    let isValidValue = false;
-
-    switch (sortValue) {
-        case 'price':
-        case 'rating':
-            result = result.sort((a, b) => a[sortValue] - b[sortValue]);
-            isValidValue = true;
-            break;
-        case 'discount':
-            result = result.sort((a, b) => a['discountPercentage'] - b['discountPercentage']);
-            isValidValue = true;
-            break;
-        default:
-            break;
-    }
-
-    if (isValidValue && sortOrder === 'DESC') {
-        result = result.reverse();
-    }
-
-    return result;
-}
-
-function searchProductInList(receivedList: ProductCard[], value: string) {
-    let result: { [key: string]: number | string | string[] }[] = [...receivedList];
-    const fieldsForSearch = [
-        'title',
-        'brand',
-        'category',
-        'price',
-        'stock',
-        'description',
-        'rating',
-        'discountPercentage',
-    ];
-
-    result = result.filter((obj) => {
-        for (let i = 0; i < fieldsForSearch.length; i++) {
-            if (`${obj[fieldsForSearch[i]]}`.toLowerCase().includes(value)) {
-                return true;
-            }
-        }
-        return false;
-    });
-
-    return result as ProductCard[];
-}
-
-async function adjustFilterAmounts(list: ProductCard[]) {
+async function adjustFilterAmounts(list: catalogProductCard[]) {
     const filterPanel = mainBlockG.querySelector('.filter-panel') as HTMLDivElement;
     const filterCategoryList = filterPanel.querySelector('.filter-category-list') as HTMLDivElement;
     const filterBrandList = filterPanel.querySelector('.filter-brand-list') as HTMLDivElement;
 
     ([...filterCategoryList.childNodes] as HTMLLabelElement[]).forEach((label: HTMLLabelElement) => {
-        const amount = list.filter((elem) => elem.category === label.dataset.value).length;
+        const amount = list.filter((elem) => elem.data.category === label.dataset.value).length;
         const spanAmount = label.querySelector('.curr-amount') as Element;
         spanAmount.textContent = `${amount}`;
         if (amount > 0) {
@@ -632,7 +467,7 @@ async function adjustFilterAmounts(list: ProductCard[]) {
     });
 
     ([...filterBrandList.childNodes] as HTMLLabelElement[]).forEach((label: HTMLLabelElement) => {
-        const amount = list.filter((elem) => elem.brand === label.dataset.value).length;
+        const amount = list.filter((elem) => elem.data.brand === label.dataset.value).length;
         const spanAmount = label.querySelector('.curr-amount') as Element;
         spanAmount.textContent = `${amount}`;
         if (amount > 0) {
@@ -648,12 +483,12 @@ async function adjustFilterAmounts(list: ProductCard[]) {
     }
 }
 
-async function adjustDualSliderValues(list: ProductCard[]) {
+async function adjustDualSliderValues(list: catalogProductCard[]) {
     const filterPanel = mainBlockG.querySelector('.filter-panel') as HTMLDivElement;
     const filterPriceDualSlider = filterPanel.querySelector('.filter-price.filter-feature-2-range') as HTMLDivElement;
     const filterStockDualSlider = filterPanel.querySelector('.filter-stock.filter-feature-2-range') as HTMLDivElement;
-    const priceValues = list.map((elem) => elem.price);
-    const stockValues = list.map((elem) => elem.stock);
+    const priceValues = list.map((elem) => elem.data.price);
+    const stockValues = list.map((elem) => elem.data.stock);
     const valuesArr = [priceValues, stockValues];
 
     [filterPriceDualSlider, filterStockDualSlider].forEach((dualSlider, idx) => {
