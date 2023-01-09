@@ -302,7 +302,6 @@ function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[])
           <ol id="paginated-list" class="all-items-holder">
           </ol>
           <div class="coupon-block">
-            <div></div>
             <form class="coupon-form">
               <label class="coupon-q">Got a coupon?</label>
               <input type="text" placeholder="Enter promocode" class="coupon-input">
@@ -502,6 +501,9 @@ function setInputsListenes(inputs: HTMLInputElement[]) {
                 const id = this.dataset.id as string;
                 let value = this.value as string;
                 const input = getCountInput(id);
+                if (value == '') {
+                    return;
+                }
                 if (Number(value) <= 0) {
                     deleteTheItem(productsFromStorage, id);
                 }

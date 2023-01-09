@@ -269,8 +269,12 @@ input:checked + .layout-slider:before {
 }
 
 .head-line {
-  display: grid;
-  grid-template-columns: repeat(6, 250px);
+  display: flex
+}
+
+.reset-copy-wrap {
+  width: 230px;
+  margin-right: 50px;
 }
 
 .under-head-line {

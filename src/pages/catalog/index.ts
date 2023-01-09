@@ -40,6 +40,7 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     canAdjustSliders = true;
 
     mainBlock.innerHTML = `
+    <div class="mobile-filter-btn"><div class="filter-icon"></div>Filters</div>
     <div class="main-inner">
         <div class="head-line">
         <div class="reset-copy-wrap">
@@ -136,6 +137,20 @@ function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string
     if (filters instanceof Element) {
         filters.append(generateFilterPanel());
     }
+
+    const filtersButton = mainBlock.querySelector('.mobile-filter-btn') as HTMLDivElement;
+    const resetFilters = mainBlock.querySelector('.reset-copy-wrap') as HTMLDivElement;
+    filtersButton.addEventListener('click', () => {
+        if (filtersButton.classList.contains('filters-active')) {
+            filtersButton.classList.remove('filters-active');
+            filters?.classList.remove('filters-active');
+            resetFilters.classList.remove('filters-active');
+        } else {
+            filtersButton.classList.add('filters-active');
+            filters?.classList.add('filters-active');
+            resetFilters.classList.add('filters-active');
+        }
+    });
 
     fillProductList(adjustProductList());
 
