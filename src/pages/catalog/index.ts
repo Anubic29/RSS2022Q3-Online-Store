@@ -1,4 +1,4 @@
-import { route, handleLocation, generateQueryParameters } from '../../router/router';
+import { handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ParamsObjGenerate, soldProducts } from '../../types/types';
 import { catalogProductCard } from './classes';
@@ -23,7 +23,7 @@ let canAdjustSliders = false;
 function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string[]) {
     parameters = params ? params : {};
     orderParameters = orderParams ? orderParams : [];
-    console.log(route);
+
     const soldProducts: soldProducts[] = JSON.parse(localStorage.getItem('soldProducts') ?? '[]');
     const computStockList = dataProducts.map((obj) => Object.create(obj));
     soldProducts.forEach((soldObj) => {
