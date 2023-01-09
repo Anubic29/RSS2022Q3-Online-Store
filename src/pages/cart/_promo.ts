@@ -5,7 +5,6 @@ import { calcFinalPrice } from './functions';
 JSON.parse(localStorage.getItem('promo') as string) ?? localStorage.setItem('promo', JSON.stringify([]));
 let promosArray: promoObj[] = JSON.parse(localStorage.getItem('promo') as string);
 
-console.log(promosArray);
 let cartTotalSpan: HTMLSpanElement;
 let newTotalSp: HTMLSpanElement;
 
