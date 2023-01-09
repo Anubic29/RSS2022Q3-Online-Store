@@ -573,4 +573,4 @@ function refresCoundInput(item: HTMLInputElement, count: string) {
     theItem.value = count;
 }
 
-export { generateContentCart };
+export default generateContentCart;

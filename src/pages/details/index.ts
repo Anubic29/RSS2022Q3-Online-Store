@@ -173,4 +173,4 @@ function generateBtnsBlock(currentProduct: ProductCard) {
     return btnsBlock;
 }
 
-export { generateContentDetails };
+export default generateContentDetails;

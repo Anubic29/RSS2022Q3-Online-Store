@@ -32,4 +32,4 @@ function generateContent404(params?: ParamsObjGenerate, orderParams?: string[]) 
     return mainBlock;
 }
 
-export { generateContent404 };
+export default generateContent404;
