@@ -3,6 +3,7 @@ import { refreshCartHead } from './index';
 import '../../../assets/img/master.png';
 import '../../../assets/img/express.png';
 import '../../../assets/img/visa.png';
+import { isRequired, isNameValid, isTelValid, isEmailValid, isAdrValid, isCardNomValid, isDateValid, isCvvValid } from './functions';
 
 function checkout(modal: HTMLDivElement, bg: HTMLDivElement, bodyOfCart: HTMLOListElement) {
     const prodsInCart: CartProduct[] = JSON.parse(localStorage.getItem('cartList') as string);
@@ -114,45 +115,6 @@ export function setInputListeners(
     const cvvInput = block.querySelector('.form-input.cvv') as HTMLInputElement;
     const form = block.querySelector('form') as HTMLFormElement;
     const cardTypeImg = block.querySelector('.card-type') as HTMLDivElement;
-
-    const isRequired = (val: string) => {
-        return val === '' ? false : true;
-    };
-
-    const isNameValid = (name: string) => {
-        const re = /^[A-Za-zа-яА-Я][A-Za-zа-яА-Я]{2,}\s+[A-ZА-Я][A-Za-zа-яА-Я]{2,}/;
-        return re.test(name);
-    };
-
-    const isTelValid = (tel: string) => {
-        const re = /\+[0-9]{9,}/;
-        return re.test(tel);
-    };
-
-    const isAdrValid = (adr: string) => {
-        const re = /[A-Za-zа-яА-Я]{5,}\s+[A-Za-zа-яА-Я]{5,}\s+[A-Za-zа-яА-Я]{5,}/;
-        return re.test(adr);
-    };
-
-    const isEmailValid = (email: string) => {
-        const re = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-    };
-
-    const isCardNomValid = (nums: string) => {
-        const re = /[0-9]{16}/;
-        return re.test(nums);
-    };
-
-    const isDateValid = (date: string) => {
-        const re = /[0-1][0-2]\/[0-9]{2}/;
-        return re.test(date);
-    };
-
-    const isCvvValid = (cvv: string) => {
-        const re = /[0-9]{3}/;
-        return re.test(cvv);
-    };
 
     const showError = (input: HTMLInputElement, message: string) => {
         const formField = input.parentElement as HTMLDivElement;
