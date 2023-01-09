@@ -207,11 +207,15 @@ function refreshCountInProdRow(id: string): void {
     const countProdsPlace = Array.from<HTMLParagraphElement>(document.querySelectorAll('p.price')).find(
         (p) => p.dataset.id === id
     ) as HTMLParagraphElement;
-    countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
-    totalSumPlace.innerText = `${
-        Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
-        theProdFromStorage.count
-    } ₴`;
+    if (countProdsPlace) {
+        countProdsPlace.innerText = `${theProdFullData.price * theProdFromStorage.count} ₴`;
+    }
+    if (theProdFromStorage) {
+        totalSumPlace.innerText = `${
+            Math.round(theProdFullData.price - (theProdFullData.discountPercentage / 100) * theProdFullData.price) *
+            theProdFromStorage.count
+        } ₴`;
+    }
 }
 
 function generateContentCart(params?: ParamsObjGenerate, orderParams?: string[]) {

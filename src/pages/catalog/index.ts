@@ -1,7 +1,8 @@
-import { route, handleLocation, generateQueryParameters } from '../../router/router';
+import { handleLocation, generateQueryParameters } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import type { ParamsObjGenerate, soldProducts } from '../../types/types';
 import { catalogProductCard } from './classes';
+import { colorGrayElement, colorBlueAccent } from '../../../assets/libs/vars';
 import { refreshCartHead } from '../cart/index';
 
 import { getPercentBetweenTwoValues, filterProductList, sortProductList, searchProductInList } from './functions';
@@ -23,7 +24,7 @@ let canAdjustSliders = false;
 function generateContentCatalog(params?: ParamsObjGenerate, orderParams?: string[]) {
     parameters = params ? params : {};
     orderParameters = orderParams ? orderParams : [];
-    console.log(route);
+
     const soldProducts: soldProducts[] = JSON.parse(localStorage.getItem('soldProducts') ?? '[]');
     const computStockList = dataProducts.map((obj) => Object.create(obj));
     soldProducts.forEach((soldObj) => {
@@ -360,7 +361,7 @@ function createTwoRange(min: number, max: number, name: string, getMin?: number,
 
     slider2.setAttribute(
         'style',
-        `background: linear-gradient(to right, #C6C6C6, #C6C6C6 ${minPercent}%, #46C2CB ${minPercent}%, #46C2CB ${maxPercent}%, #C6C6C6 ${maxPercent}%);`
+        `background: linear-gradient(to right, ${colorGrayElement}, ${colorGrayElement} ${minPercent}%, ${colorBlueAccent} ${minPercent}%, ${colorBlueAccent} ${maxPercent}%, ${colorGrayElement} ${maxPercent}%);`
     );
 
     slider1.addEventListener('input', () => {
@@ -394,7 +395,7 @@ function inputEventForDualSlider(
 
     slider2.setAttribute(
         'style',
-        `background: linear-gradient(to right, #C6C6C6, #C6C6C6 ${minPercent}%, #46C2CB ${minPercent}%, #46C2CB ${maxPercent}%, #C6C6C6 ${maxPercent}%);`
+        `background: linear-gradient(to right, ${colorGrayElement}, ${colorGrayElement} ${minPercent}%, ${colorBlueAccent} ${minPercent}%, ${colorBlueAccent} ${maxPercent}%, ${colorGrayElement} ${maxPercent}%);`
     );
 
     if (parameters[paramName] == undefined) {
@@ -510,7 +511,7 @@ async function adjustDualSliderValues(list: catalogProductCard[]) {
 
         slider2.setAttribute(
             'style',
-            `background: linear-gradient(to right, #C6C6C6, #C6C6C6 ${minPercent}%, #46C2CB ${minPercent}%, #46C2CB ${maxPercent}%, #C6C6C6 ${maxPercent}%);`
+            `background: linear-gradient(to right, ${colorGrayElement}, ${colorGrayElement} ${minPercent}%, ${colorBlueAccent} ${minPercent}%, ${colorBlueAccent} ${maxPercent}%, ${colorGrayElement} ${maxPercent}%);`
         );
     });
 

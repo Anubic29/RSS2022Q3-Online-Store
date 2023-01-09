@@ -28,7 +28,6 @@ const handleLocation = async () => {
     window.scroll({ top: 0 });
 
     const path = window.location.pathname;
-    console.log(window.location.search.substring(1));
     let route = routes[path] || routes['404'];
     if (path.match(/^\/details\//) && path.indexOf('/', 1) === path.lastIndexOf('/')) {
         route = routes['/details/'];

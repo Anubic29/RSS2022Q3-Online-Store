@@ -16,6 +16,7 @@
   margin-top: 15px;
   position: relative;
 }
+
 .prod-img-wrap {
   position: relative;
   width: 100%;
@@ -36,12 +37,12 @@
     cursor: pointer;
   }
 }
+
 .img-more-info-icon {
-  // display: none;
   position: absolute;
   width: 50px;
   height: 50px;
-  fill: white;
+  fill: $white;
   z-index: 2;
   display: none;
   margin-left: 40%;
@@ -49,6 +50,7 @@
   position: absolute;
   filter: invert(96%) sepia(100%) saturate(2%) hue-rotate(302deg) brightness(103%) contrast(101%);
 }
+
 .prod-img-wrap:hover .prod-img,
 .prod-img-wrap:focus .prod-img {
   transform: scale(1.1);
@@ -67,7 +69,7 @@
 
 .prod-img-wrap:hover .prod-img:before,
 .prod-img-wrap:focus .prod-img:before {
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: $black;
 }
 
 .prod-img-wrap:hover .img-more-info-icon,
