@@ -344,6 +344,10 @@
     right: 0;
     width: 200%;
   }
+
+  .page-404 .moon {
+    width: 500px;
+  }
 }
 
 @media screen and (max-width: 750px) {
@@ -516,6 +520,10 @@
   .img-more-info-icon {
     margin-left: 42%;
     margin-top: 23%;
+  }
+
+  .page-404 .moon {
+    width: 300px;
   }
 }
 
