@@ -682,4 +682,4 @@ async function adjustDualSliderValues(list: ProductCard[]) {
     canAdjustSliders = false;
 }
 
-export default generateContentCatalog;
+export { generateContentCatalog };

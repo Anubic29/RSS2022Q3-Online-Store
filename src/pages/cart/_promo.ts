@@ -1,5 +1,6 @@
 import { promoObj } from '../../types/types';
 import promos from '../../../assets/libs/promos';
+import { calcFinalPrice } from './functions';
 
 JSON.parse(localStorage.getItem('promo') as string) ?? localStorage.setItem('promo', JSON.stringify([]));
 let promosArray: promoObj[] = JSON.parse(localStorage.getItem('promo') as string);
@@ -100,10 +101,7 @@ export function createNewTotalSpan(spanTotal: HTMLSpanElement, newTotalSpan: HTM
     const sumInTotal = Number(cartTotalSpan.innerText.slice(0, -2));
     const newTotal = newTotalSpan;
     newTotal.innerText = '';
-    let reducedPrice = sumInTotal;
-    promosArray.forEach((promo) => {
-        reducedPrice = reducedPrice - sumInTotal / promo.disc;
-    });
+    const reducedPrice = calcFinalPrice(promosArray, sumInTotal);
     newTotal.innerText = `${Math.round(reducedPrice)} ₴`;
     spanTotal.classList.add('crossed');
     if (promosArray.length === 0) {
