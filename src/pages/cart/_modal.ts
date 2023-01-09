@@ -3,7 +3,16 @@ import { refreshCartHead } from './index';
 import '../../../assets/img/master.png';
 import '../../../assets/img/express.png';
 import '../../../assets/img/visa.png';
-import { isRequired, isNameValid, isTelValid, isEmailValid, isAdrValid, isCardNomValid, isDateValid, isCvvValid } from './functions';
+import {
+    isRequired,
+    isNameValid,
+    isTelValid,
+    isEmailValid,
+    isAdrValid,
+    isCardNomValid,
+    isDateValid,
+    isCvvValid,
+} from './functions';
 
 function checkout(modal: HTMLDivElement, bg: HTMLDivElement, bodyOfCart: HTMLOListElement) {
     const prodsInCart: CartProduct[] = JSON.parse(localStorage.getItem('cartList') as string);
