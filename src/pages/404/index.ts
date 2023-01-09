@@ -2,8 +2,6 @@ import { route } from '../../router/router';
 import type { ParamsObjGenerate } from '../../types/types';
 
 function generateContent404(params?: ParamsObjGenerate, orderParams?: string[]) {
-    console.log(params);
-    console.log(orderParams);
     const mainBlock = document.createElement('div');
     mainBlock.className = 'page-404';
 
@@ -19,8 +17,8 @@ function generateContent404(params?: ParamsObjGenerate, orderParams?: string[]) 
     moon.className = 'moon';
 
     const link = document.createElement('a');
-    link.text = 'Go to cart';
-    link.href = '/cart';
+    link.text = 'Go to home';
+    link.href = '/';
     link.className = 'link';
     link.addEventListener('click', route);
 

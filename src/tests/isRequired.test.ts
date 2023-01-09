@@ -13,5 +13,5 @@ describe('must return false if input is empty and true otherwise', () => {
     test('must return true if input is filled', () => {
         const filled = isRequired(inputFilledOut);
         expect(filled).toBe(true);
-    })
+    });
 });

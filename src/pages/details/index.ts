@@ -1,4 +1,4 @@
-import { route, handleLocation } from '../../router/router';
+import { handleLocation } from '../../router/router';
 import dataProducts from '../../../assets/libs/data';
 import { maxValueRating, colorEmptyStar, colorFilledStar } from '../../../assets/libs/vars';
 import type { ProductCard, CartProduct, ParamsObjGenerate, soldProducts } from '../../types/types';
@@ -6,9 +6,6 @@ import '../../../assets/icons/rate-star.svg';
 import { refreshCartHead } from '../cart/index';
 
 function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string[]) {
-    console.log(params);
-    console.log(orderParams);
-    console.log(route);
     const path = window.location.pathname;
     const idProd = path.substring(path.lastIndexOf('/') + 1);
     const currentProduct: ProductCard | undefined = Object.create(
@@ -115,7 +112,6 @@ function generateContentDetails(params?: ParamsObjGenerate, orderParams?: string
 
     return mainBlock;
 }
-console.log(JSON.parse(localStorage.getItem('cartList') as string));
 
 function generateBtnsBlock(currentProduct: ProductCard) {
     const cartList: CartProduct[] = JSON.parse(localStorage.getItem('cartList') ?? '[]');
