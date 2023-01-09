@@ -17,8 +17,7 @@ module.exports = {
     mode,
     target,
     devtool: 'inline-source-map',
-    // context: path.resolve(__dirname, 'src'),
-    entry: ['@babel/polyfill', path.resolve(__dirname, 'src', 'index.ts')], // path.resolve(__dirname, 'src', 'index.ts')
+    entry: ['@babel/polyfill', path.resolve(__dirname, 'src', 'index.ts')],
     plugins: [
         new HtmlWebpackPlugin({
             filename: 'index.html',
