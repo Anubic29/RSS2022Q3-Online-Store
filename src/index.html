@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet">
+  <title>Online-store</title>
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner container">
+      <a href="/" onclick="route()"><img src="../assets/img/logo.png" alt="logo" class="shop-logo"></a>
+      <div class="search-bar">
+        <img src="../assets/icons/search.svg" alt="" class="search-icon">
+        <div class="search-input-container">
+          <input class="search-input" type="text" id="product-search" placeholder="I am searching for..." title="Type in product name">
+          <button class="search-btn-reset"></button>
+        </div>
+        <button class="search-btn-find" type="submit" value="Find!">Find!</button>
+      </div>
+      <div class="cart-block">
+        <p class="total-sum">
+          total: <span id = "total-numbers" class="total-numbers"></span>
+        </p>
+        <div class="cart">
+          <a href="/cart" onclick="route()">
+            <img src="../assets/icons/cart.svg" alt="cart-icon" class="cart-icon">
+          </a>
+          <div id="cart-prod-count" class="cart-prod-count"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="main" id="main-page"></main>
+  <footer class="footer">
+    <div class="footer-inner container">
+      <div class="rs-logo-wrap">
+        <a href="https://rs.school/js/">
+          <img src="../assets/icons/rs-logo.svg" alt="rs school logo" class="rs-logo-img">
+        </a>
+      </div>
+      <p class="dev-year">2022</p>
+      <div class="developers">
+        <p class="dev-title">Developers:</p>
+        <p class="dev">
+          <a href="https://github.com/Anubic29">
+            <img src="../assets/icons/icons8-github.svg" class="git-logo-img" alt="git logo">
+            <span class="dev-name">Alexander Sitailo</span>
+          </a>
+        </p>
+        <p class="dev">
+          <a href="https://github.com/ElenaDatso">
+            <img src="../assets/icons/icons8-github.svg" class="git-logo-img" alt="git logo">
+            <span class="dev-name">Olena Datso</span>
+          </a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
