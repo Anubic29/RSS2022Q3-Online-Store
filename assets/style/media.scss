@@ -149,6 +149,10 @@
   .card-page .summary-block * {
     margin-left: auto;
   }
+
+  .page-details .image-block  {
+    width: 500px;
+  }
 }
 
 @media screen and (max-width: 950px) {
@@ -308,7 +312,7 @@
 
 @media screen and (max-width: 810px) {
   .page-details .title-block .title {
-    font-size: 55px;
+    font-size: 35px;
   }
 
   .page-catalog {
@@ -525,6 +529,10 @@
 
   .page-404 .moon {
     width: 300px;
+  }
+
+  .page-details .image-block  {
+    width: 320px;
   }
 }
 
