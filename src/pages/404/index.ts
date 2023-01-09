@@ -17,8 +17,8 @@ function generateContent404(params?: ParamsObjGenerate, orderParams?: string[]) 
     moon.className = 'moon';
 
     const link = document.createElement('a');
-    link.text = 'Go to cart';
-    link.href = '/cart';
+    link.text = 'Go to home';
+    link.href = '/';
     link.className = 'link';
     link.addEventListener('click', route);
 
