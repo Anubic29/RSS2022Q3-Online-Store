@@ -24,7 +24,6 @@ function promogenerator(
         event.preventDefault();
         promoBtn.disabled = true;
         trueCode = promoList.find((promo: promoObj) => promo.id === promoInput.value.toLocaleUpperCase());
-        console.log(trueCode);
         if (trueCode) {
             promoBtn.disabled = false;
             if (
@@ -85,7 +84,6 @@ export function addActiveCoupon(couponDiv: HTMLDivElement) {
 function setDeleteListeners(btn: HTMLCollection) {
     const collection = Array.from(btn);
     const button: HTMLButtonElement = collection.find((el) => el.tagName === 'BUTTON') as HTMLButtonElement;
-    console.log(button.dataset);
     button.addEventListener('click', () => {
         promosArray = JSON.parse(localStorage.getItem('promo') as string);
         const ind = promosArray.findIndex((promo) => promo.id === button.dataset.id);

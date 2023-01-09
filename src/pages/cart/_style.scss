@@ -87,6 +87,7 @@
 
   .pagination-number-input::-webkit-outer-spin-button,
   .pagination-number-input::-webkit-inner-spin-button {
+    appearance: none;
     -webkit-appearance: none;
     background: white;
     position: absolute;

@@ -28,4 +28,9 @@ type promoObj = {
     disc: number;
 };
 
-export type { ProductCard, CartProduct, ParamsObjGenerate, promoObj };
+type soldProducts = {
+    id: number;
+    sold: number;
+}
+
+export type { ProductCard, CartProduct, ParamsObjGenerate, promoObj, soldProducts };
