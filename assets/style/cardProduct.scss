@@ -17,6 +17,10 @@
   position: relative;
 }
 
+.page-details .image-block {
+  margin-bottom: 60px;
+}
+
 .prod-img-wrap {
   position: relative;
   width: 100%;
@@ -69,7 +73,7 @@
 
 .prod-img-wrap:hover .prod-img:before,
 .prod-img-wrap:focus .prod-img:before {
-  background-color: $black;
+  background-color: $blackSemiTransp;
 }
 
 .prod-img-wrap:hover .img-more-info-icon,
@@ -150,7 +154,7 @@
 .title {
   margin-top: 12px;
   font-size: 18px;
-  height: 40px;
+  height: auto;
   white-space: break-spaces;
 }
 

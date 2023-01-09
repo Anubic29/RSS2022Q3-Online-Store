@@ -64,13 +64,14 @@
 
   .image-block {
     display: flex;
-    flex-basis: 750px;
     flex-direction: column;
     align-items: center;
+    width: 750px;
+    height: 500px;
+    justify-content: space-between;
     .main-image {
       width: auto;
       max-height: 300px;
-      max-width: 500px;
   }
     .images-list {
       display: flex;
@@ -93,7 +94,6 @@
   .info-block {
     margin-left: 75px;
     flex: 1;
-    flex-basis: 750px;
     .info-list {
       margin-bottom: 65px;
       li {
