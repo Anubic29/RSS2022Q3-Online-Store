@@ -35,8 +35,9 @@
   }
 
   .page-details .image-block .main-image {
-    width: 500px;
-    height: auto;
+    width: auto;
+    max-height: 300px;
+    max-width: 500px;
   }
 
   .page-details .info-block .info-list {
